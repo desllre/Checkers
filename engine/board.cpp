@@ -23,7 +23,20 @@ Board::Board(uint16_t size, bool isWhiteBoard): size(size), isWhiteBoard(isWhite
         }
 
     } else {
-
+        for (uint16_t i = 0; i < size ; ++i){
+            if (i == size/2 || i == size/2 + 1) {
+                for (size_t j = 0; j < size ; ++j)
+                    board[i][j] = '0';
+            } else {
+                for (size_t j = 0; j < size ; ++j) {
+                    if (i < size / 2){
+                        board[i][j] = 'p';
+                    } else{
+                        board[i][j] = 'P';
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -39,19 +52,53 @@ bool Board::isHere(uint16_t posX, uint16_t posY) {
     return false;
 }
 
-/*std::vector<std::pair<uint16_t, uint16_t>> Board::possibles(uint16_t x, uint16_t y){
-    std::vector<std::pair<uint16_t, uint16_t>> possibles;
 
-    char figureType = board[x][y];
+bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY){
 
-    if (figureType == 'P' || figureType == 'p'){
+    char figureType = board[beginY][beginX];
+    if (figureType == '0') return false;
 
-    } else{
+    return true;
+}
+
+std::vector<uint16_t> Board::possibles(uint16_t posX, uint16_t posY){
+    void (*enumeration) (std::vector<uint16_t>&, uint16_t, uint16_t);
+
+    enumeration = [](std::vector<uint16_t>& vect, uint16_t x, uint16_t y){
+
+    };
+
+    char figureType = board[posY][posX];
+    std::vector<uint16_t> possibles;
+    if (figureType == '0'){
+        possibles.push_back(999);
+        return possibles;
+    }
+
+    uint16_t rPossible = checkStep(posX, posY, 'r');
+    uint16_t lPossible = checkStep(posX, posY, 'l');
+
+    if (rPossible != 999) {
 
     }
 
-    return possibles;
-}*/
+
+
+    uint16_t rPos = checkStep(posX, posY, 'r');
+    uint16_t lPos = checkStep(posX, posY, 'l');
+
+}
+
+/*
+void drevo(int** arr, int x, int y){
+    if (x < 0 || x >= size || y < 0 || y >= size)
+        return;
+    std::cout << arr[y][x] << std::endl;
+    drevo(arr, x + 1, y + 1);
+    drevo(arr, x - 1, y + 1);
+    return;
+}
+*/
 
 uint16_t Board::checkStep(uint16_t posX, uint16_t posY, char direct){
 
@@ -93,18 +140,6 @@ uint16_t Board::checkStep(uint16_t posX, uint16_t posY, char direct){
 
 }
 
-bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY){
-
-    char figureType = board[beginY][beginX];
-    if (figureType == '0') return false;
-
-    return true;
-}
-
-std::vector<uint16_t> Board::possibles(uint16_t posX, uint16_t posY){
-    return std::vector<uint16_t>(0);
-}
-
 std::pair<uint16_t, uint16_t> Board::convertPos(uint16_t pos){
     return std::pair<uint16_t, uint16_t>(pos % size, pos / size);
 }
@@ -115,6 +150,7 @@ char Board::checkSide(uint16_t posX, uint16_t posY){
     else
         return 'b';
 }
+
 
 
 
