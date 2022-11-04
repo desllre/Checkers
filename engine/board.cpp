@@ -35,7 +35,7 @@ Board::~Board(){
 }
 
 bool Board::isHere(uint16_t posX, uint16_t posY) {
-    if (board[posX][posY] != '0') return true;
+    if (board[posY][posX] != '0') return true;
     return false;
 }
 
@@ -53,20 +53,67 @@ bool Board::isHere(uint16_t posX, uint16_t posY) {
     return possibles;
 }*/
 
-std::pair<uint16_t, uint16_t> checkStep(uint16_t posX, uint16_t posY, char direct){
-    return std::pair<uint16_t, uint16_t>();
+uint16_t Board::checkStep(uint16_t posX, uint16_t posY, char direct){
+
+    char figureType = board[posY][posX];
+    char figureSide = checkSide(posX, posY);
+
+    if (figureType == '0') return 999;
+
+    int biasX, biasY;
+
+    if (direct == 'r'){
+        biasX = 1;
+    } else if (direct == 'l'){
+        biasX = -1;
+    } else{
+        throw "Error. Not correct direct value";
+    }
+
+    if (figureSide == 'w'){
+        biasY = -1;
+    } else if (figureSide == 'b'){
+        biasY = 1;
+    }
+
+    int i = posY + biasY;
+    int j = posX + biasX;
+    uint16_t step = 1;
+    for ( ; i < size && i >= 0 && j < size && j >= 0; i += biasY, j += biasX, ++step){
+        if (board[i][j] == '0') {
+            return i*size + j;
+        } else if (step == 2) {
+            return 999;
+        } else if (figureSide == 'w' && std::islower(board[i][j])){
+            return 999;
+        } else if (figureSide == 'b' && std::isupper(board[i][j])){
+            return 999;
+        }
+    }
+
 }
 
 bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY){
 
-    char figureType = board[beginX][beginY];
+    char figureType = board[beginY][beginX];
     if (figureType == '0') return false;
 
     return true;
 }
 
-std::vector<std::pair<uint16_t, uint16_t>> Board::possibles(uint16_t posX, uint16_t posY){
-    return std::vector<std::pair<uint16_t, uint16_t>>();
+std::vector<uint16_t> Board::possibles(uint16_t posX, uint16_t posY){
+    return std::vector<uint16_t>(0);
+}
+
+std::pair<uint16_t, uint16_t> Board::convertPos(uint16_t pos){
+    return std::pair<uint16_t, uint16_t>(pos % size, pos / size);
+}
+
+char Board::checkSide(uint16_t posX, uint16_t posY){
+    if (std::islower(board[posY][posX]))
+        return 'w';
+    else
+        return 'b';
 }
 
 
