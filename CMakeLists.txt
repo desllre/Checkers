@@ -3,5 +3,5 @@ project(Checkers)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Checkers main.cpp)
+add_executable(Checkers main.cpp engine/board.cpp engine/board.h)
 
