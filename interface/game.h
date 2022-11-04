@@ -3,6 +3,7 @@
 
 void game() {
     sf::RenderWindow window(sf::VideoMode(1440, 900), "Checkers", sf::Style::Close);
+    Menu menu;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -14,7 +15,7 @@ void game() {
         }
 
         window.clear();
-        menu.draw(window, background);
+        menu.drawMenu(window);
         window.display();
     }
 }
