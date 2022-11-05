@@ -1,10 +1,14 @@
 #include "header.h"
 #include "elements.h"
 
-/**Settings for background**/
+/**************Main class to create menu**************/
+
+/*Settings for background*/
 #define PATH_IMAGE "../textures/backgrounds/menu_bg.png"
 
-/**Settings for button**/
+/*Settings for button*/
+#define PATH_PRESS_BUTTON "../songs/pressbutton.wav"
+#define PATH_TOUCH_BUTTON "../songs/pressbutton.wav"
 #define COLOR_OUTLINE sf::Color::Black
 #define SIZE_X 600.f
 #define SIZE_Y 100.f
@@ -13,7 +17,7 @@
 #define POS_Y 325.f
 const sf::Vector2<float> SIZE_BUTTON(SIZE_X, SIZE_Y);
 
-/**Settings for text**/
+/*Settings for text*/
 #define COLOR_TEXT sf::Color::Black
 #define TEXT_SIZE 48L
 #define PATH_FONTS "../fonts/GOUDYSTO.TTF"
@@ -21,30 +25,43 @@ const sf::Vector2<float> SIZE_BUTTON(SIZE_X, SIZE_Y);
 #define POS_TEXT_Y 345.f
 #define CONST_DISPLACEMENT 150.f
 
-/**Fixed value for buttons and texts**/
+/*Fixed value for buttons and texts*/
 #define FIX_SETTINGS_TEXT_X 100.f
 
 class Menu {
 public:
-    Menu() : background(PATH_IMAGE),
+    Menu() :
+        background(PATH_IMAGE),
         play_button(SIZE_BUTTON, THICKNESS, POS_X,
                     POS_Y, COLOR_OUTLINE, COLOR_TEXT,
                     TEXT_SIZE, PATH_FONTS, POS_TEXT_X,
-                    POS_TEXT_Y, "PLAY"),
+                    POS_TEXT_Y, PATH_TOUCH_BUTTON, PATH_PRESS_BUTTON , "PLAY"),
         settings_button(SIZE_BUTTON, THICKNESS, POS_X,
                         (POS_Y + CONST_DISPLACEMENT), COLOR_OUTLINE, COLOR_TEXT,
                          TEXT_SIZE, PATH_FONTS, POS_TEXT_X - FIX_SETTINGS_TEXT_X,
-                        (POS_TEXT_Y + CONST_DISPLACEMENT), "SETTINGS"),
+                        (POS_TEXT_Y + CONST_DISPLACEMENT), PATH_TOUCH_BUTTON, PATH_PRESS_BUTTON, "SETTINGS"),
         exit_button(SIZE_BUTTON, THICKNESS, POS_X,
                     (POS_Y + 2 * CONST_DISPLACEMENT), COLOR_OUTLINE, COLOR_TEXT,
                     TEXT_SIZE, PATH_FONTS, POS_TEXT_X,
-                    (POS_TEXT_Y + 2 * CONST_DISPLACEMENT), "EXIT") {}
+                    (POS_TEXT_Y + 2 * CONST_DISPLACEMENT), PATH_TOUCH_BUTTON, PATH_PRESS_BUTTON, "EXIT") {} //Construction for menu
 
-    void drawMenu(sf::RenderWindow& window) {
+
+    ~Menu() = default;
+
+    void drawMenu(sf::RenderWindow& window) { //Function for draw and activate buttons
         sf::Vector2<int> mouse_position = sf::Mouse::getPosition(window);
+        bool is_mouse_on_play_button = (mouse_position.x >= POS_X && mouse_position.y >= POS_Y) &&
+                (mouse_position.x <= POS_X + SIZE_X && mouse_position.y <= POS_Y + SIZE_Y);
+        bool is_mouse_on_settings_button = (mouse_position.x >= POS_X && mouse_position.y >= (POS_Y + CONST_DISPLACEMENT)) &&
+                                           (mouse_position.x <= POS_X + SIZE_X) &&
+                                           (mouse_position.y <= (POS_Y + SIZE_Y + CONST_DISPLACEMENT));
+        bool is_mouse_on_exit_button = (mouse_position.x >= POS_X && mouse_position.y >= (POS_Y + 2 * CONST_DISPLACEMENT)) &&
+                                       (mouse_position.x <= POS_X + SIZE_X) &&
+                                       (mouse_position.y <= (POS_Y + SIZE_Y + 2 * CONST_DISPLACEMENT));
+        bool is_press_mouse = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 
-        if ((mouse_position.x >= POS_X && mouse_position.y >= POS_Y) &&
-            (mouse_position.x <= POS_X + SIZE_X && mouse_position.y <= POS_Y + SIZE_Y)) {
+
+        if (is_mouse_on_play_button) { //Activate play button
             play_button.setColorFigure(sf::Color::Red);
             play_button.setColorText(sf::Color::Red);
         }
@@ -53,9 +70,7 @@ public:
             play_button.setColorText(sf::Color::Black);
         }
 
-        if ((mouse_position.x >= POS_X && mouse_position.y >= (POS_Y + CONST_DISPLACEMENT)) &&
-            (mouse_position.x <= POS_X + SIZE_X) &&
-            (mouse_position.y <= (POS_Y + SIZE_Y + CONST_DISPLACEMENT))) {
+        if (is_mouse_on_settings_button) { //Activate settings button
             settings_button.setColorFigure(sf::Color::Red);
             settings_button.setColorText(sf::Color::Red);
         }
@@ -64,9 +79,7 @@ public:
             settings_button.setColorText(sf::Color::Black);
         }
 
-        if ((mouse_position.x >= POS_X && mouse_position.y >= (POS_Y + 2 * CONST_DISPLACEMENT)) &&
-            (mouse_position.x <= POS_X + SIZE_X) &&
-            (mouse_position.y <= (POS_Y + SIZE_Y + 2 * CONST_DISPLACEMENT))) {
+        if (is_mouse_on_exit_button) { //Activate exit button
             exit_button.setColorFigure(sf::Color::Red);
             exit_button.setColorText(sf::Color::Red);
         }
@@ -75,16 +88,15 @@ public:
             exit_button.setColorText(sf::Color::Black);
         }
 
+        if (is_mouse_on_exit_button && is_press_mouse) {
+            window.close();
+        }
 
         background.drawBackground(window);
         play_button.drawButton(window);
         settings_button.drawButton(window);
         exit_button.drawButton(window);
     }
-
-
-
-    ~Menu() = default;
 
 private:
     Background background;
