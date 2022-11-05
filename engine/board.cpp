@@ -47,20 +47,52 @@ Board::~Board(){
     delete[] board;
 }
 
+
 bool Board::isHere(uint16_t posX, uint16_t posY) {
     if (board[posY][posX] != '0') return true;
     return false;
 }
 
 
-
 bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY){
+
+    bool isMoving = false;
 
     char figureType = board[beginY][beginX];
     if (figureType == '0') return false;
 
-    return true;
+    std::vector<int> possiblePos = possibles(beginX, beginY);
+
+    int endPos = endY * size + endX;
+
+    for (auto i: possiblePos)
+        if (endPos == i) isMoving = true;
+
+    if (isMoving){
+        board[beginY][beginX] = '0';
+        board[endY][endX] = figureType;
+
+        int diffX = static_cast<int>(endX) - static_cast<int>(beginX);
+        int diffY = static_cast<int>(endY) - static_cast<int>(beginY);
+
+        int enemyPosX = endX, enemyPosY = endY; // убираем сбитую фигуру
+
+        if (diffX < 0)
+            enemyPosX += 1;
+        else
+            enemyPosX += -1;
+
+        if (diffY < 0)
+            enemyPosY += 1;
+        else
+            enemyPosY += -1;
+
+        board[enemyPosY][enemyPosX] = '0';
+    }
+
+    return isMoving;
 }
+
 
 std::vector<int> Board::possibles(uint16_t posX, uint16_t posY){
     std::vector<int> possibles;
@@ -362,7 +394,6 @@ std::vector<int> Board::checkKingStep_Rus(uint16_t posX, uint16_t posY){
 
     return possibles;
 }
-
 
 
 std::pair<uint16_t, uint16_t> Board::convertPos(uint16_t pos) const{
