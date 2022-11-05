@@ -1,20 +1,8 @@
 #include "cstdlib"
 #include "string"
-#include "array"
-
-#pragma once
-
-// Здесь -1 означает чёрную фигуру, а 1 - белую
-
-// обозначение фигур: 'P' - чёрная пешка, 'p' - малая пешка, 'K' - чёрная дамка, 'k' - белая дамка
-
-#include "cstdlib"
-#include "string"
 #include "vector"
 
 #pragma once
-
-// Здесь -1 означает чёрную фигуру, а 1 - белую
 
 // обозначение фигур: 'P' - чёрная пешка, 'p' - белая пешка, 'K' - чёрная дамка,
 // 'k' - белая дамка, отсутствие фигуры - '0'
@@ -23,7 +11,7 @@ class Board{
 private:
 
 public:
-    Board(uint16_t size, bool isWhiteBoard);
+    Board(uint16_t size, bool isWhiteBoard, char GameType);
     ~Board();
 
     bool isHere(uint16_t posX, uint16_t posY); // проверка на наличие фигуры в данной точке
@@ -37,13 +25,20 @@ public:
     char checkSide(uint16_t posX, uint16_t posY); // w - white, b - black
 
 private:
-    // проверка хода в конкретном направлении на 1 шаг вперёд
-    // Возвращает 999 если не возможно походить в заданном направлении или если под указанными координатами не находится фигура
+    // direct - влево - 'l', вправо - 'r'
+
+    // проверка хода в конкретном направлении на 1 шаг вперёд для пешек
+    // Возвращает -1 если не возможно походить в заданном направлении или если под указанными координатами не находится фигура
     // если возможно походить, возваращает номер позиции возможного хода (след клетка или через 1, если бьём)
-    uint16_t checkStep(uint16_t posX, uint16_t posY, char direct);
+    int checkPawnStep_Ang(uint16_t posX, uint16_t posY, char direct);
+
+    // проверка хода для дамок в заданном направлении
+    // возваращает вектор номеров возможных позиций хождения дамки
+    std::vector<int> checkKingStep_Ang(uint16_t posX, uint16_t posY, char direct);
 
 private:
     char** board;
     uint16_t size;
     bool isWhiteBoard; // хранит информацию о том, какой стороне принадлежит борд
+    char GameType; // Тип игры: русские шашки - 'r', поддавки - 'p', английские - 'a', международные - 'm'
 };

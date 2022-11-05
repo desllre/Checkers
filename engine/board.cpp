@@ -1,6 +1,6 @@
 #include "board.h"
 
-Board::Board(uint16_t size, bool isWhiteBoard): size(size), isWhiteBoard(isWhiteBoard) {
+Board::Board(uint16_t size, bool isWhiteBoard, char GameType): size(size), isWhiteBoard(isWhiteBoard), GameType(GameType) {
     board = new char*[size];
     for (size_t i = 0; i < size; ++i) {
         board[i] = new char[size];
@@ -68,53 +68,89 @@ std::vector<uint16_t> Board::possibles(uint16_t posX, uint16_t posY){
 
     };
 
-    char figureType = board[posY][posX];
+    /*char figureType = board[posY][posX];
     std::vector<uint16_t> possibles;
     if (figureType == '0'){
         possibles.push_back(999);
         return possibles;
-    }
+    } else if(figureType == 'p' || figureType == 'P'){
+        uint16_t rPossible = checkPawnStep(posX, posY, 'r');
+        uint16_t lPossible = checkPawnStep(posX, posY, 'l');
 
-    uint16_t rPossible = checkStep(posX, posY, 'r');
-    uint16_t lPossible = checkStep(posX, posY, 'l');
-
-    if (rPossible != 999) {
-
-    }
-
-
-
-    uint16_t rPos = checkStep(posX, posY, 'r');
-    uint16_t lPos = checkStep(posX, posY, 'l');
+    }*/
 
 }
 
-/*
-void drevo(int** arr, int x, int y){
-    if (x < 0 || x >= size || y < 0 || y >= size)
-        return;
-    std::cout << arr[y][x] << std::endl;
-    drevo(arr, x + 1, y + 1);
-    drevo(arr, x - 1, y + 1);
-    return;
-}
-*/
 
-uint16_t Board::checkStep(uint16_t posX, uint16_t posY, char direct){
+std::vector<int> Board::checkKingStep_Ang(uint16_t posX, uint16_t posY, char direct){
+
+    void (*checkLine) (std::vector<int>& possibles, int i, int j, int biasX, int biasY, char** board, uint16_t size, char figureSide);
+
+    checkLine = [](std::vector<int>& possibles, int i, int j, int biasX, int biasY, char** board, uint16_t size, char figureSide){
+        for ( ; i < size && i >= 0 && j < size && j >= 0; i += biasY, j += biasX){
+            if (board[i][j] == '0') {
+                possibles.emplace_back(i*size + j);
+            } else if (figureSide == 'w' && std::islower(board[i][j])){
+                break;
+            } else if (figureSide == 'b' && std::isupper(board[i][j])){
+                break;
+            } else {
+                i += biasY, j += biasX;
+                if (board[i][j] == '0' && i < size && i >= 0 && j < size && j >= 0)
+                    possibles.emplace_back(i*size + j);
+                break;
+            }
+        }
+    };
+
+    std::vector<int> possibles;
 
     char figureType = board[posY][posX];
     char figureSide = checkSide(posX, posY);
 
-    if (figureType == '0') return 999;
+    if (figureType != 'k' && figureType != 'K'){
+        possibles.emplace_back(-1);
+        return possibles;
+    }
 
-    int biasX, biasY;
+    int biasX = 0, biasY = 0;
 
     if (direct == 'r'){
         biasX = 1;
     } else if (direct == 'l'){
         biasX = -1;
     } else{
-        throw "Error. Not correct direct value";
+        throw std::exception();
+    }
+
+    biasY = -1;
+    checkLine(possibles, posY + biasY, posX + biasX, biasX, biasY, board, size , figureSide);
+
+    biasY = 1;
+    checkLine(possibles, posY + biasY, posX + biasX, biasX, biasY, board, size , figureSide);
+
+
+    if (possibles.empty())
+        possibles.emplace_back(-1);
+
+    return possibles;
+}
+
+int Board::checkPawnStep_Ang(uint16_t posX, uint16_t posY, char direct){
+
+    char figureType = board[posY][posX];
+    char figureSide = checkSide(posX, posY);
+
+    if (figureType != 'p' && figureType != 'P') return -1;
+
+    int biasX = 0, biasY = 0;
+
+    if (direct == 'r'){
+        biasX = 1;
+    } else if (direct == 'l'){
+        biasX = -1;
+    } else{
+        throw std::exception();
     }
 
     if (figureSide == 'w'){
@@ -130,18 +166,19 @@ uint16_t Board::checkStep(uint16_t posX, uint16_t posY, char direct){
         if (board[i][j] == '0') {
             return i*size + j;
         } else if (step == 2) {
-            return 999;
+            return -1;
         } else if (figureSide == 'w' && std::islower(board[i][j])){
-            return 999;
+            return -1;
         } else if (figureSide == 'b' && std::isupper(board[i][j])){
-            return 999;
+            return -1;
         }
     }
 
 }
 
 std::pair<uint16_t, uint16_t> Board::convertPos(uint16_t pos){
-    return std::pair<uint16_t, uint16_t>(pos % size, pos / size);
+    std::pair<uint16_t, uint16_t> pair(pos % size, pos / size);
+    return pair;
 }
 
 char Board::checkSide(uint16_t posX, uint16_t posY){
