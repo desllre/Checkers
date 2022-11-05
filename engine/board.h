@@ -1,17 +1,25 @@
 #include "cstdlib"
 #include "string"
 #include "vector"
+#include "list"
 
 #pragma once
 
 // обозначение фигур: 'P' - чёрная пешка, 'p' - белая пешка, 'K' - чёрная дамка,
 // 'k' - белая дамка, отсутствие фигуры - '0'
 
+enum GameType{
+    English,
+    Russian,
+    Giveaway, // поддавки шашки
+    International // международные шашки
+};
+
 class Board{
 private:
 
 public:
-    Board(uint16_t size, bool isWhiteBoard, char GameType);
+    Board(uint16_t size, bool isWhiteBoard, GameType typeOfGame);
     ~Board();
 
     bool isHere(uint16_t posX, uint16_t posY); // проверка на наличие фигуры в данной точке
@@ -24,8 +32,11 @@ public:
 
     char checkSide(uint16_t posX, uint16_t posY); // w - white, b - black
 
+    bool getIsWhiteBoard();
+
+    int endOfGame(); // проверка на конец игры. Возвращает 1 если выиграли белые, -1 - чёрные, 0 - игра ещё не окончена
+
 private:
-    // direct - влево - 'l', вправо - 'r'
 
     // проверка хода в конкретном направлении на 1 шаг вперёд для пешек
     // Возвращает -1 если не возможно походить в заданном направлении или если под указанными координатами не находится фигура
@@ -43,8 +54,19 @@ private:
     std::vector<int> checkKingStep_Rus(uint16_t posX, uint16_t posY);
 
 private:
+
+    struct Figure{
+        Figure() = default;
+        Figure(uint16_t x, uint16_t y): x(x), y(y);
+        uint16_t x = 0;
+        uint16_t y = 0;
+    };
+
+private:
     char** board;
     uint16_t size;
     bool isWhiteBoard; // хранит информацию о том, какой стороне принадлежит борд
-    char GameType; // Тип игры: русские шашки - 'r', поддавки - 'p', английские - 'a', международные - 'm'
+    GameType typeOfGame;
+    std::list<Figure> whiteFigures;
+    std::list<Figure> blackFigures;
 };
