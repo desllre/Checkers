@@ -7,14 +7,9 @@ public:
 
     ~Background() = default;
 
-    Background(const std::string path_background_image) {
-        texture_background.loadFromFile(path_background_image);
-        sprite_background.setTexture(texture_background);
-    }
+    explicit Background(const std::string& path_background_image); //Construction for background
 
-    void drawBackground(sf::RenderWindow& window) {
-        window.draw(sprite_background);
-    }
+    void drawBackground(sf::RenderWindow& window); //Draw background
 
 private:
     sf::Texture texture_background;
@@ -27,51 +22,50 @@ public:
 
     ~Button() = default;
 
-    Button(const sf::Vector2<float> size, const float thickness,
-           const float pos_button_x, const float pos_button_y,
+    Button(sf::Vector2<float> size, float thickness,
+           float pos_button_x, float pos_button_y,
            sf::Color color_outline, sf::Color color_text,
-           const int text_size, const std::string& path_font,
-           const float pos_text_x, const float pos_text_y,
+           int text_size, const std::string& path_font,
+           float pos_text_x, float pos_text_y,
            const std::string& string_music_touch,
            const std::string& string_music_press,
-           const std::string& string_text) {
+           const std::string& string_text); //Construction for buttons
 
-        figure.setFillColor(sf::Color::White);
-        figure.setOutlineColor(color_outline);
-        figure.setOutlineThickness(thickness);
-        figure.setSize(size);
-        figure.setPosition(pos_button_x, pos_button_y);
+    void setColorText(sf::Color color_text); //Setter for change color
 
-        font.loadFromFile(path_font);
+    void setColorFigure(sf::Color color_outline); //Setter for change color
 
-        text.setColor(color_text);
-        text.setStyle(sf::Text::Bold);
-        text.setFont(font);
-        text.setCharacterSize(text_size);
-        text.setPosition(pos_text_x, pos_text_y);
-        text.setString(string_text);
-
-        music_press.openFromFile(string_music_press);
-        music_touch.openFromFile(string_music_touch);
-    }
-
-    void setColorText(sf::Color color_text) { //Setter for change color
-        text.setColor(color_text);
-    }
-
-    void setColorFigure(sf::Color color_outline) { //Setter for change color
-        figure.setOutlineColor(color_outline);
-    }
-
-    void drawButton(sf::RenderWindow& window) {
-        window.draw(figure);
-        window.draw(text);
-    }
+    void drawButton(sf::RenderWindow& window); //Draw buttons
 
 private:
     sf::RectangleShape figure;
     sf::Font font;
     sf::Text text;
+    sf::Music music_touch;
+    sf::Music music_press;
+};
+
+class Arrow { //Class for create arrow
+public:
+    Arrow() = default;
+
+    Arrow(sf::Vector2<float> size, float pos_arrow_left_x, float pos_arrow_left_y, float pos_arrow_right_x,
+          float pos_arrow_right_y, const std::string &path_arrow_right, const std::string &path_arrow_left,
+          const std::string &string_music_touch, const std::string &string_music_press); //Construction for arrow
+
+    ~Arrow() = default;
+
+    void drawArrow(sf::RenderWindow &window); //Draw arrow
+
+    void changeArrowLeftColor(const std::string &path_arrow); //Change left arrow's color
+
+    void changeArrowRightColor(const std::string &path_arrow_right); //Change right arrow's color
+
+private:
+    sf::Texture texture_arrow_left;
+    sf::Texture texture_arrow_right;
+    sf::Sprite sprite_arrow_left;
+    sf::Sprite sprite_arrow_right;
     sf::Music music_touch;
     sf::Music music_press;
 };

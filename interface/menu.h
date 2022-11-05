@@ -1,8 +1,6 @@
 #include "header.h"
 #include "elements.h"
 
-/**************Main class to create menu**************/
-
 /*Settings for background*/
 #define PATH_IMAGE "../textures/backgrounds/menu_bg.png"
 
@@ -28,6 +26,7 @@ const sf::Vector2<float> SIZE_BUTTON(SIZE_X, SIZE_Y);
 /*Fixed value for buttons and texts*/
 #define FIX_SETTINGS_TEXT_X 100.f
 
+/**************Main class to create menu**************/
 class Menu {
 public:
     Menu() :
@@ -45,63 +44,21 @@ public:
                     TEXT_SIZE, PATH_FONTS, POS_TEXT_X,
                     (POS_TEXT_Y + 2 * CONST_DISPLACEMENT), PATH_TOUCH_BUTTON, PATH_PRESS_BUTTON, "EXIT") {} //Construction for menu
 
-
     ~Menu() = default;
 
-    void drawMenu(sf::RenderWindow& window) { //Function for draw and activate buttons
-        sf::Vector2<int> mouse_position = sf::Mouse::getPosition(window);
-        bool is_mouse_on_play_button = (mouse_position.x >= POS_X && mouse_position.y >= POS_Y) &&
-                (mouse_position.x <= POS_X + SIZE_X && mouse_position.y <= POS_Y + SIZE_Y);
-        bool is_mouse_on_settings_button = (mouse_position.x >= POS_X && mouse_position.y >= (POS_Y + CONST_DISPLACEMENT)) &&
-                                           (mouse_position.x <= POS_X + SIZE_X) &&
-                                           (mouse_position.y <= (POS_Y + SIZE_Y + CONST_DISPLACEMENT));
-        bool is_mouse_on_exit_button = (mouse_position.x >= POS_X && mouse_position.y >= (POS_Y + 2 * CONST_DISPLACEMENT)) &&
-                                       (mouse_position.x <= POS_X + SIZE_X) &&
-                                       (mouse_position.y <= (POS_Y + SIZE_Y + 2 * CONST_DISPLACEMENT));
-        bool is_press_mouse = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+    void changeCursor(sf::RenderWindow &window); //Change cursor
 
+    void activateButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_button, bool is_mouse_on_exit_button, sf::RenderWindow &window); //Activate buttons
 
-        if (is_mouse_on_play_button) { //Activate play button
-            play_button.setColorFigure(sf::Color::Red);
-            play_button.setColorText(sf::Color::Red);
-        }
-        else {
-            play_button.setColorFigure(sf::Color::Black);
-            play_button.setColorText(sf::Color::Black);
-        }
+    void pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_button, bool is_mouse_on_exit_button, bool is_press_mouse, sf::RenderWindow &window); //Press on button
 
-        if (is_mouse_on_settings_button) { //Activate settings button
-            settings_button.setColorFigure(sf::Color::Red);
-            settings_button.setColorText(sf::Color::Red);
-        }
-        else {
-            settings_button.setColorFigure(sf::Color::Black);
-            settings_button.setColorText(sf::Color::Black);
-        }
-
-        if (is_mouse_on_exit_button) { //Activate exit button
-            exit_button.setColorFigure(sf::Color::Red);
-            exit_button.setColorText(sf::Color::Red);
-        }
-        else {
-            exit_button.setColorFigure(sf::Color::Black);
-            exit_button.setColorText(sf::Color::Black);
-        }
-
-        if (is_mouse_on_exit_button && is_press_mouse) {
-            window.close();
-        }
-
-        background.drawBackground(window);
-        play_button.drawButton(window);
-        settings_button.drawButton(window);
-        exit_button.drawButton(window);
-    }
+    void drawMenu(sf::RenderWindow &window); //Function for draw
 
 private:
     Background background;
     Button play_button;
     Button settings_button;
     Button exit_button;
+    sf::Cursor cursor;
 };
 

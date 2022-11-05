@@ -1,4 +1,3 @@
-#include "header.h"
 #include "menu.h"
 
 /**********Main function to create game**********/
@@ -20,3 +19,4 @@ void game() {
         window.display();
     }
 }
+
