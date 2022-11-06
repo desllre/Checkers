@@ -1,6 +1,5 @@
-#include "header.h"
-
 #pragma once
+#include "header.h"
 
 /********All elements which using in game********/
 class Background { //Class for create background
@@ -58,23 +57,19 @@ class Arrow { //Class for create arrow
 public:
     Arrow() = default;
 
-    Arrow(sf::Vector2<float> size, float pos_arrow_left_x, float pos_arrow_left_y, float pos_arrow_right_x,
-          float pos_arrow_right_y, const std::string &path_arrow_right, const std::string &path_arrow_left,
-          const std::string &string_music_touch, const std::string &string_music_press); //Construction for arrow
+    Arrow(sf::Vector2<float> size_arrow, float pos_arrow_x, float pos_arrow_y,
+          const std::string &path_arrow, const std::string &string_music_touch,
+          const std::string &string_music_press); //Construction for arrow
 
     ~Arrow() = default;
 
     void drawArrow(sf::RenderWindow &window); //Draw arrow
 
-    void changeArrowLeftColor(const std::string &path_arrow); //Change left arrow's color
-
-    void changeArrowRightColor(const std::string &path_arrow_right); //Change right arrow's color
+    void setColor(const std::string &path_arrow_left); //Change left arrow's color
 
 private:
-    sf::Texture texture_arrow_left;
-    sf::Texture texture_arrow_right;
-    sf::Sprite sprite_arrow_left;
-    sf::Sprite sprite_arrow_right;
+    sf::Texture texture_arrow;
+    sf::Sprite sprite_arrow;
     sf::Music music_touch;
     sf::Music music_press;
 };

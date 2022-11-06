@@ -1,7 +1,7 @@
 #include "exitWindow.h"
+#include "config.h"
 
-
-void ExitWindow(sf::RenderWindow& window){
+void exit_window(sf::RenderWindow& window) {
     window.setActive();
     sf::RenderWindow exitWindow(sf::VideoMode(695, 434), "Checkers", sf::Style::None);
     sf::Vector2i menuWindowPosition = window.getPosition();
@@ -37,6 +37,7 @@ void ExitWindow(sf::RenderWindow& window){
         }
 
         if (window.pollEvent(event)){}
+
 
         exitWindow.clear();
         exit.Draw(exitWindow);
@@ -94,8 +95,8 @@ Exit::Exit(): background(BACKGROUND_IMAGE),
               cancel(SIZE_EXIT_BUTTON, THICKNESS, POS_CANCEL_X,
                      POS_Y , COLOR_OUTLINE, COLOR_TEXT,
                      TEXT_SIZE, PATH_FONTS, POS_CANCEL_TEXT_X,
-                     POS_TEXT_Y , "CANCEL")
-{}
+                     POS_TEXT_Y , "CANCEL"){}
+
 
 void Exit::Draw(sf::RenderWindow& window){
     background.drawBackground(window);

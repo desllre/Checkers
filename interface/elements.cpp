@@ -73,36 +73,27 @@ void Button::drawButton(sf::RenderWindow &window) {
     window.draw(text);
 }
 
-Arrow::Arrow(sf::Vector2<float> size, float pos_arrow_left_x, float pos_arrow_left_y,
-             float pos_arrow_right_x, float pos_arrow_right_y, const std::string &path_arrow_right,
-             const std::string &path_arrow_left, const std::string &string_music_touch,
+Arrow::Arrow(sf::Vector2<float> size, float pos_arrow_x, float pos_arrow_y,
+             const std::string &path_arrow, const std::string &string_music_touch,
              const std::string &string_music_press) {
-    texture_arrow_right.loadFromFile(path_arrow_right);
-    texture_arrow_left.loadFromFile(path_arrow_left);
-    sprite_arrow_right.setTexture(texture_arrow_right);
-    sprite_arrow_left.setTexture(texture_arrow_left);
+    texture_arrow.loadFromFile(path_arrow);
+    sprite_arrow.setTexture(texture_arrow);
 
-    sprite_arrow_right.setPosition(pos_arrow_right_x, pos_arrow_right_y);
-    sprite_arrow_right.setScale(size);
+    sprite_arrow.setPosition(pos_arrow_x, pos_arrow_y);
+    sprite_arrow.setScale(size);
 
-    sprite_arrow_right.setPosition(pos_arrow_left_x, pos_arrow_left_y);
-    sprite_arrow_right.setScale(size);
+    sprite_arrow.setPosition(pos_arrow_x, pos_arrow_y);
+    sprite_arrow.setScale(size);
 
     music_press.openFromFile(string_music_press);
     music_touch.openFromFile(string_music_touch);
 }
 
-void Arrow::changeArrowLeftColor(const std::string &path_arrow_left) {
-    texture_arrow_left.loadFromFile(path_arrow_left);
-    sprite_arrow_left.setTexture(texture_arrow_left);
-}
-
-void Arrow::changeArrowRightColor(const std::string &path_arrow_right) {
-    texture_arrow_right.loadFromFile(path_arrow_right);
-    sprite_arrow_right.setTexture(texture_arrow_right);
+void Arrow::setColor(const std::string &path_arrow) {
+    texture_arrow.loadFromFile(path_arrow);
+    sprite_arrow.setTexture(texture_arrow);
 }
 
 void Arrow::drawArrow(sf::RenderWindow &window) {
-    window.draw(sprite_arrow_right);
-    window.draw(sprite_arrow_left);
+    window.draw(sprite_arrow);
 }
