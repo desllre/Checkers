@@ -2,7 +2,7 @@
 
 
 void ExitWindow(sf::RenderWindow& window){
-   window.setActive();
+    window.setActive();
     sf::RenderWindow exitWindow(sf::VideoMode(695, 434), "Checkers", sf::Style::None);
     sf::Vector2i menuWindowPosition = window.getPosition();
     menuWindowPosition.x += 372;
@@ -11,35 +11,91 @@ void ExitWindow(sf::RenderWindow& window){
     exitWindow.setPosition(menuWindowPosition);
     Exit exit;
 
+
+    exitWindow.hasFocus();
     while (exitWindow.isOpen()) {
         sf::Event event;
 
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-                window.close();
+        exit.ActivateButton(sf::Mouse::getPosition(exitWindow));
+
+        while (exitWindow.pollEvent(event)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                exitWindow.close();
             }
         }
+
+        switch (exit.PressButton(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
+            case -1:{
+                window.close();
+                exitWindow.close();
+                break;
+            }
+            case 1:{
+                exitWindow.close();
+                break;
+            }
+        }
+
+        if (window.pollEvent(event)){}
 
         exitWindow.clear();
         exit.Draw(exitWindow);
         exitWindow.display();
     }
 
-
-  window.setActive(false);
+    window.setActive(false);
 }
 
 
+void Exit::ActivateButton(const sf::Vector2i& mousePosition){
+
+    if (mousePosition.x >= POS_ACCEPT_X && mousePosition.x <= POS_ACCEPT_X + SIZE_X &&
+        mousePosition.y >= POS_Y && mousePosition.y <= POS_Y + SIZE_Y)
+        is_mouse_on_accept_button = true;
+    else
+        is_mouse_on_accept_button = false;
+
+    if (mousePosition.x >= POS_CANCEL_X && mousePosition.x <= POS_CANCEL_X + SIZE_X &&
+        mousePosition.y >= POS_Y && mousePosition.y <= POS_Y + SIZE_Y)
+        is_mouse_on_cancel_button = true;
+    else
+        is_mouse_on_cancel_button = false;
+
+    if(is_mouse_on_accept_button){
+        accept.setColorFigure(sf::Color::Red);
+    } else {
+        accept.setColorFigure(sf::Color::Black);
+    }
+
+    if(is_mouse_on_cancel_button){
+        cancel.setColorFigure(sf::Color::Red);
+    } else {
+        cancel.setColorFigure(sf::Color::Black);
+    }
+}
+
+int Exit::PressButton(bool mouse_is_pressed) const{
+    if (mouse_is_pressed){
+        if (is_mouse_on_accept_button)
+            return -1;
+
+        if (is_mouse_on_cancel_button)
+            return 1;
+    }
+
+    return 0;
+}
+
 Exit::Exit(): background(BACKGROUND_IMAGE),
               accept(SIZE_EXIT_BUTTON, THICKNESS, POS_ACCEPT_X,
-                              POS_Y, COLOR_OUTLINE, COLOR_TEXT,
-                              TEXT_SIZE, PATH_FONTS, POS_ACCEPT_TEXT_X,
-                              POS_TEXT_Y, "ACCEPT"),
+                     POS_Y, COLOR_OUTLINE, COLOR_TEXT,
+                     TEXT_SIZE, PATH_FONTS, POS_ACCEPT_TEXT_X,
+                     POS_TEXT_Y, "ACCEPT"),
               cancel(SIZE_EXIT_BUTTON, THICKNESS, POS_CANCEL_X,
-                          POS_Y , COLOR_OUTLINE, COLOR_TEXT,
-                          TEXT_SIZE, PATH_FONTS, POS_CANCEL_TEXT_X,
-                          POS_TEXT_Y , "CANCEL")
-                          {}
+                     POS_Y , COLOR_OUTLINE, COLOR_TEXT,
+                     TEXT_SIZE, PATH_FONTS, POS_CANCEL_TEXT_X,
+                     POS_TEXT_Y , "CANCEL")
+{}
 
 void Exit::Draw(sf::RenderWindow& window){
     background.drawBackground(window);
