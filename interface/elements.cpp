@@ -36,6 +36,30 @@ Button::Button(sf::Vector2<float> size, float thickness,
     music_touch.openFromFile(string_music_touch);
 }
 
+
+Button::Button(sf::Vector2<float> size, float thickness,
+               float pos_button_x, float pos_button_y,
+               sf::Color color_outline, sf::Color color_text,
+               int text_size, const std::string& path_font,
+               float pos_text_x, float pos_text_y,
+               const std::string& string_text) {
+    figure.setFillColor(sf::Color::White);
+    figure.setOutlineColor(color_outline);
+    figure.setOutlineThickness(thickness);
+    figure.setSize(size);
+    figure.setPosition(pos_button_x, pos_button_y);
+
+    font.loadFromFile(path_font);
+
+    text.setColor(color_text);
+    text.setStyle(sf::Text::Bold);
+    text.setFont(font);
+    text.setCharacterSize(text_size);
+    text.setPosition(pos_text_x, pos_text_y);
+    text.setString(string_text);
+}
+
+
 void Button::setColorText(const sf::Color color_text) {
     text.setColor(color_text);
 }

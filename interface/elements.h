@@ -31,6 +31,13 @@ public:
            const std::string& string_music_press,
            const std::string& string_text); //Construction for buttons
 
+    Button(sf::Vector2<float> size, float thickness,
+           float pos_button_x, float pos_button_y,
+           sf::Color color_outline, sf::Color color_text,
+           int text_size, const std::string& path_font,
+           float pos_text_x, float pos_text_y,
+           const std::string& string_text); //Construction for buttons
+
     void setColorText(sf::Color color_text); //Setter for change color
 
     void setColorFigure(sf::Color color_outline); //Setter for change color

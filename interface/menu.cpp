@@ -70,4 +70,20 @@ void Menu::pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_b
         window.setActive();
     }
 
+   /* if (is_mouse_on_settings_button && is_press_mouse) {
+        window.setActive(false);
+        sf::Thread settingsThread(config_game, std::ref(window));
+        settingsThread.launch();
+        settingsThread.wait();
+        window.setActive();
+    }*/
+
+    if (is_mouse_on_exit_button && is_press_mouse) {
+        window.setActive(false);
+        sf::Thread exitThread(config_game, std::ref(window));
+        exitThread.launch();
+        exitThread.wait();
+        window.setActive();
+    }
+
 }
