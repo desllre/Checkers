@@ -46,9 +46,18 @@ void ExitWindow(sf::RenderWindow& window){
     window.setActive(false);
 }
 
+void Exit::ChangeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor) {
+    cursor.loadFromSystem(type_cursor);
+    window.setMouseCursor(cursor);
+}
 
 void Exit::ActivateButton(const sf::Vector2i& mousePosition){
 
+    if (is_mouse_on_accept_button || is_mouse_on_cancel_button){
+        is_mouse_on_button = true;
+    } else {
+        is_mouse_on_cancel_button = false;
+    }
     if (mousePosition.x >= POS_ACCEPT_X && mousePosition.x <= POS_ACCEPT_X + SIZE_X &&
         mousePosition.y >= POS_Y && mousePosition.y <= POS_Y + SIZE_Y)
         is_mouse_on_accept_button = true;
@@ -98,6 +107,14 @@ Exit::Exit(): background(BACKGROUND_IMAGE),
 {}
 
 void Exit::Draw(sf::RenderWindow& window){
+    if ((is_mouse_on_accept_button || is_mouse_on_cancel_button) && !is_mouse_on_button){
+        is_mouse_on_button = true;
+        ChangeCursor(window, sf::Cursor::Hand);
+    } else if (!(is_mouse_on_accept_button || is_mouse_on_cancel_button) && is_mouse_on_button){
+        is_mouse_on_button = false;
+        ChangeCursor(window, sf::Cursor::Arrow);
+    }
+
     background.drawBackground(window);
     accept.drawButton(window);
     cancel.drawButton(window);

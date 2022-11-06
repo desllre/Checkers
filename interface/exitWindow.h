@@ -34,17 +34,25 @@ public:
     Exit();
     ~Exit() = default;
 
-
     void ActivateButton(const sf::Vector2i& mousePosition); // проверка наведения на кнопки
 
     int PressButton(bool mouse_is_pressed) const; // функция проверки нажатия на кнопку. Возвращает -1 - если нажата клавиша accept, 1 - если close, 0 - ничего
 
     void Draw(sf::RenderWindow& window);
+
+private:
+
+    void ChangeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor);
+
 private:
     Background background;
     Button accept;
     Button cancel;
+    sf::Cursor cursor;
 
     bool is_mouse_on_accept_button = false;
     bool is_mouse_on_cancel_button = false;
+
+    bool is_mouse_on_button = false;
 };
+
