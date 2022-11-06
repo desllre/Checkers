@@ -82,5 +82,4 @@ void Menu::pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_b
         exitThread.wait();
         window.setActive();
     }
-
 }

@@ -13,6 +13,12 @@ void game() {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
+            sf::
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Cursor cursor;
+                cursor.loadFromSystem(sf::Cursor::Hand);
+                window.setMouseCursor(cursor);
+            }
         }
 
         window.clear();

@@ -41,8 +41,6 @@ public:
 
     ~ConfigGame() = default;
 
-    void changeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor); //Change cursor
-
     void activateButtonArrows(bool is_mouse_on_back_button, sf::RenderWindow &window); //Activate buttons and arrows
 
     void pressButtonArrows(bool is_mouse_on_back_button, bool is_press_mouse, sf::RenderWindow &window); //Press on button and on arrows
@@ -51,9 +49,11 @@ public:
 
     bool getValueEndFunction(); //Get value end of function
 
+    bool getValueActivateButton(); //Get value end of function
+
 private:
-    bool end_function = false;
     Background background;
     Button back_button;
-    sf::Cursor cursor;
+    bool end_function = false;
+    bool is_mouse_on_button = false;
 };
