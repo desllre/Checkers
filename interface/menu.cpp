@@ -1,6 +1,5 @@
 #include "menu.h"
-#include "config.h"
-#include "exitWindow.h"
+
 
 void Menu::changeCursor(sf::RenderWindow &window) {
     cursor.loadFromSystem(sf::Cursor::Help);

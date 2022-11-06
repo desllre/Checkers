@@ -1,5 +1,7 @@
 #include "header.h"
 #include "elements.h"
+#include "config.h"
+#include "exitWindow.h"
 
 /*Settings for background*/
 #define PATH_IMAGE "../textures/backgrounds/menu_bg.png"
