@@ -2,11 +2,16 @@
 
 
 void ExitWindow(sf::RenderWindow& window){
-    window.setActive();
-    sf::RenderWindow exitWindow(sf::VideoMode(1440, 900), "Checkers", sf::Style::Close);
+   window.setActive();
+    sf::RenderWindow exitWindow(sf::VideoMode(695, 434), "Checkers", sf::Style::None);
+    sf::Vector2i menuWindowPosition = window.getPosition();
+    menuWindowPosition.x += 372;
+    menuWindowPosition.y += 233;
+
+    exitWindow.setPosition(menuWindowPosition);
     Exit exit;
 
-    while (window.isOpen()) {
+    while (exitWindow.isOpen()) {
         sf::Event event;
 
         while (window.pollEvent(event)) {
@@ -15,13 +20,13 @@ void ExitWindow(sf::RenderWindow& window){
             }
         }
 
-        window.clear();
-        exit.Draw(window);
-        window.display();
+        exitWindow.clear();
+        exit.Draw(exitWindow);
+        exitWindow.display();
     }
 
 
-    window.setActive(false);
+  window.setActive(false);
 }
 
 

@@ -3,7 +3,7 @@
 #include "SFML/Graphics.hpp"
 
 // BACKGROUND VARIABLESS
-#define BACKGROUND_IMAGE "../textures/menu_exit.png"
+#define BACKGROUND_IMAGE "../textures/backgrounds/menu_exit.png"
 
 // BUTTON VARIABLESS
 #define COLOR_OUTLINE sf::Color::Black
@@ -30,15 +30,12 @@ class Exit {
 private:
 
 public:
+    Exit();
+    ~Exit() = default;
 
-Exit();
-~Exit() = default;
-
-void Draw(sf::RenderWindow&);
-
-
+    void Draw(sf::RenderWindow&);
 private:
-Background background;
-Button accept;
-Button cancel;
+    Background background;
+    Button accept;
+    Button cancel;
 };

@@ -11,7 +11,7 @@
 #define SIZE_X 600.f
 #define SIZE_Y 100.f
 #define THICKNESS 7.f
-#define POS_X 400.f
+#define POS_X 420.f
 #define POS_Y 325.f
 const sf::Vector2<float> SIZE_MENU_BUTTON(SIZE_X, SIZE_Y);
 
@@ -19,7 +19,7 @@ const sf::Vector2<float> SIZE_MENU_BUTTON(SIZE_X, SIZE_Y);
 #define COLOR_TEXT sf::Color::Black
 #define TEXT_SIZE 48L
 #define PATH_FONTS "../fonts/GOUDYSTO.TTF"
-#define POS_TEXT_X 580.f
+#define POS_TEXT_X 600.f
 #define POS_TEXT_Y 345.f
 #define CONST_DISPLACEMENT 150.f
 
