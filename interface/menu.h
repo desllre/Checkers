@@ -64,5 +64,7 @@ private:
     Button settings_button;
     Button exit_button;
     sf::Cursor cursor;
+
+    bool is_mouse_on_button = false;
 };
 

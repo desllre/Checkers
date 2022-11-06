@@ -8,40 +8,46 @@ void Menu::changeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor) 
 
 void Menu::activateButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_button,
                           bool is_mouse_on_exit_button, sf::RenderWindow &window) {
-    sf::Cursor::Type cursor_hand = sf::Cursor::Hand;
-    sf::Cursor::Type cursor_arrow = sf::Cursor::Arrow;
+
+    if (is_mouse_on_play_button || is_mouse_on_exit_button || is_mouse_on_settings_button){
+        is_mouse_on_button = true;
+    } else {
+        is_mouse_on_button = false;
+    }
+
+
+    if (is_mouse_on_button){
+        changeCursor(window, sf::Cursor::Type::Hand);
+    } else {
+        changeCursor(window, sf::Cursor::Arrow);
+    }
+
 
     if (is_mouse_on_play_button) { //Activate play button
         play_button.setColorFigure(sf::Color::Red);
         play_button.setColorText(sf::Color::Red);
-        changeCursor(window, cursor_hand);
     }
     else {
         play_button.setColorFigure(sf::Color::Black);
         play_button.setColorText(sf::Color::Black);
-        changeCursor(window, cursor_arrow);
     }
 
     if (is_mouse_on_settings_button) { //Activate settings button
         settings_button.setColorFigure(sf::Color::Red);
         settings_button.setColorText(sf::Color::Red);
-        changeCursor(window, cursor_hand);
     }
     else {
         settings_button.setColorFigure(sf::Color::Black);
         settings_button.setColorText(sf::Color::Black);
-        changeCursor(window, cursor_arrow);
     }
 
     if (is_mouse_on_exit_button) { //Activate exit button
         exit_button.setColorFigure(sf::Color::Red);
         exit_button.setColorText(sf::Color::Red);
-        changeCursor(window, cursor_hand);
     }
     else {
         exit_button.setColorFigure(sf::Color::Black);
         exit_button.setColorText(sf::Color::Black);
-        changeCursor(window, cursor_arrow);
     }
 }
 
