@@ -78,7 +78,7 @@ void Menu::pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_b
 
     if (is_mouse_on_exit_button && is_press_mouse) {
         window.setActive(false);
-        sf::Thread exitThread(exit_window, std::ref(window));
+        sf::Thread exitThread(ExitWindow, std::ref(window));
         exitThread.launch();
         exitThread.wait();
         window.setActive();

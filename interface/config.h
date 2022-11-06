@@ -1,4 +1,3 @@
-#pragma once
 #include "header.h"
 #include "elements.h"
 
@@ -28,6 +27,8 @@ const sf::Vector2<float> SIZE_BUTTON(SIZE_X, SIZE_Y);
 
 /*Fixed value for buttons and texts*/
 #define FIX_SETTINGS_TEXT_X 100.f
+
+#pragma once
 
 /**************Main class to create config game**************/
 class ConfigGame {
