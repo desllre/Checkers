@@ -12,9 +12,9 @@ void config_game(sf::RenderWindow &window) {
                 window.close();
             }
         }
-        /*if (config.getValueEndFunction()) {
+        if (config.getValueEndFunction()) {
             return;
-        }*/
+        }
 
         window.clear();
         config.drawConfigGame(window);
