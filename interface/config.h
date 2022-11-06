@@ -1,19 +1,22 @@
+#pragma once
 #include "header.h"
 #include "elements.h"
+
+/*Music*/
+#define MUSIC_PRESS "../songs/pressbutton.wav"
+#define MUSIC_TOUCH "../songs/pressbutton.wav"
 
 /*Settings for background*/
 #define PATH_MENU_BACKGROUND "../textures/backgrounds/menu_bg.png"
 
 /*Settings for button*/
-#define PATH_PRESS_BUTTON "../songs/pressbutton.wav"
-#define PATH_TOUCH_BUTTON "../songs/pressbutton.wav"
 #define COLOR_OUTLINE sf::Color::Black
 #define SIZE_X 600.f
 #define SIZE_Y 100.f
 #define THICKNESS 7.f
 #define POS_X 400.f
 #define POS_Y 325.f
-const sf::Vector2<float> SIZE_CONFIG_BUTTON(SIZE_X, SIZE_Y);
+const sf::Vector2<float> SIZE_BUTTON(SIZE_X, SIZE_Y);
 
 /*Settings for text*/
 #define COLOR_TEXT sf::Color::Black
@@ -27,36 +30,48 @@ const sf::Vector2<float> SIZE_CONFIG_BUTTON(SIZE_X, SIZE_Y);
 #define FIX_SETTINGS_TEXT_X 100.f
 
 /*Settings for arrows*/
-
-#pragma once
-
-void config_game(sf::RenderWindow &window);
+#define PATH_ARROW_LEFT "../textures/elements/arrow_left.png"
+#define PATH_ARROW_RIGHT "../textures/elements/arrow_right.png"
+#define PATH_ARROW_LEFT_ACTIVATE "../textures/elements/arrow_left_activate.png"
+#define PATH_ARROW_RIGHT_ACTIVATE "../textures/elements/arrow_right_activate.png"
+#define SIZE_ARROW_X 100.f
+#define SIZE_ARROW_Y 100.f
+#define POS_ARROW_LEFT_X 800.f
+#define POS_ARROW_LEFT_Y 345.f
+#define POS_ARROW_RIGHT_X 1200.f
+#define POS_ARROW_RIGHT_Y 345.f
+const sf::Vector2<float> SIZE_ARROW(SIZE_X, SIZE_Y);
 
 /**************Main class to create config game**************/
 class ConfigGame {
 public:
     ConfigGame() :
             background(PATH_MENU_BACKGROUND),
-
-            back_button(SIZE_CONFIG_BUTTON, THICKNESS, POS_X,
-                        (POS_Y + 2 * CONST_DISPLACEMENT), COLOR_OUTLINE, COLOR_TEXT,
+            begin_button(SIZE_BUTTON, THICKNESS, POS_X,
+                         POS_Y, COLOR_OUTLINE, COLOR_TEXT,
+                         TEXT_SIZE, PATH_FONTS, POS_TEXT_X,
+                         POS_TEXT_Y, MUSIC_TOUCH, MUSIC_PRESS, "BEGIN"),
+            back_button(SIZE_BUTTON, THICKNESS, POS_X,
+                        POS_Y, COLOR_OUTLINE, COLOR_TEXT,
                         TEXT_SIZE, PATH_FONTS, POS_TEXT_X,
-                        (POS_TEXT_Y + 2 * CONST_DISPLACEMENT), PATH_TOUCH_BUTTON, PATH_PRESS_BUTTON, "BACK"),
-            arrow_left(),
-            arrow_right() {} //Construction for config game
+                        POS_TEXT_Y, MUSIC_TOUCH, MUSIC_PRESS, "BACK"),
+            arrow_left(SIZE_ARROW, POS_ARROW_LEFT_X, POS_ARROW_LEFT_Y,
+                       PATH_ARROW_LEFT, MUSIC_TOUCH, MUSIC_PRESS),
+            arrow_right(SIZE_ARROW, POS_ARROW_RIGHT_X, POS_ARROW_RIGHT_Y,
+                        PATH_ARROW_RIGHT, MUSIC_TOUCH, MUSIC_PRESS) {} //Construction for config game
+
+    ~ConfigGame() = default;
 
     void changeCursor(sf::RenderWindow &window); //Change cursor
 
     void activateButtonArrows(bool is_mouse_on_back_button, bool is_mouse_on_begin_button, bool is_mouse_on_arrow_right,
-                        bool is_mouse_on_arrow_left, sf::RenderWindow &window); //Activate buttons and arrows
+                              bool is_mouse_on_arrow_left, sf::RenderWindow &window); //Activate buttons and arrows
 
     void pressButtonArrows(bool is_mouse_on_back_button, bool is_mouse_on_begin_button, bool is_mouse_on_arrow_left,
                            bool is_mouse_on_arrow_right,bool is_press_mouse_button,
                            bool is_press_mouse, sf::RenderWindow &window); //Press on button and on arrows
 
     void drawConfigGame(sf::RenderWindow& window); //Function for draw
-
-    ~ConfigGame() = default;
 
 private:
     Background background;
@@ -69,4 +84,3 @@ private:
     Arrow arrow_right;
     sf::Cursor cursor;
 };
-

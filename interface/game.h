@@ -1,6 +1,5 @@
-#include "menu.h"
-
 #pragma once
+#include "menu.h"
 
 /**********Main function to create game**********/
 void game() {
