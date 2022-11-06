@@ -1,5 +1,7 @@
 #include "menu.h"
 
+#pragma once
+
 /**********Main function to create game**********/
 void game() {
     sf::RenderWindow window(sf::VideoMode(1440, 900), "Checkers", sf::Style::Close);

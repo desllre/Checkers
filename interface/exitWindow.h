@@ -1,7 +1,6 @@
 #include "elements.h"
 
 #include "SFML/Graphics.hpp"
-#pragma once
 
 // BACKGROUND VARIABLESS
 #define BACKGROUND_IMAGE "../textures/menu_exit.png"
@@ -13,7 +12,7 @@
 #define THICKNESS 7.f
 #define POS_X 400.f
 #define POS_Y 325.f
-const sf::Vector2<float> SIZE_BUTTON(SIZE_X, SIZE_Y);
+const sf::Vector2<float> SIZE_EXIT_BUTTON(SIZE_X, SIZE_Y);
 
 /*Settings for text*/
 #define COLOR_TEXT sf::Color::Black
@@ -23,6 +22,9 @@ const sf::Vector2<float> SIZE_BUTTON(SIZE_X, SIZE_Y);
 #define POS_TEXT_Y 345.f
 #define CONST_DISPLACEMENT 150.f
 
+#pragma once
+
+void ExitWindow(sf::RenderWindow& window);
 
 class Exit {
 private:
@@ -32,7 +34,7 @@ public:
 Exit();
 ~Exit() = default;
 
-void Draw();
+void Draw(sf::RenderWindow&);
 
 
 private:

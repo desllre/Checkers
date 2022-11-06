@@ -1,5 +1,7 @@
 #include "header.h"
 
+#pragma once
+
 /********All elements which using in game********/
 class Background { //Class for create background
 public:

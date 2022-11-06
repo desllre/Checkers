@@ -13,7 +13,7 @@
 #define THICKNESS 7.f
 #define POS_X 400.f
 #define POS_Y 325.f
-const sf::Vector2<float> SIZE_BUTTON(SIZE_X, SIZE_Y);
+const sf::Vector2<float> SIZE_MENU_BUTTON(SIZE_X, SIZE_Y);
 
 /*Settings for text*/
 #define COLOR_TEXT sf::Color::Black
@@ -26,20 +26,22 @@ const sf::Vector2<float> SIZE_BUTTON(SIZE_X, SIZE_Y);
 /*Fixed value for buttons and texts*/
 #define FIX_SETTINGS_TEXT_X 100.f
 
+#pragma once
+
 /**************Main class to create menu**************/
 class Menu {
 public:
     Menu() :
         background(PATH_IMAGE),
-        play_button(SIZE_BUTTON, THICKNESS, POS_X,
+        play_button(SIZE_MENU_BUTTON, THICKNESS, POS_X,
                     POS_Y, COLOR_OUTLINE, COLOR_TEXT,
                     TEXT_SIZE, PATH_FONTS, POS_TEXT_X,
                     POS_TEXT_Y, PATH_TOUCH_BUTTON, PATH_PRESS_BUTTON , "PLAY"),
-        settings_button(SIZE_BUTTON, THICKNESS, POS_X,
+        settings_button(SIZE_MENU_BUTTON, THICKNESS, POS_X,
                         (POS_Y + CONST_DISPLACEMENT), COLOR_OUTLINE, COLOR_TEXT,
                          TEXT_SIZE, PATH_FONTS, POS_TEXT_X - FIX_SETTINGS_TEXT_X,
                         (POS_TEXT_Y + CONST_DISPLACEMENT), PATH_TOUCH_BUTTON, PATH_PRESS_BUTTON, "SETTINGS"),
-        exit_button(SIZE_BUTTON, THICKNESS, POS_X,
+        exit_button(SIZE_MENU_BUTTON, THICKNESS, POS_X,
                     (POS_Y + 2 * CONST_DISPLACEMENT), COLOR_OUTLINE, COLOR_TEXT,
                     TEXT_SIZE, PATH_FONTS, POS_TEXT_X,
                     (POS_TEXT_Y + 2 * CONST_DISPLACEMENT), PATH_TOUCH_BUTTON, PATH_PRESS_BUTTON, "EXIT") {} //Construction for menu

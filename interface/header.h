@@ -5,4 +5,5 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
 
+#pragma once
 #endif

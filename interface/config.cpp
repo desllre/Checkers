@@ -47,7 +47,7 @@ void ConfigGame::drawConfigGame(sf::RenderWindow& window) { //Function for draw 
     bool is_mouse_on_begin_button = (mouse_position.x >= POS_X && mouse_position.y >= (POS_Y + CONST_DISPLACEMENT)) &&
                                        (mouse_position.x <= POS_X + SIZE_X) &&
                                        (mouse_position.y <= (POS_Y + SIZE_Y + CONST_DISPLACEMENT));
-    bool is_mouse_on_arrow_right
+    bool is_mouse_on_arrow_right;
     bool is_press_mouse = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 
 
@@ -67,7 +67,7 @@ void config_game(sf::RenderWindow &window) {
         }
 
         window.clear();
-        config.drawConfigGame();
+        config.drawConfigGame(window);
         window.display();
     }
 

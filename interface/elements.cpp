@@ -1,4 +1,4 @@
-#include "../interface/elements.h"
+#include "elements.h"
 
 Background::Background(const std::string& path_background_image) {
     texture_background.loadFromFile(path_background_image);
