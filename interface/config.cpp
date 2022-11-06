@@ -12,6 +12,9 @@ void config_game(sf::RenderWindow &window) {
                 window.close();
             }
         }
+        /*if (config.getValueEndFunction()) {
+            return;
+        }*/
 
         window.clear();
         config.drawConfigGame(window);
@@ -21,69 +24,47 @@ void config_game(sf::RenderWindow &window) {
     window.setActive(false);
 }
 
-
-void ConfigGame::changeCursor(sf::RenderWindow& window) { //Change cursor
-    cursor.loadFromSystem(sf::Cursor::Help);
+void ConfigGame::changeCursor(sf::RenderWindow& window, sf::Cursor::Type type_cursor) { //Change cursor
+    cursor.loadFromSystem(type_cursor);
     window.setMouseCursor(cursor);
 }
 
-void ConfigGame::activateButtonArrows(bool is_mouse_on_back_button, bool is_mouse_on_begin_button, bool is_mouse_on_arrow_right,
-                                      bool is_mouse_on_arrow_left, sf::RenderWindow &window) { //Activate buttons and arrows
+void ConfigGame::activateButtonArrows(bool is_mouse_on_back_button, sf::RenderWindow &window) { //Activate buttons and arrows
+    sf::Cursor::Type cursor_hand = sf::Cursor::Hand;
+    sf::Cursor::Type cursor_arrow = sf::Cursor::Arrow;
+
     if (is_mouse_on_back_button) { //Activate back button
         back_button.setColorFigure(sf::Color::Red);
         back_button.setColorText(sf::Color::Red);
-        changeCursor(window);
+        changeCursor(window, cursor_hand);
     }
     else {
         back_button.setColorFigure(sf::Color::Black);
         back_button.setColorText(sf::Color::Black);
-    }
-
-    if (is_mouse_on_begin_button) { //Activate begin button
-        begin_button.setColorFigure(sf::Color::Red);
-        begin_button.setColorText(sf::Color::Red);
-        changeCursor(window);
-    }
-    else {
-        begin_button.setColorFigure(sf::Color::Black);
-        begin_button.setColorText(sf::Color::Black);
-    }
-
-    if (is_mouse_on_arrow_left) {
-        arrow_left.setColor(PATH_ARROW_LEFT_ACTIVATE);
-    }
-    else {
-        arrow_left.setColor(PATH_ARROW_LEFT);
-    }
-
-    if (is_mouse_on_arrow_right) {
-        arrow_left.setColor(PATH_ARROW_RIGHT_ACTIVATE);
-    }
-    else {
-        arrow_left.setColor(PATH_ARROW_RIGHT);
+        changeCursor(window, cursor_arrow);
     }
 }
-void ConfigGame::pressButtonArrows(bool is_mouse_on_back_button, bool is_mouse_on_begin_button, bool is_mouse_on_arrow_left,
-                                   bool is_mouse_on_arrow_right,bool is_press_mouse_button,
-                                   bool is_press_mouse, sf::RenderWindow &window) { //Press on button
 
+bool ConfigGame::getValueEndFunction() {
+    return end_function;
+}
 
+void ConfigGame::pressButtonArrows(bool is_mouse_on_back_button, bool is_press_mouse, sf::RenderWindow &window) { //Press on button
+    if (is_mouse_on_back_button && is_press_mouse) { //Activate back button
+        end_function =true;
+    }
 }
 
 void ConfigGame::drawConfigGame(sf::RenderWindow& window) { //Function for draw and activate buttons
     auto mouse_position = sf::Mouse::getPosition(window);
     bool is_mouse_on_back_button = (mouse_position.x >= POS_X && mouse_position.y >= POS_Y) &&
                                    (mouse_position.x <= POS_X + SIZE_X && mouse_position.y <= POS_Y + SIZE_Y);
-    bool is_mouse_on_begin_button = (mouse_position.x >= POS_X && mouse_position.y >= (POS_Y + CONST_DISPLACEMENT)) &&
-                                    (mouse_position.x <= POS_X + SIZE_X) &&
-                                    (mouse_position.y <= (POS_Y + SIZE_Y + CONST_DISPLACEMENT));
-    bool is_mouse_on_arrow_left = (mouse_position.x >= POS_ARROW_LEFT_X && mouse_position.y >= POS_ARROW_LEFT_Y) &&
-                                  (mouse_position.x <= POS_ARROW_LEFT_Y+ SIZE_ARROW_X) &&
-                                  (mouse_position.y <= POS_ARROW_LEFT_Y + SIZE_ARROW_Y);
-    bool is_mouse_on_arrow_right = (mouse_position.x >= POS_ARROW_RIGHT_X && mouse_position.y >= POS_ARROW_RIGHT_Y) &&
-                                   (mouse_position.x <= POS_ARROW_RIGHT_Y+ SIZE_ARROW_X) &&
-                                   (mouse_position.y <= POS_ARROW_RIGHT_Y + SIZE_ARROW_Y);
+
     bool is_press_mouse = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 
-    activateButtonArrows(is_mouse_on_back_button, is_mouse_on_begin_button, is_mouse_on_arrow_right, is_mouse_on_arrow_left, window);
+    activateButtonArrows(is_mouse_on_back_button, window);
+    pressButtonArrows(is_mouse_on_back_button, is_press_mouse, window);
+
+    background.drawBackground(window);
+    back_button.drawButton(window);
 }
