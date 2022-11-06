@@ -9,18 +9,20 @@ void Menu::changeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor) 
 void Menu::activateButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_button,
                           bool is_mouse_on_exit_button, sf::RenderWindow &window) {
 
-    if (is_mouse_on_play_button || is_mouse_on_exit_button || is_mouse_on_settings_button){
+    if ((is_mouse_on_play_button || is_mouse_on_exit_button || is_mouse_on_settings_button) && !is_mouse_on_button){
         is_mouse_on_button = true;
-    } else {
+        changeCursor(window, sf::Cursor::Type::Hand);
+    } else if (!(is_mouse_on_play_button || is_mouse_on_exit_button || is_mouse_on_settings_button) && is_mouse_on_button){
         is_mouse_on_button = false;
+        changeCursor(window, sf::Cursor::Arrow);
     }
 
 
-    if (is_mouse_on_button){
+    /*if (is_mouse_on_button){
         changeCursor(window, sf::Cursor::Type::Hand);
     } else {
         changeCursor(window, sf::Cursor::Arrow);
-    }
+    }*/
 
 
     if (is_mouse_on_play_button) { //Activate play button

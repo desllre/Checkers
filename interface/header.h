@@ -8,4 +8,3 @@
 
 /*Definition functions*/
 void config_game(sf::RenderWindow &window);
-void exit_window(sf::RenderWindow& window);
