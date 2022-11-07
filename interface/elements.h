@@ -45,6 +45,8 @@ public:
 
     void drawButton(sf::RenderWindow& window); //Draw buttons
 
+    void SetText(const std::string&);
+
 private:
     sf::RectangleShape figure;
     sf::Font font;
@@ -57,9 +59,12 @@ class Arrow { //Class for create arrow
 public:
     Arrow() = default;
 
-    Arrow(sf::Vector2<float> size_arrow, float pos_arrow_x, float pos_arrow_y,
+    Arrow(float pos_arrow_x, float pos_arrow_y,
           const std::string &path_arrow, const std::string &string_music_touch,
           const std::string &string_music_press); //Construction for arrow
+
+    Arrow(float pos_arrow_x, float pos_arrow_y,
+          const std::string &path_arrow); //Construction for arrow
 
     ~Arrow() = default;
 

@@ -34,20 +34,7 @@ const sf::Vector2<float> SIZE_MENU_BUTTON(SIZE_X, SIZE_Y);
 /**************Main class to create menu**************/
 class Menu {
 public:
-    Menu() :
-        background(PATH_MENU_BACKGROUND),
-        play_button(SIZE_MENU_BUTTON, THICKNESS, POS_X,
-                    POS_Y, COLOR_OUTLINE, COLOR_TEXT,
-                    TEXT_SIZE, PATH_FONTS, POS_TEXT_X,
-                    POS_TEXT_Y, PATH_TOUCH_BUTTON, PATH_PRESS_BUTTON , "PLAY"),
-        settings_button(SIZE_MENU_BUTTON, THICKNESS, POS_X,
-                        (POS_Y + CONST_DISPLACEMENT), COLOR_OUTLINE, COLOR_TEXT,
-                         TEXT_SIZE, PATH_FONTS, POS_TEXT_X - FIX_SETTINGS_TEXT_X,
-                        (POS_TEXT_Y + CONST_DISPLACEMENT), PATH_TOUCH_BUTTON, PATH_PRESS_BUTTON, "SETTINGS"),
-        exit_button(SIZE_MENU_BUTTON, THICKNESS, POS_X,
-                    (POS_Y + 2 * CONST_DISPLACEMENT), COLOR_OUTLINE, COLOR_TEXT,
-                    TEXT_SIZE, PATH_FONTS, POS_TEXT_X,
-                    (POS_TEXT_Y + 2 * CONST_DISPLACEMENT), PATH_TOUCH_BUTTON, PATH_PRESS_BUTTON, "EXIT") {} //Construction for menu
+    Menu();//Construction for menu
 
     ~Menu() = default;
 
@@ -67,5 +54,7 @@ private:
     sf::Cursor cursor;
 
     bool is_mouse_on_button = false;
+
+    sf::Clock press_delay_timer; // a delay on pressing so that the buttons are not pressed again when leaving the selected item
 };
 

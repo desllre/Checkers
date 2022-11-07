@@ -73,17 +73,21 @@ void Button::drawButton(sf::RenderWindow &window) {
     window.draw(text);
 }
 
-Arrow::Arrow(sf::Vector2<float> size, float pos_arrow_x, float pos_arrow_y,
-             const std::string &path_arrow, const std::string &string_music_touch,
-             const std::string &string_music_press) {
+void Button::SetText(const std::string& str){
+    text.setString(str);
+}
+
+Arrow::Arrow(float pos_arrow_x, float pos_arrow_y,
+             const std::string &path_arrow){
     texture_arrow.loadFromFile(path_arrow);
     sprite_arrow.setTexture(texture_arrow);
 
     sprite_arrow.setPosition(pos_arrow_x, pos_arrow_y);
-    sprite_arrow.setScale(size);
+}
 
-    sprite_arrow.setPosition(pos_arrow_x, pos_arrow_y);
-    sprite_arrow.setScale(size);
+Arrow::Arrow(float pos_arrow_x, float pos_arrow_y,
+             const std::string &path_arrow, const std::string &string_music_touch,
+             const std::string &string_music_press): Arrow(pos_arrow_x, pos_arrow_y, path_arrow) {
 
     music_press.openFromFile(string_music_press);
     music_touch.openFromFile(string_music_touch);

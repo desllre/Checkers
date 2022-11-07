@@ -1,5 +1,19 @@
 #include "menu.h"
 
+Menu::Menu():
+        background(PATH_MENU_BACKGROUND),
+        play_button(SIZE_MENU_BUTTON, THICKNESS, POS_X,
+                    POS_Y, COLOR_OUTLINE, COLOR_TEXT,
+                    TEXT_SIZE, PATH_FONTS, POS_TEXT_X,
+                    POS_TEXT_Y, PATH_TOUCH_BUTTON, PATH_PRESS_BUTTON , "PLAY"),
+        settings_button(SIZE_MENU_BUTTON, THICKNESS, POS_X,
+                        (POS_Y + CONST_DISPLACEMENT), COLOR_OUTLINE, COLOR_TEXT,
+                        TEXT_SIZE, PATH_FONTS, POS_TEXT_X - FIX_SETTINGS_TEXT_X,
+                        (POS_TEXT_Y + CONST_DISPLACEMENT), PATH_TOUCH_BUTTON, PATH_PRESS_BUTTON, "SETTINGS"),
+        exit_button(SIZE_MENU_BUTTON, THICKNESS, POS_X,
+                    (POS_Y + 2 * CONST_DISPLACEMENT), COLOR_OUTLINE, COLOR_TEXT,
+                    TEXT_SIZE, PATH_FONTS, POS_TEXT_X,
+                    (POS_TEXT_Y + 2 * CONST_DISPLACEMENT), PATH_TOUCH_BUTTON, PATH_PRESS_BUTTON, "EXIT") {}
 
 void Menu::changeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor) {
     cursor.loadFromSystem(type_cursor);
@@ -68,7 +82,7 @@ void Menu::drawMenu(sf::RenderWindow &window) { //Function for draw and activate
 }
 
 void Menu::pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_button, bool is_mouse_on_exit_button, bool is_press_mouse, sf::RenderWindow &window) {
-    if (is_press_mouse){
+    if (is_press_mouse && press_delay_timer.getElapsedTime() >= sf::seconds(0.1)){
         if (is_mouse_on_play_button) {
 
             changeCursor(window, sf::Cursor::Arrow);
@@ -112,6 +126,7 @@ void Menu::pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_b
             exitThread.wait();
             window.setActive();
         }
+        press_delay_timer.restart();
     }
 
 }
