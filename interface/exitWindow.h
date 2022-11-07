@@ -13,7 +13,7 @@
 #define POS_ACCEPT_X 20
 #define POS_CANCEL_X 385
 #define POS_Y 280
-const sf::Vector2<float> SIZE_EXIT_BUTTON(SIZE_X, SIZE_Y);
+const sf::Vector2<float> SIZE_EXIT_BUTTONS(SIZE_X, SIZE_Y);
 
 /*Settings for text*/
 #define COLOR_TEXT sf::Color::Black

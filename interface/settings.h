@@ -5,25 +5,44 @@
 #include "fstream"
 
 // BACKGROUND VARIABLESS
-#define BACKGROUND_IMAGE "../textures/backgrounds/menu_exit.png"
+#define BACKGROUND_IMAGE "../textures/backgrounds/settings_bg.png"
 
 // BUTTON VARIABLESS
 #define COLOR_OUTLINE sf::Color::Black
-#define SIZE_X 290
-#define SIZE_Y 80
-#define THICKNESS 3
-#define POS_ACCEPT_X 20
-#define POS_CANCEL_X 385
-#define POS_Y 280
-const sf::Vector2<float> SIZE_SETTINGS_BUTTON(SIZE_X, SIZE_Y);
+#define SIZE_SETTINGS_BUTTON_X 450
+#define SIZE_SETTINGS_BUTTON_Y 90
+
+#define SIZE_CHANGE_NAME_X 500
+#define SIZE_CHANGE_NAME_Y 90
+
+#define THICKNESS 5
+
+#define POS_SAVE_X 150
+#define POS_BACK_X 790
+#define POS_CHANGE_NAME_X 200
+
+#define POS_SAVE_Y 720
+#define POS_BACK_Y 720
+#define POS_CHANGE_NAME_Y 300
+
+const sf::Vector2<float> SIZE_CHANGE_NAME(SIZE_CHANGE_NAME_X, SIZE_CHANGE_NAME_Y);
+const sf::Vector2<float> SIZE_SETTINGS_BUTTONS(SIZE_SETTINGS_BUTTON_X, SIZE_SETTINGS_BUTTON_Y);
 
 /*Settings for text*/
 #define COLOR_TEXT sf::Color::Black
-#define TEXT_SIZE 35L
+
+#define TEXT_CHANGE_NAME_SIZE 35L
+
+#define TEXT_BUTTON_SIZE 40L
 #define PATH_FONTS "../fonts/GOUDYSTO.TTF"
-#define POS_ACCEPT_TEXT_X 38
-#define POS_CANCEL_TEXT_X 410
-#define POS_TEXT_Y 300
+
+#define POS_SAVE_TEXT_X 270
+#define POS_BACK_TEXT_X 910
+#define POS_CHANGE_NAME_TEXT_X 235
+
+#define POS_SAVE_TEXT_Y 740
+#define POS_BACK_TEXT_Y 740
+#define POS_CHANGE_NAME_TEXT_Y 323
 
 #pragma once
 

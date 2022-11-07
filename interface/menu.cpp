@@ -70,6 +70,9 @@ void Menu::drawMenu(sf::RenderWindow &window) { //Function for draw and activate
 void Menu::pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_button, bool is_mouse_on_exit_button, bool is_press_mouse, sf::RenderWindow &window) {
     if (is_press_mouse){
         if (is_mouse_on_play_button) {
+
+            changeCursor(window, sf::Cursor::Arrow);
+
             window.setActive(false);
             sf::Thread configGameThread(config_game, std::ref(window));
             configGameThread.launch();
@@ -79,6 +82,9 @@ void Menu::pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_b
 
         if (is_mouse_on_settings_button) {
             window.setActive(false);
+
+            changeCursor(window, sf::Cursor::Arrow);
+
             sf::Thread configGameThread( SettingsWindow, std::ref(window));
             configGameThread.launch();
             configGameThread.wait();
