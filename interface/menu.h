@@ -2,6 +2,7 @@
 #include "elements.h"
 #include "config.h"
 #include "exitWindow.h"
+#include "settings.h"
 
 /*Settings for background*/
 #define PATH_MENU_BACKGROUND "../textures/backgrounds/menu_bg.png"
@@ -10,23 +11,23 @@
 #define PATH_PRESS_BUTTON "../songs/pressbutton.wav"
 #define PATH_TOUCH_BUTTON "../songs/pressbutton.wav"
 #define COLOR_OUTLINE sf::Color::Black
-#define SIZE_X 600.f
-#define SIZE_Y 100.f
-#define THICKNESS 7.f
-#define POS_X 420.f
-#define POS_Y 325.f
+#define SIZE_X 600
+#define SIZE_Y 100
+#define THICKNESS 7
+#define POS_X 420
+#define POS_Y 325
 const sf::Vector2<float> SIZE_MENU_BUTTON(SIZE_X, SIZE_Y);
 
 /*Settings for text*/
 #define COLOR_TEXT sf::Color::Black
 #define TEXT_SIZE 48L
 #define PATH_FONTS "../fonts/GOUDYSTO.TTF"
-#define POS_TEXT_X 600.f
-#define POS_TEXT_Y 345.f
-#define CONST_DISPLACEMENT 150.f
+#define POS_TEXT_X 600
+#define POS_TEXT_Y 345
+#define CONST_DISPLACEMENT 150
 
 /*Fixed value for buttons and texts*/
-#define FIX_SETTINGS_TEXT_X 100.f
+#define FIX_SETTINGS_TEXT_X 100
 
 #pragma once
 

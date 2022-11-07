@@ -17,14 +17,6 @@ void Menu::activateButton(bool is_mouse_on_play_button, bool is_mouse_on_setting
         changeCursor(window, sf::Cursor::Arrow);
     }
 
-
-    /*if (is_mouse_on_button){
-        changeCursor(window, sf::Cursor::Type::Hand);
-    } else {
-        changeCursor(window, sf::Cursor::Arrow);
-    }*/
-
-
     if (is_mouse_on_play_button) { //Activate play button
         play_button.setColorFigure(sf::Color::Red);
         play_button.setColorText(sf::Color::Red);
@@ -76,20 +68,44 @@ void Menu::drawMenu(sf::RenderWindow &window) { //Function for draw and activate
 }
 
 void Menu::pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_button, bool is_mouse_on_exit_button, bool is_press_mouse, sf::RenderWindow &window) {
-    if (is_mouse_on_play_button && is_press_mouse) {
-        window.setActive(false);
-        sf::Thread configGameThread(config_game, std::ref(window));
-        configGameThread.launch();
-        configGameThread.wait();
-        window.setActive(true);
-    }
+    if (is_press_mouse){
+        if (is_mouse_on_play_button) {
+            window.setActive(false);
+            sf::Thread configGameThread(config_game, std::ref(window));
+            configGameThread.launch();
+            configGameThread.wait();
+            window.setActive(true);
+        }
 
-    if (is_mouse_on_exit_button && is_press_mouse) {
-        window.setActive(false);
-        sf::Thread exitThread(ExitWindow, std::ref(window));
-        exitThread.launch();
-        exitThread.wait();
-        window.setActive();
+        if (is_mouse_on_settings_button) {
+            window.setActive(false);
+            sf::Thread configGameThread( SettingsWindow, std::ref(window));
+            configGameThread.launch();
+            configGameThread.wait();
+            window.setActive(true);
+        }
+
+        if (is_mouse_on_exit_button) {
+
+            exit_button.setColorFigure(sf::Color::Black);
+            exit_button.setColorText(sf::Color::Black);
+
+            window.clear();
+            background.drawBackground(window);
+            play_button.drawButton(window);
+            settings_button.drawButton(window);
+            exit_button.drawButton(window);
+            window.display();
+
+            changeCursor(window, sf::Cursor::Arrow);
+
+            window.setActive(false);
+
+            sf::Thread exitThread(ExitWindow, std::ref(window));
+            exitThread.launch();
+            exitThread.wait();
+            window.setActive();
+        }
     }
 
 }
