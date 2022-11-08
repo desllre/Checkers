@@ -10,76 +10,108 @@
 #define BACKGROUND_IMAGE "../textures/backgrounds/settings_bg.png"
 
 // BUTTON VARIABLESS
-#define LEFT_ARROW_IMAGE "../textures/elements/arrow_left.png"
-#define RIGHT_ARROW_IMAGE "../textures/elements/arrow_right.png"
-
-#define STANDART_STYLE_IMAGE "../textures/elements/standart_style.png"
-#define BLACK_AND_WHITE_STYLE_IMAGE "../textures/elements/black_and_white_style.png"
-
 #define COLOR_OUTLINE sf::Color::Black
 #define SIZE_SETTINGS_BUTTON_X 450
 #define SIZE_SETTINGS_BUTTON_Y 90
 
-#define SIZE_CHANGE_NAME_X 500
-#define SIZE_CHANGE_NAME_Y 90
+const sf::Vector2<float> SIZE_SETTINGS_BUTTONS(SIZE_SETTINGS_BUTTON_X, SIZE_SETTINGS_BUTTON_Y);
 
-#define THICKNESS 5
 
+// PLAYER 1 SETTINGS
+#define SIZE_NAME_FIELD_PLAYER_1_X 430
+#define SIZE_NAME_FIELD_PLAYER_1_Y 90
+
+#define SIZE_ENTER_FIELD_PLAYER_1_X 570
+#define SIZE_ENTER_FIELD_PLAYER_1_Y 90
+
+#define POS_NAME_FIELD_PLAYER_1_X 185
+#define POS_NAME_FIELD_PLAYER_1_Y 230
+
+#define POS_ENTER_FIELD_PLAYER_1_X 665
+#define POS_ENTER_FIELD_PLAYER_1_Y 230
+
+
+#define TEXT_NAME_FIELD_PLAYER_1_SIZE 35L
+#define TEXT_ENTER_FIELD_PLAYER_1_SIZE 28L
+
+
+#define TEXT_POS_NAME_FIELD_PLAYER_1_X 240
+#define TEXT_POS_NAME_FIELD_PLAYER_1_Y 255
+
+#define TEXT_POS_ENTER_FIELD_PLAYER_1_X 700
+#define TEXT_POS_ENTER_FIELD_PLAYER_1_Y 258
+
+const sf::Vector2<float> SIZE_NAME_FIELD_PLAYER_1(SIZE_NAME_FIELD_PLAYER_1_X, SIZE_NAME_FIELD_PLAYER_1_Y);
+const sf::Vector2<float> SIZE_ENTER_FIELD_PLAYER_1(SIZE_ENTER_FIELD_PLAYER_1_X, SIZE_ENTER_FIELD_PLAYER_1_Y);
+
+// PLAYER 2 SETTINGS
+
+#define SIZE_NAME_FIELD_PLAYER_2_X 430
+#define SIZE_NAME_FIELD_PLAYER_2_Y 90
+
+#define SIZE_ENTER_FIELD_PLAYER_2_X 570
+#define SIZE_ENTER_FIELD_PLAYER_2_Y 90
+
+#define POS_NAME_FIELD_PLAYER_2_X 185
+#define POS_NAME_FIELD_PLAYER_2_Y 360
+
+#define POS_ENTER_FIELD_PLAYER_2_X 665
+#define POS_ENTER_FIELD_PLAYER_2_Y 360
+
+
+#define TEXT_NAME_FIELD_PLAYER_2_SIZE 35L
+#define TEXT_ENTER_FIELD_PLAYER_2_SIZE 28L
+
+
+#define TEXT_POS_NAME_FIELD_PLAYER_2_X 240
+#define TEXT_POS_NAME_FIELD_PLAYER_2_Y 385
+
+#define TEXT_POS_ENTER_FIELD_PLAYER_2_X 700
+#define TEXT_POS_ENTER_FIELD_PLAYER_2_Y 388
+
+const sf::Vector2<float> SIZE_NAME_FIELD_PLAYER_2(SIZE_NAME_FIELD_PLAYER_2_X, SIZE_NAME_FIELD_PLAYER_2_Y);
+const sf::Vector2<float> SIZE_ENTER_FIELD_PLAYER_2(SIZE_ENTER_FIELD_PLAYER_2_X, SIZE_ENTER_FIELD_PLAYER_2_Y);
+
+// SAVE BUTTON SETTINGS
 #define POS_SAVE_X 170
-#define POS_BACK_X 790
-
-#define POS_CHANGE_NAME_PLAYER_1_NOTATION_X 185
-#define POS_CHANGE_NAME_PLAYER_2_NOTATION_X 185
-#define POS_CHANGE_NAME_PLAYER_1_X 735
-#define POS_CHANGE_NAME_PLAYER_2_X 735
-
 #define POS_SAVE_Y 720
+
+#define POS_SAVE_TEXT_X 290
+#define POS_SAVE_TEXT_Y 740
+
+// BACK BUTTON SETTINGS
+#define POS_BACK_X 790
 #define POS_BACK_Y 720
 
-#define POS_CHANGE_NAME_PLAYER_1_NOTATION_Y 230
-#define POS_CHANGE_NAME_PLAYER_2_NOTATION_Y 360
-#define POS_CHANGE_NAME_PLAYER_1_Y 230
-#define POS_CHANGE_NAME_PLAYER_2_Y 360
+#define POS_BACK_TEXT_X 910
+#define POS_BACK_TEXT_Y 740
+
+// STYLE IMAGE SETTINGS
+#define STANDART_STYLE_IMAGE "../textures/elements/standart_style.png"
+#define BLACK_AND_WHITE_STYLE_IMAGE "../textures/elements/black_and_white_style.png"
 
 #define POS_STYLE_IMAGE_X 615
 #define POS_STYLE_IMAGE_Y 500
 
-#define POS_LEFT_ARROW_X 495
-#define POS_RIGHT_ARROW_X 795
+// ARROW SETTINGS
+#define LEFT_ARROW_IMAGE "../textures/elements/arrow_left.png"
+#define RIGHT_ARROW_IMAGE "../textures/elements/arrow_right.png"
 
+#define POS_LEFT_ARROW_X 495
 #define POS_LEFT_ARROW_Y 530
+
+#define POS_RIGHT_ARROW_X 795
 #define POS_RIGHT_ARROW_Y 520
 
-const sf::Vector2<float> SIZE_CHANGE_NAME(SIZE_CHANGE_NAME_X, SIZE_CHANGE_NAME_Y);
-const sf::Vector2<float> SIZE_SETTINGS_BUTTONS(SIZE_SETTINGS_BUTTON_X, SIZE_SETTINGS_BUTTON_Y);
+
+#define THICKNESS 5
+
 
 /*Settings for text*/
 #define COLOR_TEXT sf::Color::Black
 
-#define TEXT_CHANGE_NAME_SIZE 28L
-
-#define TEXT_CHANGE_NAME_NOTATION_SIZE 35L
-
 #define TEXT_BUTTON_SIZE 40L
 #define PATH_FONTS "../fonts/GOUDYSTO.TTF"
-
-#define POS_SAVE_TEXT_X 290
-#define POS_BACK_TEXT_X 910
-
-#define POS_CHANGE_NAME_PLAYER_1_TEXT_NOTATION_X 275
-#define POS_CHANGE_NAME_PLAYER_2_TEXT_NOTATION_X 275
-
-#define POS_CHANGE_NAME_PLAYER_1_TEXT_X 745
-#define POS_CHANGE_NAME_PLAYER_2_TEXT_X 745
-
-#define POS_SAVE_TEXT_Y 740
-#define POS_BACK_TEXT_Y 740
-
-#define POS_CHANGE_NAME_PLAYER_1_TEXT_NOTATION_Y 253
-#define POS_CHANGE_NAME_PLAYER_2_TEXT_NOTATION_Y 385
-
-#define POS_CHANGE_NAME_PLAYER_1_TEXT_Y 258
-#define POS_CHANGE_NAME_PLAYER_2_TEXT_Y 388
 
 #pragma once
 
@@ -105,28 +137,47 @@ private:
 private:
 
     struct Game_Styles{
-        Game_Styles(const std::string&, const std::string&, uint32_t x, uint32_t y);
+        Game_Styles(const std::string&, const std::string&, float x, float y);
 
         std::array<sf::Texture, 2> textures;
 
         sf::Sprite sprite;
-        uint32_t x;
-        uint32_t y;
+        float x;
+        float y;
 
         bool isStandartStyle = true;
     };
+
+    struct InputNameField{
+        InputNameField(sf::Vector2<float> nameFieldSize, sf::Vector2<float> enterFieldSize,
+                       float nameField_posX, float nameField_posY,
+                       float enterField_posX, float enterField_posY,
+                       int nameField_textSize, int enterField_textSize,
+                       float nameField_text_posX, float nameField_text_posY,
+                       float enterField_text_posX, float enterField_text_posY,
+                       const std::string& path_font,
+                       const std::string& nameFieldString, const std::string& enterFieldString);
+
+        void Draw(sf::RenderWindow& window) const;
+
+        sf::RectangleShape nameField;
+        sf::RectangleShape enterField;
+
+        sf::Font font;
+
+        sf::Text nameFieldText;
+        sf::Text enterFieldText;
+
+    };
+
+    InputNameField player1Field;
+    InputNameField player2Field;
 
     Game_Styles game_styles;
 
     Background background;
     Button save;
     Button back;
-
-    Button changeNamePlayer_1;
-    Button changeNamePlayer_2;
-
-    Button changeNamePlayer_1_Text_Button;
-    Button changeNamePlayer_2_Text_Button;
 
     std::string player_1_Name = "";
     std::string player_2_Name = "";
