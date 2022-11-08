@@ -82,7 +82,7 @@ void Menu::drawMenu(sf::RenderWindow &window) { //Function for draw and activate
 }
 
 void Menu::pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_button, bool is_mouse_on_exit_button, bool is_press_mouse, sf::RenderWindow &window) {
-    if (is_press_mouse && press_delay_timer.getElapsedTime() >= sf::seconds(0.1)){
+    if (is_press_mouse && press_delay_timer.getElapsedTime() >= sf::seconds(0.2)){
         if (is_mouse_on_play_button) {
 
             changeCursor(window, sf::Cursor::Arrow);

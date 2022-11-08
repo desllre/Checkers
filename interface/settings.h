@@ -124,7 +124,7 @@ public:
     Settings();
     ~Settings() = default;
 
-    void ActivateButton(const sf::Vector2i& mousePosition); // проверка наведения на кнопки
+    void ActivateButton(const sf::Vector2i& mousePosition, sf::RenderWindow& window); // проверка наведения на кнопки
 
     int PressButton(bool mouse_is_pressed) const; // функция проверки нажатия на кнопку. Возвращает -1 - если нажата клавиша accept, 1 - если close, 0 - ничего
 
@@ -187,9 +187,15 @@ private:
 
     sf::Cursor cursor;
 
-    bool is_mouse_on_accept_button = false;
-    bool is_mouse_on_cancel_button = false;
-
+    bool is_mouse_on_save_button = false;
+    bool is_mouse_on_back_button = false;
     bool is_mouse_on_button = false;
-};
 
+    bool is_mouse_on_enter_player_1_field = false;
+    bool is_mouse_on_enter_player_2_field = false;
+    bool is_mouse_on_enter_field = false;
+
+    bool is_mouse_on_left_arrow = false;
+    bool is_mouse_on_right_arrow = false;
+    bool is_mouse_on_arrow = false;
+};

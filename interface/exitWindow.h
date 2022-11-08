@@ -34,7 +34,7 @@ public:
     Exit();
     ~Exit() = default;
 
-    void ActivateButton(const sf::Vector2i& mousePosition); // проверка наведения на кнопки
+    void ActivateButton(const sf::Vector2i& mousePosition, sf::RenderWindow& window); // проверка наведения на кнопки
 
     int PressButton(bool mouse_is_pressed) const; // функция проверки нажатия на кнопку. Возвращает -1 - если нажата клавиша accept, 1 - если close, 0 - ничего
 

@@ -8,6 +8,8 @@ void SettingsWindow(sf::RenderWindow& window){
     while (window.isOpen()) {
         sf::Event event;
 
+        settings.ActivateButton(sf::Mouse::getPosition(window), window);
+
         while (window.pollEvent(event)) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 window.setActive(false);
@@ -101,8 +103,94 @@ void Settings::InputNameField::Draw(sf::RenderWindow& window) const{
     window.draw(enterFieldText);
 }
 
-void Settings::ActivateButton(const sf::Vector2i& mousePosition){
+void Settings::ActivateButton(const sf::Vector2i& mousePosition, sf::RenderWindow& window){
 
+    if ((is_mouse_on_left_arrow || is_mouse_on_right_arrow) && !is_mouse_on_arrow){
+        is_mouse_on_arrow = true;
+        ChangeCursor(window, sf::Cursor::Type::Hand);
+
+    } else if(!(is_mouse_on_left_arrow || is_mouse_on_right_arrow) && is_mouse_on_arrow){
+
+        is_mouse_on_arrow = false;
+        ChangeCursor(window, sf::Cursor::Type::Arrow);
+    }
+
+    if ((is_mouse_on_enter_player_1_field || is_mouse_on_enter_player_2_field) && !is_mouse_on_enter_field){
+        is_mouse_on_enter_field = true;
+        ChangeCursor(window, sf::Cursor::Type::Text);
+
+
+    } else if(!(is_mouse_on_enter_player_1_field || is_mouse_on_enter_player_2_field) && is_mouse_on_enter_field){
+        is_mouse_on_enter_field = false;
+        ChangeCursor(window, sf::Cursor::Type::Arrow);
+    }
+
+    if ((is_mouse_on_save_button || is_mouse_on_back_button) && !is_mouse_on_button){
+        is_mouse_on_button = true;
+        ChangeCursor(window, sf::Cursor::Type::Hand);
+
+        if (is_mouse_on_save_button) {
+            save.setColorFigure(sf::Color::Red);
+        } else if(is_mouse_on_back_button) {
+            back.setColorFigure(sf::Color::Red);
+        }
+
+    } else if(!(is_mouse_on_save_button || is_mouse_on_back_button) && is_mouse_on_button){
+        is_mouse_on_button = false;
+        ChangeCursor(window, sf::Cursor::Type::Arrow);
+
+        save.setColorFigure(sf::Color::Black);
+        back.setColorFigure(sf::Color::Black);
+    }
+
+    if (mousePosition.x >= POS_SAVE_X && mousePosition.x <= POS_SAVE_X + SIZE_SETTINGS_BUTTON_X &&
+        mousePosition.y >= POS_SAVE_Y && mousePosition.y <= POS_SAVE_Y + SIZE_SETTINGS_BUTTON_Y){
+        is_mouse_on_save_button = true;
+        return;
+    } else {
+        is_mouse_on_save_button = false;
+    }
+
+    if (mousePosition.x >= POS_BACK_X && mousePosition.x <= POS_BACK_X + SIZE_SETTINGS_BUTTON_X &&
+        mousePosition.y >= POS_BACK_Y && mousePosition.y <= POS_BACK_Y + SIZE_SETTINGS_BUTTON_Y){
+        is_mouse_on_back_button = true;
+        return;
+    } else {
+        is_mouse_on_back_button = false;
+    }
+
+    if (mousePosition.x >= POS_ENTER_FIELD_PLAYER_1_X && mousePosition.x <= POS_ENTER_FIELD_PLAYER_1_X + SIZE_ENTER_FIELD_PLAYER_1_X &&
+        mousePosition.y >= POS_ENTER_FIELD_PLAYER_1_Y && mousePosition.y <= POS_ENTER_FIELD_PLAYER_1_Y + SIZE_ENTER_FIELD_PLAYER_1_Y){
+        is_mouse_on_enter_player_1_field = true;
+        return;
+    } else {
+        is_mouse_on_enter_player_1_field = false;
+    }
+
+    if (mousePosition.x >= POS_ENTER_FIELD_PLAYER_2_X && mousePosition.x <= POS_ENTER_FIELD_PLAYER_2_X + SIZE_ENTER_FIELD_PLAYER_2_X &&
+        mousePosition.y >= POS_ENTER_FIELD_PLAYER_2_Y && mousePosition.y <= POS_ENTER_FIELD_PLAYER_2_Y + SIZE_ENTER_FIELD_PLAYER_2_Y){
+        is_mouse_on_enter_player_2_field = true;
+        return;
+    } else {
+        is_mouse_on_enter_player_2_field = false;
+    }
+
+    // Due to the wrong size of the arrow images, constants have been added for the sensitivity of the cursor when hovering over the arrow
+    if (mousePosition.x >= POS_LEFT_ARROW_X + 40 && mousePosition.x <= POS_LEFT_ARROW_X + 80 &&
+        mousePosition.y >= POS_LEFT_ARROW_Y + 20 && mousePosition.y <= POS_LEFT_ARROW_Y + 90){
+        is_mouse_on_left_arrow = true;
+        return;
+    } else {
+        is_mouse_on_left_arrow = false;
+    }
+
+    if (mousePosition.x >= POS_RIGHT_ARROW_X + 40 && mousePosition.x <= POS_RIGHT_ARROW_X + 80 &&
+        mousePosition.y >= POS_RIGHT_ARROW_Y + 30 && mousePosition.y <= POS_RIGHT_ARROW_Y + 100){
+        is_mouse_on_right_arrow = true;
+        return;
+    } else {
+        is_mouse_on_right_arrow = false;
+    }
 }
 int Settings::PressButton(bool mouse_is_pressed) const{
 
