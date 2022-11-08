@@ -48,7 +48,7 @@ public:
 
     ~Menu() = default;
 
-    void changeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor); //Change cursor
+    void changeCursor(sf::RenderWindow& window, sf::Cursor::Type type_cursor); //Change cursor
 
     void activateButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_button, bool is_mouse_on_exit_button, sf::RenderWindow &window); //Activate buttons
 
@@ -62,5 +62,6 @@ private:
     Button settings_button;
     Button exit_button;
     sf::Cursor cursor;
+    bool is_pressed_button = false;
 };
 

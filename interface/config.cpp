@@ -6,58 +6,60 @@ void config_game(sf::RenderWindow &window) {
 
     while (window.isOpen()) {
         sf::Event event;
-        sf::Cursor cursor_hand;
-        sf::Cursor cursor_arrow;
-
-        cursor_hand.loadFromSystem(sf::Cursor::Hand);
-        cursor_arrow.loadFromSystem(sf::Cursor::Arrow);
 
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
+            if (config.getIsBackButtonPressed()) {
+                return;
+            }
         }
 
-        if (config.getValueActivateButton()) { //Change cursor if button is active
-            window.setMouseCursor(cursor_hand);
-        }
-
-        if (config.getValueEndFunction()) { //Exit the function
-            window.setActive(false);
-            return;
-        }
-        else {
-            window.clear();
-            config.drawConfigGame(window);
-            window.display();
-        }
+        window.clear();
+        config.drawConfigGame(window);
+        window.display();
     }
+
+    window.setActive(false);
 }
 
-bool ConfigGame::getValueEndFunction() {
-    return end_function;
+bool ConfigGame::getIsBackButtonPressed() {
+    return is_back_button_pressed;
 }
 
-bool ConfigGame::getValueActivateButton() {
-    return is_mouse_on_button;
+void ConfigGame::changeCursor(sf::RenderWindow& window, sf::Cursor::Type type_cursor) { //Change cursor
+    sf::Cursor cursor;
+    cursor.loadFromSystem(type_cursor);
+    window.setMouseCursor(cursor);
 }
 
 void ConfigGame::activateButtonArrows(bool is_mouse_on_back_button, sf::RenderWindow &window) { //Activate buttons and arrows
+    sf::Cursor::Type cursor_hand = sf::Cursor::Hand;
+    sf::Cursor::Type cursor_arrow = sf::Cursor::Arrow;
+
     if (is_mouse_on_back_button) { //Activate back button
         back_button.setColorFigure(sf::Color::Red);
         back_button.setColorText(sf::Color::Red);
-        is_mouse_on_button = true;
+        if (!is_cursor_set) {
+            changeCursor(window, cursor_hand);
+            is_cursor_set = true;
+        }
     }
-    else {
+    else if (!is_mouse_on_back_button) {
         back_button.setColorFigure(sf::Color::Black);
         back_button.setColorText(sf::Color::Black);
-        is_mouse_on_button = false;
+        if (is_cursor_set) {
+            changeCursor(window, cursor_arrow);
+            is_cursor_set = false;
+        }
     }
 }
 
 void ConfigGame::pressButtonArrows(bool is_mouse_on_back_button, bool is_press_mouse, sf::RenderWindow &window) { //Press on button
-    if (is_mouse_on_back_button && is_press_mouse) { //Activate back button
-        end_function = true;
+    if (is_mouse_on_back_button && is_press_mouse) {
+        back_button.playSongsPress();
+        is_back_button_pressed = true;
     }
 }
 
@@ -69,6 +71,7 @@ void ConfigGame::drawConfigGame(sf::RenderWindow& window) { //Function for draw 
     bool is_press_mouse = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 
     activateButtonArrows(is_mouse_on_back_button, window);
+
     pressButtonArrows(is_mouse_on_back_button, is_press_mouse, window);
 
     background.drawBackground(window);

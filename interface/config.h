@@ -1,6 +1,6 @@
-#pragma once
 #include "header.h"
 #include "elements.h"
+#pragma once
 
 /*Music*/
 #define MUSIC_PRESS "../songs/pressbutton.wav"
@@ -45,15 +45,15 @@ public:
 
     void pressButtonArrows(bool is_mouse_on_back_button, bool is_press_mouse, sf::RenderWindow &window); //Press on button and on arrows
 
+    void changeCursor(sf::RenderWindow& window, sf::Cursor::Type type_cursor); //Change cursor
+
     void drawConfigGame(sf::RenderWindow& window); //Function for draw
 
-    bool getValueEndFunction(); //Get value end of function
-
-    bool getValueActivateButton(); //Get value end of function
+    bool getIsBackButtonPressed(); //Get value end of function
 
 private:
     Background background;
     Button back_button;
-    bool end_function = false;
-    bool is_mouse_on_button = false;
+    bool is_cursor_set = true;
+    bool is_back_button_pressed = false;
 };

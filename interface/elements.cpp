@@ -9,7 +9,7 @@ void Background::drawBackground(sf::RenderWindow& window) {
     window.draw(sprite_background);
 }
 
-Button::Button(sf::Vector2<float> size, float thickness,
+Button::Button(const sf::Vector2<float> &size, float thickness,
                float pos_button_x, float pos_button_y,
                sf::Color color_outline, sf::Color color_text,
                int text_size, const std::string& path_font,
@@ -37,7 +37,7 @@ Button::Button(sf::Vector2<float> size, float thickness,
 }
 
 
-Button::Button(sf::Vector2<float> size, float thickness,
+Button::Button(const sf::Vector2<float> &size, float thickness,
                float pos_button_x, float pos_button_y,
                sf::Color color_outline, sf::Color color_text,
                int text_size, const std::string& path_font,
@@ -59,6 +59,12 @@ Button::Button(sf::Vector2<float> size, float thickness,
     text.setString(string_text);
 }
 
+void Button::playSongsPress() {
+    sf::Time time = sf::seconds(0.6);
+    music_press.play();
+    sleep(time);
+    music_press.stop();
+}
 
 void Button::setColorText(const sf::Color color_text) {
     text.setColor(color_text);
