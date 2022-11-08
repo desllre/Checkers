@@ -2,6 +2,9 @@
 
 #include "SFML/Graphics.hpp"
 
+#include "filesystem"
+#include "fstream"
+
 // BACKGROUND VARIABLESS
 #define BACKGROUND_IMAGE "../textures/backgrounds/menu_exit.png"
 
@@ -39,6 +42,8 @@ public:
     int PressButton(bool mouse_is_pressed) const; // функция проверки нажатия на кнопку. Возвращает -1 - если нажата клавиша accept, 1 - если close, 0 - ничего
 
     void Draw(sf::RenderWindow& window);
+
+    void deleteConfigCustomFiles();
 
 private:
 

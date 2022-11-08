@@ -25,6 +25,7 @@ void ExitWindow(sf::RenderWindow& window){
 
         switch (exit.PressButton(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
             case -1:{
+                exit.deleteConfigCustomFiles();
                 window.close();
                 exitWindow.close();
                 break;
@@ -123,4 +124,10 @@ void Exit::Draw(sf::RenderWindow& window){
     background.drawBackground(window);
     accept.drawButton(window);
     cancel.drawButton(window);
+}
+
+void Exit::deleteConfigCustomFiles(){
+    if (std::filesystem::exists("../config/custom_settings.txt")){
+        std::system("rm -r ../config/custom_settings.txt");
+    }
 }

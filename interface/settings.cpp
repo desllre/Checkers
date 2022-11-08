@@ -11,6 +11,13 @@ void SettingsWindow(sf::RenderWindow& window){
         settings.ActivateButton(sf::Mouse::getPosition(window), window);
 
         while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                if (std::filesystem::exists("../config/custom_settings.txt")){
+                    std::system("rm -r ../config/custom_settings.txt");
+                }
+                window.close();
+            }
+
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 window.setActive(false);
                 return;
@@ -23,6 +30,7 @@ void SettingsWindow(sf::RenderWindow& window){
 
         switch (settings.PressButton(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
             case 1:{
+                settings.saveSettings();
                 window.setActive(false);
                 return;
             }
@@ -42,9 +50,6 @@ void SettingsWindow(sf::RenderWindow& window){
                 settings.setStyleBoardStyle("black_and_white");
                 break;
             }
-            default:{
-                break;
-            };
         }
 
         if (window.pollEvent(event)){}
@@ -85,7 +90,10 @@ Settings::Settings(): background(BACKGROUND_IMAGE),
                       leftArrow(POS_LEFT_ARROW_X, POS_LEFT_ARROW_Y, LEFT_ARROW_IMAGE),
                       rightArrow(POS_RIGHT_ARROW_X, POS_RIGHT_ARROW_Y, RIGHT_ARROW_IMAGE),
                       game_styles(STANDART_STYLE_IMAGE, BLACK_AND_WHITE_STYLE_IMAGE, POS_STYLE_IMAGE_X, POS_STYLE_IMAGE_Y)
-                      {}
+                      {
+                          player_1_Name = "";
+                          player_2_Name = "";
+                      }
 
 void Settings::ActivateButton(const sf::Vector2i& mousePosition, sf::RenderWindow& window){
 
@@ -300,6 +308,43 @@ void Settings::inputText(const uint32_t& inputSymbol){
     }
 }
 
+void Settings::saveSettings(){
+    if(!player_1_Name.empty() || !player_2_Name.empty() || !game_styles.isStandartStyle){
+        std::ofstream fout("../config/custom_settings.txt");
+
+        if (!fout.is_open())
+            throw std::exception();
+
+        fout << "Player_1 ";
+        if (!player_1_Name.empty()){
+            fout << player_1_Name;
+
+        } else{
+            fout << "player_1";
+        }
+        fout << std::endl;
+
+        fout << "Player_2 ";
+        if (!player_1_Name.empty()){
+            fout << player_2_Name;
+
+        } else{
+            fout << "player_2";
+        }
+        fout << std::endl;
+
+        fout << "Game_style ";
+        if (game_styles.isStandartStyle){
+            fout << "standart";
+        } else{
+            fout << "black_and_white";
+        }
+
+    }
+}
+
+
+
 Settings::InputNameField::InputNameField(sf::Vector2<float> nameFieldSize, sf::Vector2<float> enterFieldSize,
                                          float nameField_posX, float nameField_posY,
                                          float enterField_posX, float enterField_posY,
@@ -347,7 +392,7 @@ void Settings::InputNameField::Draw(sf::RenderWindow& window) const{
 
 
 
-Settings::Game_Styles::Game_Styles(const std::string& textureImg_1, const std::string& textureImg_2, float x, float y): x(x), y(y){
+Settings::Game_Styles::Game_Styles(const std::string& textureImg_1, const std::string& textureImg_2, float x, float y){
     textures[0].loadFromFile(textureImg_1);
     textures[1].loadFromFile(textureImg_2);
 

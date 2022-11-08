@@ -2,9 +2,27 @@
 
 #include "SFML/Graphics.hpp"
 
+#include "filesystem"
 #include "fstream"
 #include "string"
 #include "array"
+
+/*
+    После изменения настроек и их сохранения, в папке config появляется
+    файл: custom_settings.txt - в котором хранится информация и настройках игры вида:
+
+    Player_1 "введённое имя"
+    Player_2 "введённое имя"
+    Game_style "выбранный стиль игры"
+
+    если имя не было введено, то по умолчанию будет стоять player_1 и player_2 соответсвенно
+
+    стили игры: standart и black_and_white. По умолчанию standart.
+
+    Так же в папке config находится файл default_settings.txt.
+    Если игра была не настроена, то он будет использоваться по умолчанию
+*/
+
 
 // BACKGROUND VARIABLESS
 #define BACKGROUND_IMAGE "../textures/backgrounds/settings_bg.png"
@@ -126,15 +144,17 @@ public:
 
     void ActivateButton(const sf::Vector2i& mousePosition, sf::RenderWindow& window); // проверка наведения на кнопки
 
-    int PressButton(bool mouse_is_pressed); // функция проверки нажатия на кнопку. Возвращает -1 - если нажата клавиша accept, 1 - если close, 0 - ничего
+    int PressButton(bool mouse_is_pressed); // функция проверки нажатия на мышку. Возвращает 1 - если нажато на save, 2 - back, 3 - поле ввода текста, 4 - left_arrow, 5 - right arrow
 
     void Draw(sf::RenderWindow& window);
 
-    void setStyleBoardStyle(const std::string& styleName);
+    void setStyleBoardStyle(const std::string& styleName); // установка картинки установленного стиля борда
 
-    void setTextInput();
+    void setTextInput(); // установка активности поля, для ввода текста
 
-    void inputText(const uint32_t& inputSymbol);
+    void inputText(const uint32_t& inputSymbol); // ввод текста в выбранное поле, если выбранно
+
+    void saveSettings(); // сохранение выставленных настроек
 
 private:
 
@@ -142,19 +162,17 @@ private:
 
 private:
 
-    struct Game_Styles{
+    struct Game_Styles{ // структура для хранения возможных стилей игра
         Game_Styles(const std::string&, const std::string&, float x, float y);
 
         std::array<sf::Texture, 2> textures;
 
         sf::Sprite sprite;
-        float x;
-        float y;
 
         bool isStandartStyle = true;
     };
 
-    struct InputNameField{
+    struct InputNameField{ // структура для работы с полями ввода имени
         InputNameField(sf::Vector2<float> nameFieldSize, sf::Vector2<float> enterFieldSize,
                        float nameField_posX, float nameField_posY,
                        float enterField_posX, float enterField_posY,
@@ -173,8 +191,6 @@ private:
 
         sf::Text nameFieldText;
         sf::Text enterFieldText;
-
-        bool isTextEntered = false;
     };
 
     InputNameField player1Field;
@@ -186,8 +202,8 @@ private:
     Button save;
     Button back;
 
-    std::string player_1_Name = "";
-    std::string player_2_Name = "";
+    std::string player_1_Name;
+    std::string player_2_Name;
 
     Arrow leftArrow;
     Arrow rightArrow;

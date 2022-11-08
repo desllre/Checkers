@@ -11,6 +11,9 @@ void game() {
 
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
+                if (std::filesystem::exists("../config/custom_settings.txt")){
+                    std::system("rm -r ../config/custom_settings.txt");
+                }
                 window.close();
             }
         }
