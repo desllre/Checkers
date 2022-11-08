@@ -34,6 +34,7 @@ void Menu::activateButton(bool is_mouse_on_play_button, bool is_mouse_on_setting
     if (is_mouse_on_play_button) { //Activate play button
         play_button.setColorFigure(sf::Color::Red);
         play_button.setColorText(sf::Color::Red);
+        return;
     }
     else {
         play_button.setColorFigure(sf::Color::Black);
@@ -43,6 +44,7 @@ void Menu::activateButton(bool is_mouse_on_play_button, bool is_mouse_on_setting
     if (is_mouse_on_settings_button) { //Activate settings button
         settings_button.setColorFigure(sf::Color::Red);
         settings_button.setColorText(sf::Color::Red);
+        return;
     }
     else {
         settings_button.setColorFigure(sf::Color::Black);
@@ -52,6 +54,7 @@ void Menu::activateButton(bool is_mouse_on_play_button, bool is_mouse_on_setting
     if (is_mouse_on_exit_button) { //Activate exit button
         exit_button.setColorFigure(sf::Color::Red);
         exit_button.setColorText(sf::Color::Red);
+        return;
     }
     else {
         exit_button.setColorFigure(sf::Color::Black);

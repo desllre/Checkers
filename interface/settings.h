@@ -126,9 +126,15 @@ public:
 
     void ActivateButton(const sf::Vector2i& mousePosition, sf::RenderWindow& window); // проверка наведения на кнопки
 
-    int PressButton(bool mouse_is_pressed) const; // функция проверки нажатия на кнопку. Возвращает -1 - если нажата клавиша accept, 1 - если close, 0 - ничего
+    int PressButton(bool mouse_is_pressed); // функция проверки нажатия на кнопку. Возвращает -1 - если нажата клавиша accept, 1 - если close, 0 - ничего
 
     void Draw(sf::RenderWindow& window);
+
+    void setStyleBoardStyle(const std::string& styleName);
+
+    void setTextInput();
+
+    void inputText(const uint32_t& inputSymbol);
 
 private:
 
@@ -168,6 +174,7 @@ private:
         sf::Text nameFieldText;
         sf::Text enterFieldText;
 
+        bool isTextEntered = false;
     };
 
     InputNameField player1Field;
@@ -198,4 +205,7 @@ private:
     bool is_mouse_on_left_arrow = false;
     bool is_mouse_on_right_arrow = false;
     bool is_mouse_on_arrow = false;
+
+    bool is_player_1_name_input = false;
+    bool is_player_2_name_input = false;
 };

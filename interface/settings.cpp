@@ -15,6 +15,36 @@ void SettingsWindow(sf::RenderWindow& window){
                 window.setActive(false);
                 return;
             }
+
+            if (event.type == sf::Event::TextEntered){
+                settings.inputText(event.text.unicode);
+            }
+        }
+
+        switch (settings.PressButton(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
+            case 1:{
+                window.setActive(false);
+                return;
+            }
+            case 2:{
+                window.setActive(false);
+                return;
+            }
+            case 3:{
+                settings.setTextInput();
+                break;
+            }
+            case 4:{
+                settings.setStyleBoardStyle("standart");
+                break;
+            }
+            case 5:{
+                settings.setStyleBoardStyle("black_and_white");
+                break;
+            }
+            default:{
+                break;
+            };
         }
 
         if (window.pollEvent(event)){}
@@ -57,60 +87,18 @@ Settings::Settings(): background(BACKGROUND_IMAGE),
                       game_styles(STANDART_STYLE_IMAGE, BLACK_AND_WHITE_STYLE_IMAGE, POS_STYLE_IMAGE_X, POS_STYLE_IMAGE_Y)
                       {}
 
-
-Settings::InputNameField::InputNameField(sf::Vector2<float> nameFieldSize, sf::Vector2<float> enterFieldSize,
-                                                         float nameField_posX, float nameField_posY,
-                                                         float enterField_posX, float enterField_posY,
-                                                         int nameField_textSize, int enterField_textSize,
-                                                         float nameField_text_posX, float nameField_text_posY,
-                                                         float enterField_text_posX, float enterField_text_posY,
-                                                         const std::string& path_font,
-                                                         const std::string& nameFieldString, const std::string& enterFieldString) {
-    nameField.setSize(nameFieldSize);
-    nameField.setOutlineThickness(5);
-    nameField.setOutlineColor(sf::Color::Black);
-    nameField.setFillColor(sf::Color::White);
-    nameField.setPosition(nameField_posX, nameField_posY);
-
-    enterField.setSize(enterFieldSize);
-    enterField.setOutlineThickness(5);
-    enterField.setOutlineColor(sf::Color::Black);
-    enterField.setFillColor(sf::Color::White);
-    enterField.setPosition(enterField_posX, enterField_posY);
-
-    font.loadFromFile(path_font);
-
-    nameFieldText.setFillColor(sf::Color::Black);
-    nameFieldText.setFont(font);
-    nameFieldText.setCharacterSize(nameField_textSize);
-    nameFieldText.setPosition(nameField_text_posX, nameField_text_posY);
-    nameFieldText.setString(nameFieldString);
-    nameFieldText.setStyle(sf::Text::Bold);
-
-    enterFieldText.setFillColor(sf::Color::Black);
-    enterFieldText.setFont(font);
-    enterFieldText.setCharacterSize(enterField_textSize);
-    enterFieldText.setPosition(enterField_text_posX, enterField_text_posY);
-    enterFieldText.setString(enterFieldString);
-
-}
-
-void Settings::InputNameField::Draw(sf::RenderWindow& window) const{
-    window.draw(nameField);
-    window.draw(enterField);
-
-    window.draw(nameFieldText);
-    window.draw(enterFieldText);
-}
-
 void Settings::ActivateButton(const sf::Vector2i& mousePosition, sf::RenderWindow& window){
 
     if ((is_mouse_on_left_arrow || is_mouse_on_right_arrow) && !is_mouse_on_arrow){
         is_mouse_on_arrow = true;
-        ChangeCursor(window, sf::Cursor::Type::Hand);
+
+        if (is_mouse_on_right_arrow && game_styles.isStandartStyle){ //the right arrow will not work if the style is not standard
+            ChangeCursor(window, sf::Cursor::Type::Hand);
+        } else if (is_mouse_on_left_arrow && !game_styles.isStandartStyle){ // left arrow won't work if default style is set
+            ChangeCursor(window, sf::Cursor::Type::Hand);
+        }
 
     } else if(!(is_mouse_on_left_arrow || is_mouse_on_right_arrow) && is_mouse_on_arrow){
-
         is_mouse_on_arrow = false;
         ChangeCursor(window, sf::Cursor::Type::Arrow);
     }
@@ -118,7 +106,6 @@ void Settings::ActivateButton(const sf::Vector2i& mousePosition, sf::RenderWindo
     if ((is_mouse_on_enter_player_1_field || is_mouse_on_enter_player_2_field) && !is_mouse_on_enter_field){
         is_mouse_on_enter_field = true;
         ChangeCursor(window, sf::Cursor::Type::Text);
-
 
     } else if(!(is_mouse_on_enter_player_1_field || is_mouse_on_enter_player_2_field) && is_mouse_on_enter_field){
         is_mouse_on_enter_field = false;
@@ -131,8 +118,10 @@ void Settings::ActivateButton(const sf::Vector2i& mousePosition, sf::RenderWindo
 
         if (is_mouse_on_save_button) {
             save.setColorFigure(sf::Color::Red);
+            save.setColorText(sf::Color::Red);
         } else if(is_mouse_on_back_button) {
             back.setColorFigure(sf::Color::Red);
+            back.setColorText(sf::Color::Red);
         }
 
     } else if(!(is_mouse_on_save_button || is_mouse_on_back_button) && is_mouse_on_button){
@@ -140,7 +129,10 @@ void Settings::ActivateButton(const sf::Vector2i& mousePosition, sf::RenderWindo
         ChangeCursor(window, sf::Cursor::Type::Arrow);
 
         save.setColorFigure(sf::Color::Black);
+        save.setColorText(sf::Color::Black);
+
         back.setColorFigure(sf::Color::Black);
+        back.setColorText(sf::Color::Black);
     }
 
     if (mousePosition.x >= POS_SAVE_X && mousePosition.x <= POS_SAVE_X + SIZE_SETTINGS_BUTTON_X &&
@@ -192,8 +184,54 @@ void Settings::ActivateButton(const sf::Vector2i& mousePosition, sf::RenderWindo
         is_mouse_on_right_arrow = false;
     }
 }
-int Settings::PressButton(bool mouse_is_pressed) const{
 
+int Settings::PressButton(bool mouse_is_pressed){
+    if (mouse_is_pressed){
+
+        if (is_mouse_on_enter_player_1_field){
+            is_player_2_name_input = false;
+
+            if (player_2_Name.empty()) {
+                player2Field.enterFieldText.setString("Enter name");
+            }
+
+            return 3;
+        } else if (is_mouse_on_enter_player_2_field){
+            is_player_1_name_input = false;
+
+            if (player_1_Name.empty()){
+                player1Field.enterFieldText.setString("Enter name");
+            }
+
+            return 3;
+        } else{
+            is_player_1_name_input = false;
+            is_player_2_name_input = false;
+
+            if (player_1_Name.empty()){
+                player1Field.enterFieldText.setString("Enter name");
+            }
+
+            if (player_2_Name.empty()) {
+                player2Field.enterFieldText.setString("Enter name");
+            }
+        }
+
+
+        if (is_mouse_on_save_button)
+            return 1;
+
+        if (is_mouse_on_back_button)
+            return 2;
+
+        if (is_mouse_on_left_arrow)
+            return 4;
+
+        if (is_mouse_on_right_arrow)
+            return 5;
+
+    }
+    return 0;
 }
 
 void Settings::Draw(sf::RenderWindow& window){
@@ -207,11 +245,107 @@ void Settings::Draw(sf::RenderWindow& window){
     back.drawButton(window);
 }
 
+void Settings::setStyleBoardStyle(const std::string& styleName){
+    if (styleName == "standart" && !game_styles.isStandartStyle){
+        game_styles.isStandartStyle = true;
+        game_styles.sprite.setTexture(game_styles.textures[0]);
+    } else if (styleName == "black_and_white" && game_styles.isStandartStyle){
+        game_styles.isStandartStyle = false;
+        game_styles.sprite.setTexture(game_styles.textures[1]);
+    }
+}
 
 void Settings::ChangeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor){
     cursor.loadFromSystem(type_cursor);
     window.setMouseCursor(cursor);
 }
+
+void Settings::setTextInput(){
+    if (is_mouse_on_enter_player_1_field){
+        is_player_1_name_input = true;
+
+        if (player_1_Name.empty())
+            player1Field.enterFieldText.setString("");
+
+    } else if (is_mouse_on_enter_player_2_field){
+        is_player_2_name_input = true;
+
+        if (player_2_Name.empty())
+            player2Field.enterFieldText.setString("");
+    }
+}
+
+void Settings::inputText(const uint32_t& inputSymbol){
+    char symbol = static_cast<char>(inputSymbol);
+    if (is_player_1_name_input){
+        if (std::to_string(inputSymbol) == "8"){ // if pressed backspace, delete last symbol
+            if (player_1_Name.size() != 0){
+                player_1_Name.pop_back();
+            }
+        } else if (player_1_Name.size() != 12){ // set character limit
+            player_1_Name.push_back(symbol);
+        }
+        player1Field.enterFieldText.setString(player_1_Name);
+    }
+
+    if (is_player_2_name_input){
+        if (std::to_string(inputSymbol) == "8"){ // if pressed backspace, delete last symbol
+            if (player_2_Name.size() != 0){
+                player_2_Name.pop_back();
+            }
+        } else if (player_2_Name.size() != 12){ // set character limit
+            player_2_Name.push_back(symbol);
+        }
+        player2Field.enterFieldText.setString(player_2_Name);
+    }
+}
+
+Settings::InputNameField::InputNameField(sf::Vector2<float> nameFieldSize, sf::Vector2<float> enterFieldSize,
+                                         float nameField_posX, float nameField_posY,
+                                         float enterField_posX, float enterField_posY,
+                                         int nameField_textSize, int enterField_textSize,
+                                         float nameField_text_posX, float nameField_text_posY,
+                                         float enterField_text_posX, float enterField_text_posY,
+                                         const std::string& path_font,
+                                         const std::string& nameFieldString, const std::string& enterFieldString) {
+    nameField.setSize(nameFieldSize);
+    nameField.setOutlineThickness(5);
+    nameField.setOutlineColor(sf::Color::Black);
+    nameField.setFillColor(sf::Color::White);
+    nameField.setPosition(nameField_posX, nameField_posY);
+
+    enterField.setSize(enterFieldSize);
+    enterField.setOutlineThickness(5);
+    enterField.setOutlineColor(sf::Color::Black);
+    enterField.setFillColor(sf::Color::White);
+    enterField.setPosition(enterField_posX, enterField_posY);
+
+    font.loadFromFile(path_font);
+
+    nameFieldText.setFillColor(sf::Color::Black);
+    nameFieldText.setFont(font);
+    nameFieldText.setCharacterSize(nameField_textSize);
+    nameFieldText.setPosition(nameField_text_posX, nameField_text_posY);
+    nameFieldText.setString(nameFieldString);
+    nameFieldText.setStyle(sf::Text::Bold);
+
+    enterFieldText.setFillColor(sf::Color::Black);
+    enterFieldText.setFont(font);
+    enterFieldText.setCharacterSize(enterField_textSize);
+    enterFieldText.setPosition(enterField_text_posX, enterField_text_posY);
+    enterFieldText.setString(enterFieldString);
+
+}
+
+void Settings::InputNameField::Draw(sf::RenderWindow& window) const{
+    window.draw(nameField);
+    window.draw(enterField);
+
+    window.draw(nameFieldText);
+    window.draw(enterFieldText);
+}
+
+
 
 Settings::Game_Styles::Game_Styles(const std::string& textureImg_1, const std::string& textureImg_2, float x, float y): x(x), y(y){
     textures[0].loadFromFile(textureImg_1);
@@ -220,3 +354,4 @@ Settings::Game_Styles::Game_Styles(const std::string& textureImg_1, const std::s
     sprite.setTexture(textures[0]);
     sprite.setPosition(x, y);
 }
+

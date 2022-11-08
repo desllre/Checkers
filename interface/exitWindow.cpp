@@ -59,8 +59,10 @@ void Exit::ActivateButton(const sf::Vector2i& mousePosition, sf::RenderWindow& w
 
         if (is_mouse_on_accept_button) {
             accept.setColorFigure(sf::Color::Red);
+            accept.setColorText(sf::Color::Red);
         } else if (is_mouse_on_cancel_button) {
             cancel.setColorFigure(sf::Color::Red);
+            cancel.setColorText(sf::Color::Red);
         }
 
     } else if (!(is_mouse_on_accept_button || is_mouse_on_cancel_button) && is_mouse_on_button){
@@ -69,7 +71,10 @@ void Exit::ActivateButton(const sf::Vector2i& mousePosition, sf::RenderWindow& w
         ChangeCursor(window, sf::Cursor::Arrow);
 
         accept.setColorFigure(sf::Color::Black);
+        accept.setColorText(sf::Color::Black);
+
         cancel.setColorFigure(sf::Color::Black);
+        cancel.setColorText(sf::Color::Black);
     }
 
     if (mousePosition.x >= POS_ACCEPT_X && mousePosition.x <= POS_ACCEPT_X + SIZE_X &&
