@@ -6,33 +6,43 @@ void config_game(sf::RenderWindow &window) {
 
     while (window.isOpen()) {
         sf::Event event;
+        sf::Cursor cursor_hand;
+        sf::Cursor cursor_arrow;
+
+        cursor_hand.loadFromSystem(sf::Cursor::Hand);
+        cursor_arrow.loadFromSystem(sf::Cursor::Arrow);
 
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
-            if (event.type == sf::Event::MouseButtonPressed) {
-                sf::Cursor cursor;
-                cursor.loadFromSystem(sf::Cursor::Hand);
-                window.setMouseCursor(cursor);
-            }
         }
-        if (config.getValueEndFunction()) {
+
+        if (config.getValueActivateButton()) { //Change cursor if button is active
+            window.setMouseCursor(cursor_hand);
+        }
+
+        if (config.getValueEndFunction()) { //Exit the function
+            window.setActive(false);
             return;
         }
-
-        window.clear();
-        config.drawConfigGame(window);
-        window.display();
+        else {
+            window.clear();
+            config.drawConfigGame(window);
+            window.display();
+        }
     }
+}
 
-    window.setActive(false);
+bool ConfigGame::getValueEndFunction() {
+    return end_function;
+}
+
+bool ConfigGame::getValueActivateButton() {
+    return is_mouse_on_button;
 }
 
 void ConfigGame::activateButtonArrows(bool is_mouse_on_back_button, sf::RenderWindow &window) { //Activate buttons and arrows
-    sf::Cursor::Type cursor_hand = sf::Cursor::Hand;
-    sf::Cursor::Type cursor_arrow = sf::Cursor::Arrow;
-
     if (is_mouse_on_back_button) { //Activate back button
         back_button.setColorFigure(sf::Color::Red);
         back_button.setColorText(sf::Color::Red);
@@ -41,12 +51,8 @@ void ConfigGame::activateButtonArrows(bool is_mouse_on_back_button, sf::RenderWi
     else {
         back_button.setColorFigure(sf::Color::Black);
         back_button.setColorText(sf::Color::Black);
-        is_mouse_on_button = true;
+        is_mouse_on_button = false;
     }
-}
-
-bool ConfigGame::getValueEndFunction() {
-    return end_function;
 }
 
 void ConfigGame::pressButtonArrows(bool is_mouse_on_back_button, bool is_press_mouse, sf::RenderWindow &window) { //Press on button
