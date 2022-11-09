@@ -1,6 +1,17 @@
 #include "board.h"
 
 Board::Board(uint16_t size, bool isWhiteBoard, GameType typeOfGame): size(size), isWhiteBoard(isWhiteBoard), typeOfGame(typeOfGame) {
+    init();
+}
+
+Board::~Board(){
+    for (int i = 0; i < size; ++i) {
+        delete[] board[i];
+    }
+    delete[] board;
+}
+
+void Board::init(){
     board = new char*[size];
     for (size_t i = 0; i < size; ++i) {
         board[i] = new char[size];
@@ -43,14 +54,6 @@ Board::Board(uint16_t size, bool isWhiteBoard, GameType typeOfGame): size(size),
         }
     }
 }
-
-Board::~Board(){
-    for (int i = 0; i < size; ++i) {
-        delete[] board[i];
-    }
-    delete[] board;
-}
-
 
 bool Board::isHere(uint16_t posX, uint16_t posY) {
     if (board[posY][posX] != '0') return true;

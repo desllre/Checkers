@@ -3,6 +3,7 @@
 #include "config.h"
 #include "exitWindow.h"
 #include "settings.h"
+#include "game_design.h"
 
 /*Settings for background*/
 #define PATH_MENU_BACKGROUND "../textures/backgrounds/menu_bg.png"

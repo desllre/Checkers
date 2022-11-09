@@ -1,5 +1,9 @@
 #include "menu.h"
+////////////////////////////
+// Это нужно будет убрать. Заголовок добавлен, для тестирования game_design.cpp
+#include "../engine/board.h"
 
+////////////////////////////
 Menu::Menu():
         background(PATH_MENU_BACKGROUND),
         play_button(SIZE_MENU_BUTTON, THICKNESS, POS_X,
@@ -91,7 +95,7 @@ void Menu::pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_b
             changeCursor(window, sf::Cursor::Arrow);
 
             window.setActive(false);
-            sf::Thread configGameThread(config_game, std::ref(window));
+            sf::Thread configGameThread(Game_design, std::ref(window),);
             configGameThread.launch();
             configGameThread.wait();
             window.setActive(true);
@@ -102,7 +106,7 @@ void Menu::pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_b
 
             changeCursor(window, sf::Cursor::Arrow);
 
-            sf::Thread configGameThread( SettingsWindow, std::ref(window));
+            sf::Thread configGameThread( SettingsWindow, std::ref(window), 1, true, GameType::English, white);
             configGameThread.launch();
             configGameThread.wait();
             window.setActive(true);
