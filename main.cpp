@@ -1,6 +1,7 @@
-#include <iostream>
+#include "interface/game.h"
 
 int main() {
-    std::cout << "asd";
+    game();
+
     return 0;
 }
