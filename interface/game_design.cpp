@@ -140,7 +140,6 @@ void Game::Draw(sf::RenderWindow& window){
             black_king.Draw(window);
         }
     }
-    std::cout << std::endl;
 
     for(auto i: board.whiteFigures){
         if (i.figureType == 'p'){
