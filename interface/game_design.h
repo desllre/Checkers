@@ -8,10 +8,20 @@
 #include "fstream"
 
 
-#define FIRST_FIGURE_POSITION_X 42
-#define FIRST_FIGURE_POSITION_Y 56
-#define FIGURE_DISPLACEMENT_X 100
-#define FIGURE_DISPLACEMENT_Y 100
+#define BOARD_WIDTH 800
+#define BOARD_HEIGHT 800
+
+// константы для большого поля (междуанродные шашки)
+#define BIG_FIRST_FIGURE_POSITION_X 42
+#define BIG_FIRST_FIGURE_POSITION_Y 56
+#define BIG_FIGURE_DISPLACEMENT_X 80
+#define BIG_FIGURE_DISPLACEMENT_Y 80
+
+// константы для малого поля (любые шашки, кроме международных)
+#define SMALL_FIRST_FIGURE_POSITION_X 42
+#define SMALL_FIRST_FIGURE_POSITION_Y 56
+#define SMALL_FIGURE_DISPLACEMENT_X 100
+#define SMALL_FIGURE_DISPLACEMENT_Y 100
 
 
 #pragma once
@@ -26,6 +36,8 @@ public:
          const uint16_t& boardSize);
 
     void Draw(sf::RenderWindow& window);
+
+    //void FigureSelection(sf::Vector2i mousePos); // выделение фигуры и её возможных ходов при нажатии
 
 private:
     struct Object{
@@ -64,5 +76,15 @@ private:
 
     Object white_pawn;
     Object white_king;
+
+    Object moveSelector;
+    Object figureSelector;
+
+    int FIRST_FIGURE_POSITION_X;
+    int FIRST_FIGURE_POSITION_Y;
+
+    int FIGURE_DISPLACEMENT_X;
+    int FIGURE_DISPLACEMENT_Y;
+
 };
 
