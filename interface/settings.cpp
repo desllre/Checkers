@@ -309,37 +309,34 @@ void Settings::inputText(const uint32_t& inputSymbol){
 }
 
 void Settings::saveSettings(){
-    if(!player_1_Name.empty() || !player_2_Name.empty() || !game_styles.isStandartStyle){
-        std::ofstream fout("../config/custom_settings.txt");
+    std::ofstream fout("../config/custom_settings.txt");
 
-        if (!fout.is_open())
-            throw std::exception();
+    if (!fout.is_open())
+        throw std::exception();
 
-        fout << "Player_1 ";
-        if (!player_1_Name.empty()){
-            fout << player_1_Name;
+    fout << "Player_1 ";
+    if (!player_1_Name.empty()){
+        fout << player_1_Name;
 
-        } else{
-            fout << "player_1";
-        }
-        fout << std::endl;
+    } else{
+        fout << "player_1";
+    }
+    fout << std::endl;
 
-        fout << "Player_2 ";
-        if (!player_1_Name.empty()){
-            fout << player_2_Name;
+    fout << "Player_2 ";
+    if (!player_1_Name.empty()){
+        fout << player_2_Name;
 
-        } else{
-            fout << "player_2";
-        }
-        fout << std::endl;
+    } else{
+        fout << "player_2";
+    }
+    fout << std::endl;
 
-        fout << "Game_style ";
-        if (game_styles.isStandartStyle){
-            fout << "standart";
-        } else{
-            fout << "black_and_white";
-        }
-
+    fout << "Game_style ";
+    if (game_styles.isStandartStyle){
+        fout << "standart";
+    } else{
+        fout << "black_and_white";
     }
 }
 

@@ -3,31 +3,15 @@
 
 #include "SFML/Graphics.hpp"
 
-
-// IMAGES
-#define GAME_BACKGROUND "../textures/backgrounds/game_bg.png"
-
-
-#define BLACK_AND_WHITE_SMALL_BOARD "../textures/boards/bw.png"
-#define BLACK_AND_WHITE_BIG_BOARD "../textures/boards/big_bw.png"
-
-#define STANDART_SMALL_BOARD "../textures/boards/yellow.png"
-#define STANDART_BIG_BOARD "../textures/boards/big_yellow.png"
+#include "string"
+#include "filesystem"
+#include "fstream"
 
 
-#define BLACK_AND_WHITE_PAWN_BLACK "../textures/figures/black_and_white/black_pawn.png"
-#define BLACK_AND_WHITE_KING_BLACK "../textures/figures/black_and_white/black_king.png"
-
-#define BLACK_AND_WHITE_PAWN_WHITE "../textures/figures/black_and_white/white_pawn.png"
-#define BLACK_AND_WHITE_KING_WHITE "../textures/figures/black_and_white/white_king.png"
-
-#define STANDART_PAWN_BLACK "../textures/figures/Standart/black_pawn.png"
-#define STANDART_KING_BLACK "../textures/figures/Standart/black_king.png"
-
-#define STANDART_PAWN_WHITE "../textures/figures/Standart/white_pawn.png"
-#define STANDART_KING_WHITE "../textures/figures/Standart/white_king.png"
-
-
+#define FIRST_FIGURE_POSITION_X 42
+#define FIRST_FIGURE_POSITION_Y 56
+#define FIGURE_DISPLACEMENT_X 100
+#define FIGURE_DISPLACEMENT_Y 100
 
 
 #pragma once
@@ -38,10 +22,16 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
 class Game{
 public:
 
-    Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool playerHasWhiteBoard, const uint16_t& boardSize, bool isWhiteBoard);
+    Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool playerHasWhiteBoard,
+         const uint16_t& boardSize);
+
+    void Draw(sf::RenderWindow& window);
 
 private:
     struct Object{
+        void SetPosition(int x, int y); // установка позиции объекта
+        void Draw(sf::RenderWindow& window);
+
         sf::Texture texture;
         sf::Sprite sprite;
         uint32_t x;
@@ -50,8 +40,11 @@ private:
         uint32_t height;
     };
 
+
+
 private:
     Board board;
+    Object boardStyle;
 
     uint32_t roundsNum;
     uint32_t currentRound = 1;
@@ -61,6 +54,9 @@ private:
     bool isSingleGame;
     bool playerHasWhiteBoard; // определяет цвет фигур игрока. Если игра на двоих, то первого игрока
 
+    std::string player1Name;
+    std::string player2Name;
+
     Background background;
 
     Object black_pawn;
@@ -69,3 +65,4 @@ private:
     Object white_pawn;
     Object white_king;
 };
+

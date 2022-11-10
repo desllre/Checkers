@@ -17,37 +17,22 @@ void Board::init(){
         board[i] = new char[size];
     }
 
-    if (isWhiteBoard){
-        for (uint16_t i = 0; i < size ; ++i){
-            if (i == size/2 || i == size/2 + 1) {
-                for (size_t j = 0; j < size ; ++j)
-                    board[i][j] = '0';
-            } else {
-                for (size_t j = 0; j < size ; ++j) {
-                    if (i < size / 2){
+    for (uint16_t i = 0; i < size ; ++i){ // заполнение борда
+        if (i == size/2 || i == size/2 - 1) {
+            for (size_t j = 0; j < size ; ++j)
+                board[i][j] = '0';
+        } else {
+            for (size_t j = 0; j < size ; ++j) {
+                if (i < size / 2){
+                    if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
                         board[i][j] = 'P';
-                        blackFigures.emplace_back(Figure(j, i));
-                    } else{
-                        board[i][j] = 'p';
-                        whiteFigures.emplace_back(Figure(j,i));
+                        blackFigures.emplace_back(Figure(j, i,char('p')));
                     }
-                }
-            }
-        }
 
-    } else {
-        for (uint16_t i = 0; i < size ; ++i){
-            if (i == size/2 || i == size/2 + 1) {
-                for (size_t j = 0; j < size ; ++j)
-                    board[i][j] = '0';
-            } else {
-                for (size_t j = 0; j < size ; ++j) {
-                    if (i < size / 2){
+                } else{
+                    if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
                         board[i][j] = 'p';
-                        whiteFigures.emplace_back(Figure(j, i));
-                    } else{
-                        board[i][j] = 'P';
-                        blackFigures.emplace_back(Figure(j, i));
+                        whiteFigures.emplace_back(Figure(j,i,char('p')));
                     }
                 }
             }
@@ -66,18 +51,46 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
     bool isMoving = false;
 
     char figureType = board[beginY][beginX];
+    char figureSide = checkSide(beginX, beginY);
     if (figureType == '0') return false;
 
     std::vector<int> possiblePos = possibles(beginX, beginY);
 
     int endPos = endY * size + endX;
 
-    for (auto i: possiblePos)
+    for (auto i: possiblePos) // проверка на наличие возможности походить
         if (endPos == i) isMoving = true;
 
     if (isMoving){
         board[beginY][beginX] = '0';
+
+        if (endY == 0 && figureSide == 'w'){ // преобразование
+            figureType = 'k';
+        } else if (endY == 7 && figureSide == 'b') {
+            figureType = 'K';
+        }
         board[endY][endX] = figureType;
+
+        if (figureType == 'w'){
+            for (auto i: whiteFigures){
+                if(i.x == beginX && i.y == beginY){
+                    i.figureType = std::tolower(figureType);
+                    i.x = endX;
+                    i.y = endY;
+                    break;
+                }
+            }
+        } else {
+            for (auto i: blackFigures){
+                if(i.x == beginX && i.y == beginY){
+                    i.figureType = figureType;
+                    i.x = endX;
+                    i.y = endY;
+                    break;
+                }
+            }
+        }
+
 
         int diffX = static_cast<int>(endX) - static_cast<int>(beginX);
         int diffY = static_cast<int>(endY) - static_cast<int>(beginY);
@@ -483,4 +496,8 @@ int Board::endOfGame() {
             return -1;
     }
     return 0;
+}
+
+uint16_t Board::getSize(){
+    return size;
 }

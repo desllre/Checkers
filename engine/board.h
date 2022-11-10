@@ -36,6 +36,8 @@ public:
 
     int endOfGame(); // проверка на конец игры. Возвращает 1 если выиграли белые, -1 - чёрные, 0 - игра ещё не окончена
 
+    uint16_t getSize();
+
 private:
     // функция инициализации борда
     void init();
@@ -56,10 +58,11 @@ private:
     std::vector<int> checkKingStep_Rus(uint16_t posX, uint16_t posY);
 
 private:
-
     struct Figure{
         Figure() = default;
-        Figure(uint16_t x, uint16_t y): x(x), y(y) {};
+        Figure(uint16_t x, uint16_t y, char figureType): x(x), y(y), figureType(figureType) {};
+
+        char figureType; // p - пешка(pawn), k - дамка(king)
         uint16_t x = 0;
         uint16_t y = 0;
     };
@@ -69,6 +72,8 @@ private:
     uint16_t size;
     bool isWhiteBoard; // хранит информацию о том, какой стороне принадлежит борд
     GameType typeOfGame;
+
+public:
     std::list<Figure> whiteFigures;
     std::list<Figure> blackFigures;
 };
