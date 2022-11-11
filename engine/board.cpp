@@ -58,8 +58,12 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
 
     int endPos = endY * size + endX;
 
-    for (auto i: possiblePos) // проверка на наличие возможности походить
-        if (endPos == i) isMoving = true;
+    for (auto i: possiblePos) { // проверка на наличие возможности походить
+        if (endPos == i){
+            isMoving = true;
+            break;
+        }
+    }
 
     if (isMoving){
         board[beginY][beginX] = '0';
@@ -71,23 +75,33 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
         }
         board[endY][endX] = figureType;
 
-        if (figureType == 'w'){
-            for (auto i: whiteFigures){
-                if(i.x == beginX && i.y == beginY){
-                    i.figureType = std::tolower(figureType);
-                    i.x = endX;
-                    i.y = endY;
+        if (figureSide == 'w'){
+            bool isFindPos = false;
+            auto it = whiteFigures.begin();
+            for (auto i = whiteFigures.begin(); i != whiteFigures.end(); ++i){
+                if(i->x == beginX && i->y == beginY){
+                    isFindPos = true;
+                    it = i;
                     break;
                 }
             }
+            if (isFindPos){
+                whiteFigures.erase(it);
+                whiteFigures.emplace_back(endX, endY, static_cast<char>(std::tolower(figureType)));
+            }
         } else {
-            for (auto i: blackFigures){
-                if(i.x == beginX && i.y == beginY){
-                    i.figureType = figureType;
-                    i.x = endX;
-                    i.y = endY;
+            bool isFindPos = false;
+            auto it = blackFigures.begin();
+            for (auto i = blackFigures.begin(); i != blackFigures.end(); ++i){
+                if(i->x == beginX && i->y == beginY){
+                    isFindPos = true;
+                    it = i;
                     break;
                 }
+            }
+            if (isFindPos){
+                blackFigures.erase(it);
+                blackFigures.emplace_back(endX, endY, static_cast<char>(std::tolower(figureType)));
             }
         }
 
@@ -509,4 +523,37 @@ int Board::endOfGame() {
 
 uint16_t Board::getSize(){
     return size;
+}
+
+void Board::setFigure(uint16_t x, uint16_t y, char figure){
+    if (x >= 0 && y >= 0 && x < size && y < size){
+        board[y][x] = figure;
+        bool isReplaced = false;
+        auto it = whiteFigures.begin();
+        for (auto i = whiteFigures.begin(); i !=whiteFigures.end() ; ++i){
+            if (i->x == x && i->y == y){
+                isReplaced = true;
+                it = i;
+            }
+        }
+        if (isReplaced){
+            whiteFigures.erase(it);
+        } else {
+            for (auto i = blackFigures.begin(); i !=blackFigures.end() ; ++i){
+                if (i->x == x && i->y == y){
+                    isReplaced = true;
+                    it = i;
+                }
+            }
+        }
+        if (isReplaced){
+            blackFigures.erase(it);
+        }
+
+        if (std::islower(figure))
+            whiteFigures.emplace_back(x, y, figure);
+        else
+            blackFigures.emplace_back(x, y, std::tolower(figure));
+
+    }
 }

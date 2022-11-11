@@ -38,6 +38,8 @@ public:
 
     uint16_t getSize();
 
+    void setFigure(uint16_t x, uint16_t y, char figure);
+
 private:
     // функция инициализации борда
     void init();

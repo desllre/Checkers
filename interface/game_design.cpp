@@ -31,6 +31,7 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
             }
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+                game.Move(sf::Mouse::getPosition(window));
                 game.FigureSelection(sf::Mouse::getPosition(window));
             }
         }
@@ -201,7 +202,7 @@ void Game::Draw(sf::RenderWindow& window){
     }
 }
 
-void Game::FigureSelection(sf::Vector2i mousePos){
+void Game::FigureSelection(const sf::Vector2i& mousePos){
 
     bool isMissed = false; // проверка на нажатие не на фигуру. В таком случае выделения фигуры убираются
 
@@ -212,6 +213,9 @@ void Game::FigureSelection(sf::Vector2i mousePos){
                 mousePos.y <= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*(i.y + 1)){
             isSelected = true;
             isMissed = true;
+
+            selectedPos.first = i.x;
+            selectedPos.second = i.y;
 
             figureSelector.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
 
@@ -228,6 +232,9 @@ void Game::FigureSelection(sf::Vector2i mousePos){
             isSelected = true;
             isMissed = true;
 
+            selectedPos.first = i.x;
+            selectedPos.second = i.y;
+
             figureSelector.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x + 1, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
 
             movePos = board.possibles(i.x, i.y);
@@ -236,15 +243,32 @@ void Game::FigureSelection(sf::Vector2i mousePos){
     }
 
     if (!isMissed){
+        selectedPos.first = 99;
+        selectedPos.second = 99;
         isSelected = false;
         movePos.clear();
     }
 }
 
+void Game::Move(const sf::Vector2i& mousePos){
+    std::pair<uint16_t, uint16_t> pos;
+    for(auto i: movePos){
+        pos = board.convertPos(i);
+
+        if(mousePos.x >= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*pos.first &&
+           mousePos.x <= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*(pos.first + 1) &&
+           mousePos.y >= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*pos.second &&
+           mousePos.y <= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*(pos.second + 1)){
+            std::cout << board.move(selectedPos.first, selectedPos.second, pos.first, pos.second);
+        }
+    }
+}
+
 
 void Game::Object::SetPosition(int x, int y){
-    sprite.setPosition(x, y);
+    sprite.setPosition(float(x), float(y));
 }
-void Game::Object::Draw(sf::RenderWindow& window){
+void Game::Object::Draw(sf::RenderWindow& window) const{
     window.draw(sprite);
 }
+

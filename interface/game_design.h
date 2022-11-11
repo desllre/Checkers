@@ -8,8 +8,9 @@
 #include "filesystem"
 #include "fstream"
 
+#include "iostream"
 
-
+// параметры поля игры
 #define BOARD_WIDTH 800
 #define BOARD_HEIGHT 800
 
@@ -38,12 +39,14 @@ public:
 
     void Draw(sf::RenderWindow& window);
 
-    void FigureSelection(sf::Vector2i mousePos); // выделение фигуры и её возможных ходов при нажатии
+    void FigureSelection(const sf::Vector2i& mousePos); // выделение фигуры и её возможных ходов при нажатии
+
+    void Move(const sf::Vector2i& mousePos); // движение фигуры
 
 private:
     struct Object{
         void SetPosition(int x, int y); // установка позиции объекта
-        void Draw(sf::RenderWindow& window);
+        void Draw(sf::RenderWindow& window) const;
 
         sf::Texture texture;
         sf::Sprite sprite;
@@ -52,8 +55,6 @@ private:
         uint32_t width = 0;
         uint32_t height = 0;
     };
-
-
 
 private:
     Board board;
@@ -79,6 +80,7 @@ private:
     Object white_king;
 
     Object moveSelector; // для выделения возможных ходов фигур
+    std::pair<uint16_t, uint16_t> selectedPos; // координаты выделеннной фигуры в массиве
     std::vector<int> movePos; // хранит номера позиций возможных ходов фигуры, на которую нажали
 
     Object figureSelector; // для выделения фигуры
@@ -90,6 +92,5 @@ private:
     int FIGURE_DISPLACEMENT_Y;
 
     bool isSelected = false; // выделена ли на данный момент фигура
-
 };
 
