@@ -30,9 +30,9 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
                 window.close();
             }
 
-            /*if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
                 game.FigureSelection(sf::Mouse::getPosition(window));
-            }*/
+            }
         }
 
         window.clear();
@@ -169,11 +169,16 @@ void Game::Draw(sf::RenderWindow& window){
     background.drawBackground(window);
     window.draw(boardStyle.sprite);
 
-    moveSelector.SetPosition(FIRST_FIGURE_POSITION_X, FIRST_FIGURE_POSITION_Y);
-    moveSelector.Draw(window);
+    if (isSelected){
+        figureSelector.Draw(window);
 
-    figureSelector.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y);
-    figureSelector.Draw(window);
+        std::pair<uint16_t, uint16_t> pos;
+        for(auto i: movePos){
+            pos = board.convertPos(i);
+            moveSelector.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*pos.first + 1, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*pos.second);
+            moveSelector.Draw(window);
+        }
+    }
 
     for(auto i: board.blackFigures){
         if (i.figureType == 'p'){
@@ -196,9 +201,45 @@ void Game::Draw(sf::RenderWindow& window){
     }
 }
 
-/*void Game::FigureSelection(sf::Vector2i mousePos){
-    if ()
-}*/
+void Game::FigureSelection(sf::Vector2i mousePos){
+
+    bool isMissed = false; // проверка на нажатие не на фигуру. В таком случае выделения фигуры убираются
+
+    for (auto i: board.whiteFigures){
+        if (mousePos.x >= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x &&
+                mousePos.x <= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*(i.x + 1) &&
+                mousePos.y >= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y &&
+                mousePos.y <= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*(i.y + 1)){
+            isSelected = true;
+            isMissed = true;
+
+            figureSelector.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
+
+            movePos = board.possibles(i.x, i.y);
+            break;
+        }
+    }
+
+    for (auto i: board.blackFigures){
+        if (mousePos.x >= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x &&
+            mousePos.x <= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*(i.x + 1) &&
+            mousePos.y >= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y &&
+            mousePos.y <= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*(i.y + 1)){
+            isSelected = true;
+            isMissed = true;
+
+            figureSelector.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x + 1, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
+
+            movePos = board.possibles(i.x, i.y);
+            break;
+        }
+    }
+
+    if (!isMissed){
+        isSelected = false;
+        movePos.clear();
+    }
+}
 
 
 void Game::Object::SetPosition(int x, int y){

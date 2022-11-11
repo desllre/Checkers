@@ -95,7 +95,7 @@ void Menu::pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_b
             changeCursor(window, sf::Cursor::Arrow);
 
             window.setActive(false);
-            sf::Thread configGameThread(std::bind(Game_design,std::ref(window), 1, true, GameType::English, 'w'));
+            sf::Thread configGameThread(std::bind(Game_design,std::ref(window), 1, true, GameType::Russian, 'w'));
             configGameThread.launch();
             configGameThread.wait();
             window.setActive(true);
