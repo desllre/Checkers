@@ -28,6 +28,7 @@
 
 #pragma once
 
+void GameExitWindow(sf::RenderWindow& window);
 
 void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSingleGame, GameType gameType, const char& figureColor);
 
@@ -44,6 +45,10 @@ public:
     void Move(const sf::Vector2i& mousePos); // движение фигуры
 
     void SetCurrentTIme(); // устанавливает текущее время продолжительности игры
+
+    void CheckActive(const sf::Vector2i& mousePos); // проверка на наведение на кнопку паузы
+
+    bool GetPauseActivity() const;
 
 private:
     struct Object{
@@ -112,5 +117,9 @@ private:
     std::string player2Name;
     sf::Text player2TextName; // строка с указанием противников
     sf::RectangleShape player2Rect;
+
+    Object pauseButton;
+    Object activePauseButton;
+    bool pauseIsActive = false;
 };
 

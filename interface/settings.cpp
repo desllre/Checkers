@@ -89,11 +89,45 @@ Settings::Settings(): background(BACKGROUND_IMAGE),
                                    "PLAYER 2", "Enter name"),
                       leftArrow(POS_LEFT_ARROW_X, POS_LEFT_ARROW_Y, LEFT_ARROW_IMAGE),
                       rightArrow(POS_RIGHT_ARROW_X, POS_RIGHT_ARROW_Y, RIGHT_ARROW_IMAGE),
-                      game_styles(STANDART_STYLE_IMAGE, BLACK_AND_WHITE_STYLE_IMAGE, POS_STYLE_IMAGE_X, POS_STYLE_IMAGE_Y)
-                      {
-                          player_1_Name = "";
-                          player_2_Name = "";
-                      }
+                      game_styles(STANDART_STYLE_IMAGE, BLACK_AND_WHITE_STYLE_IMAGE, POS_STYLE_IMAGE_X, POS_STYLE_IMAGE_Y) {
+
+    player_1_Name = "";
+    player_2_Name = "";
+    std::ifstream fin;
+    if (std::filesystem::exists("../config/custom_settings.txt")){
+        fin.open("../config/custom_settings.txt");
+        if (!fin.is_open()){
+            throw std::exception();
+        }
+        std::string buff;
+        fin >> buff;
+        if (buff == "Player_1"){
+            fin >> buff;
+            if (buff != "player_1"){
+                player_1_Name = buff;
+                player1Field.enterFieldText.setString(player_1_Name);
+            }
+
+        }
+        fin >> buff;
+        if (buff == "Player_2"){
+            fin >> buff;
+            if (buff != "player_2"){
+                player_2_Name = buff;
+                player2Field.enterFieldText.setString(player_2_Name);
+            }
+        }
+        fin >> buff;
+        if (buff == "Game_style"){
+            fin >> buff;
+            if (buff == "black_and_white"){
+                game_styles.isStandartStyle = false;
+                game_styles.sprite.setTexture(game_styles.textures[1]);
+            }
+        }
+        fin.close();
+    }
+}
 
 void Settings::ActivateButton(const sf::Vector2i& mousePosition, sf::RenderWindow& window){
 
@@ -324,7 +358,7 @@ void Settings::saveSettings(){
     fout << std::endl;
 
     fout << "Player_2 ";
-    if (!player_1_Name.empty()){
+    if (!player_2_Name.empty()){
         fout << player_2_Name;
 
     } else{
@@ -380,13 +414,13 @@ Settings::InputNameField::InputNameField(sf::Vector2<float> nameFieldSize, sf::V
 }
 
 void Settings::InputNameField::Draw(sf::RenderWindow& window) const{
+
     window.draw(nameField);
     window.draw(enterField);
 
     window.draw(nameFieldText);
     window.draw(enterFieldText);
 }
-
 
 
 Settings::Game_Styles::Game_Styles(const std::string& textureImg_1, const std::string& textureImg_2, float x, float y){

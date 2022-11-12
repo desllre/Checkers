@@ -21,6 +21,7 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
         sf::Event event;
 
         game.SetCurrentTIme();
+        game.CheckActive(sf::Mouse::getPosition(window));
 
         while (window.pollEvent(event)) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
@@ -29,11 +30,22 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
             }
 
             if (event.type == sf::Event::Closed) {
+                if (std::filesystem::exists("../config/custom_settings.txt")){
+                    std::system("rm -r ../config/custom_settings.txt");
+                }
                 window.close();
             }
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-                game.Move(sf::Mouse::getPosition(window));
-                game.FigureSelection(sf::Mouse::getPosition(window));
+                if (game.GetPauseActivity()){ // проверка нажатия на кнопку паузы
+                    window.setActive(false);
+                    sf::Thread GameExitThread(GameExitWindow, std::ref(window));
+                    GameExitThread.launch();
+                    GameExitThread.wait();
+                    window.setActive(true);
+                } else {
+                    game.Move(sf::Mouse::getPosition(window));
+                    game.FigureSelection(sf::Mouse::getPosition(window));
+                }
             }
         }
 
@@ -78,18 +90,16 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
         fin >> player1Name;
     else
         player1Name = "player_1";
-    buff = "";
 
     fin >> buff;
     if (buff == "Player_2")
         fin >> player2Name;
     else
         player2Name = "player_1";
-    buff = "";
+
     if (isSingleGame){
         player2Name = "Bot-Oleg";
     }
-
 
     std::string boardStyleStr;
     std::string moveSelectorStr;
@@ -98,10 +108,11 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
     std::string black_kingStr;
     std::string white_pawnStr;
     std::string white_kingStr;
+    std::string pauseButtonStr = "../textures/elements/pause.png";
+    std::string activePauseButtonStr = "../textures/elements/active_pause.png";
 
     fin >> buff;
     if (buff == "Game_style") {
-        buff = "";
         fin >> buff;
 
         if (buff == "standart"){
@@ -144,6 +155,8 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
             }
         }
     }
+
+    fin.close();
 
     textFont.loadFromFile("../fonts/GOUDYSTO.TTF");
 
@@ -221,6 +234,15 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
     player2Rect.setPosition(43, 862);
 
 
+    pauseButton.texture.loadFromFile(pauseButtonStr);
+    pauseButton.sprite.setTexture(pauseButton.texture);
+    pauseButton.sprite.setPosition(1360, 400);
+
+    activePauseButton.texture.loadFromFile(activePauseButtonStr);
+    activePauseButton.sprite.setTexture(activePauseButton.texture);
+    activePauseButton.sprite.setPosition(1360, 400);
+
+
     moveSelector.texture.loadFromFile(moveSelectorStr);
     moveSelector.sprite.setTexture(moveSelector.texture);
 
@@ -266,6 +288,11 @@ void Game::Draw(sf::RenderWindow& window){
     window.draw(player2Rect);
     window.draw(player2TextName);
 
+    if (pauseIsActive){
+        activePauseButton.Draw(window);
+    } else {
+        pauseButton.Draw(window);
+    }
 
     if (isSelected){
         figureSelector.Draw(window);
@@ -389,6 +416,17 @@ void Game::SetCurrentTIme(){
     gameTimeText.setString(gameTimeString);
 }
 
+void Game::CheckActive(const sf::Vector2i& mousePos){
+    if (mousePos.x >= 1360 && mousePos.x <= 1440 && mousePos.y >= 400 && mousePos.y <= 480){
+        pauseIsActive = true;
+    } else {
+        pauseIsActive = false;
+    }
+}
+
+bool Game::GetPauseActivity() const{
+    return pauseIsActive;
+}
 
 void Game::Object::SetPosition(int x, int y){
     sprite.setPosition(float(x), float(y));
@@ -397,5 +435,6 @@ void Game::Object::Draw(sf::RenderWindow& window) const{
     window.draw(sprite);
 }
 
-
-
+void GameExitWindow(sf::RenderWindow& window){
+    return;
+}
