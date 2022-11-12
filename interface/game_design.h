@@ -62,16 +62,10 @@ private:
     Board board;
     Object boardStyle;
 
-    uint32_t roundsNum;
-    uint32_t currentRound = 1;
-
     GameType gameType;
 
     bool isSingleGame;
     bool playerHasWhiteBoard; // определяет цвет фигур игрока. Если игра на двоих, то первого игрока
-
-    std::string player1Name;
-    std::string player2Name;
 
     Background background;
 
@@ -97,11 +91,26 @@ private:
 
     sf::Font textFont;
 
+    uint32_t roundsNum;
+    uint32_t currentRound = 1;
+    sf::Text roundsText;
+    sf::RectangleShape roundsRect;
+
+    std::pair<uint16_t, uint16_t> score; // счёт игры. Первая цифра - кол-во побед player_1, вторая - player_2
+    sf::Text scoreText;
+    sf::RectangleShape scoreRect;
+
     sf::Clock gameTime; // время игры
-    sf::Text gameTimeText;
     std::string gameTimeString;
+    sf::Text gameTimeText;
+    sf::RectangleShape gameTimeRect;
 
-    sf::Text playerText; // строка с указанием противников
+    std::string player1Name;
+    sf::Text player1TextName;
+    sf::RectangleShape player1Rect;
 
+    std::string player2Name;
+    sf::Text player2TextName; // строка с указанием противников
+    sf::RectangleShape player2Rect;
 };
 

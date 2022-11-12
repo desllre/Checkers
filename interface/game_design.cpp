@@ -147,20 +147,79 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
 
     textFont.loadFromFile("../fonts/GOUDYSTO.TTF");
 
+    score.first = 0;
+    score.second = 0;
+
+    scoreText.setFillColor(sf::Color::Black);
+    scoreText.setFont(textFont);
+    scoreText.setCharacterSize(35);
+    scoreText.setPosition(990, 805);
+    scoreText.setString("Score " + std::to_string(score.first) + " : " + std::to_string(score.second));
+    scoreText.setStyle(sf::Text::Bold);
+
+    scoreRect.setSize(sf::Vector2f(360, 55));
+    scoreRect.setFillColor(sf::Color::White);
+    scoreRect.setOutlineColor(sf::Color::Black);
+    scoreRect.setOutlineThickness(4);
+    scoreRect.setPosition(975, 800);
+
+
+    roundsText.setFillColor(sf::Color::Black);
+    roundsText.setFont(textFont);
+    roundsText.setCharacterSize(35);
+    roundsText.setPosition(1020, 737);
+    roundsText.setString("Round " + std::to_string(currentRound));
+    roundsText.setStyle(sf::Text::Bold);
+
+    roundsRect.setSize(sf::Vector2f(280, 55));
+    roundsRect.setFillColor(sf::Color::White);
+    roundsRect.setOutlineColor(sf::Color::Black);
+    roundsRect.setOutlineThickness(4);
+    roundsRect.setPosition(1015, 730);
+
+
     gameTimeString = "";
-    gameTimeText.setFillColor(sf::Color(216,0,0));
+    gameTimeText.setFillColor(sf::Color::Black);
     gameTimeText.setFont(textFont);
     gameTimeText.setCharacterSize(45);
-    gameTimeText.setPosition(1070, 105);
+    gameTimeText.setPosition(1070, 115);
     gameTimeText.setString("00:00");
     gameTimeText.setStyle(sf::Text::Bold);
 
-    playerText.setFillColor(sf::Color(216,0,0));
-    playerText.setFont(textFont);
-    playerText.setCharacterSize(25);
-    playerText.setPosition(870, 205);
-    playerText.setString(player1Name + " vs " + player2Name);
-    playerText.setStyle(sf::Text::Bold);
+    gameTimeRect.setSize(sf::Vector2f(200, 55));
+    gameTimeRect.setFillColor(sf::Color::White);
+    gameTimeRect.setOutlineColor(sf::Color::Black);
+    gameTimeRect.setOutlineThickness(4);
+    gameTimeRect.setPosition(1055, 115);
+
+
+    player1TextName.setFillColor(sf::Color::Black);
+    player1TextName.setFont(textFont);
+    player1TextName.setCharacterSize(20);
+    player1TextName.setPosition(45, 23);
+    player1TextName.setString(player1Name);
+    player1TextName.setStyle(sf::Text::Bold);
+
+    player1Rect.setSize(sf::Vector2f(250, 30));
+    player1Rect.setFillColor(sf::Color::White);
+    player1Rect.setOutlineColor(sf::Color::Black);
+    player1Rect.setOutlineThickness(3);
+    player1Rect.setPosition(43, 20);
+
+
+    player2TextName.setFillColor(sf::Color::Black);
+    player2TextName.setFont(textFont);
+    player2TextName.setCharacterSize(20);
+    player2TextName.setPosition(45, 865);
+    player2TextName.setString(player2Name);
+    player2TextName.setStyle(sf::Text::Bold);
+
+    player2Rect.setSize(sf::Vector2f(250, 30));
+    player2Rect.setFillColor(sf::Color::White);
+    player2Rect.setOutlineColor(sf::Color::Black);
+    player2Rect.setOutlineThickness(3);
+    player2Rect.setPosition(43, 862);
+
 
     moveSelector.texture.loadFromFile(moveSelectorStr);
     moveSelector.sprite.setTexture(moveSelector.texture);
@@ -192,8 +251,21 @@ void Game::Draw(sf::RenderWindow& window){
     background.drawBackground(window);
     window.draw(boardStyle.sprite);
 
+    window.draw(scoreRect);
+    window.draw(scoreText);
+
+    window.draw(roundsRect);
+    window.draw(roundsText);
+
+    window.draw(gameTimeRect);
     window.draw(gameTimeText);
-    window.draw(playerText);
+
+    window.draw(player1Rect);
+    window.draw(player1TextName);
+
+    window.draw(player2Rect);
+    window.draw(player2TextName);
+
 
     if (isSelected){
         figureSelector.Draw(window);
@@ -297,6 +369,12 @@ void Game::SetCurrentTIme(){
     int time = static_cast<int>(gameTime.getElapsedTime().asSeconds());
     int minutes = time / 60;
     int seconds = time % 60;
+
+    if (minutes >= 60){
+        gameTimeString = "--:--";
+        gameTimeText.setString(gameTimeString);
+    }
+
 
     if (minutes < 10){
         gameTimeString = "0";
