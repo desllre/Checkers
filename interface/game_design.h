@@ -43,6 +43,8 @@ public:
 
     void Move(const sf::Vector2i& mousePos); // движение фигуры
 
+    void SetCurrentTIme(); // устанавливает текущее время продолжительности игры
+
 private:
     struct Object{
         void SetPosition(int x, int y); // установка позиции объекта
@@ -92,5 +94,14 @@ private:
     int FIGURE_DISPLACEMENT_Y;
 
     bool isSelected = false; // выделена ли на данный момент фигура
+
+    sf::Font textFont;
+
+    sf::Clock gameTime; // время игры
+    sf::Text gameTimeText;
+    std::string gameTimeString;
+
+    sf::Text playerText; // строка с указанием противников
+
 };
 

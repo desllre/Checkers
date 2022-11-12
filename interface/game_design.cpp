@@ -20,6 +20,8 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
     while (window.isOpen()) {
         sf::Event event;
 
+        game.SetCurrentTIme();
+
         while (window.pollEvent(event)) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
                 window.setActive(false);
@@ -29,7 +31,6 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
-
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
                 game.Move(sf::Mouse::getPosition(window));
                 game.FigureSelection(sf::Mouse::getPosition(window));
@@ -85,6 +86,9 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
     else
         player2Name = "player_1";
     buff = "";
+    if (isSingleGame){
+        player2Name = "Bot-Oleg";
+    }
 
 
     std::string boardStyleStr;
@@ -141,6 +145,23 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
         }
     }
 
+    textFont.loadFromFile("../fonts/GOUDYSTO.TTF");
+
+    gameTimeString = "";
+    gameTimeText.setFillColor(sf::Color(216,0,0));
+    gameTimeText.setFont(textFont);
+    gameTimeText.setCharacterSize(45);
+    gameTimeText.setPosition(1070, 105);
+    gameTimeText.setString("00:00");
+    gameTimeText.setStyle(sf::Text::Bold);
+
+    playerText.setFillColor(sf::Color(216,0,0));
+    playerText.setFont(textFont);
+    playerText.setCharacterSize(25);
+    playerText.setPosition(870, 205);
+    playerText.setString(player1Name + " vs " + player2Name);
+    playerText.setStyle(sf::Text::Bold);
+
     moveSelector.texture.loadFromFile(moveSelectorStr);
     moveSelector.sprite.setTexture(moveSelector.texture);
 
@@ -164,11 +185,15 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
     white_king.texture.loadFromFile(white_kingStr);
     white_king.sprite.setTexture(white_king.texture);
 
+    gameTime.restart();
 }
 
 void Game::Draw(sf::RenderWindow& window){
     background.drawBackground(window);
     window.draw(boardStyle.sprite);
+
+    window.draw(gameTimeText);
+    window.draw(playerText);
 
     if (isSelected){
         figureSelector.Draw(window);
@@ -205,6 +230,10 @@ void Game::Draw(sf::RenderWindow& window){
 void Game::FigureSelection(const sf::Vector2i& mousePos){
 
     bool isMissed = false; // проверка на нажатие не на фигуру. В таком случае выделения фигуры убираются
+
+    if (gameTime.getElapsedTime() <= sf::seconds(0.2)){
+        return;
+    }
 
     for (auto i: board.whiteFigures){
         if (mousePos.x >= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x &&
@@ -259,9 +288,27 @@ void Game::Move(const sf::Vector2i& mousePos){
            mousePos.x <= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*(pos.first + 1) &&
            mousePos.y >= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*pos.second &&
            mousePos.y <= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*(pos.second + 1)){
-            std::cout << board.move(selectedPos.first, selectedPos.second, pos.first, pos.second);
+            board.move(selectedPos.first, selectedPos.second, pos.first, pos.second);
         }
     }
+}
+
+void Game::SetCurrentTIme(){
+    int time = static_cast<int>(gameTime.getElapsedTime().asSeconds());
+    int minutes = time / 60;
+    int seconds = time % 60;
+
+    if (minutes < 10){
+        gameTimeString = "0";
+    }
+    gameTimeString += std::to_string(minutes);
+    gameTimeString += ":";
+    if (seconds < 10){
+        gameTimeString += "0";
+    }
+
+    gameTimeString += std::to_string(seconds);
+    gameTimeText.setString(gameTimeString);
 }
 
 
@@ -271,4 +318,6 @@ void Game::Object::SetPosition(int x, int y){
 void Game::Object::Draw(sf::RenderWindow& window) const{
     window.draw(sprite);
 }
+
+
 

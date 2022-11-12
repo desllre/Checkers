@@ -128,7 +128,7 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
                     break;
                 }
             }
-        } else{
+        } else if(checkSide(enemyPosX, enemyPosY) == 'b'){
             for (auto i = blackFigures.begin(); i != blackFigures.end() ; ++i) {
                 if (i->x == enemyPosX && i->y == enemyPosY){
                     blackFigures.erase(i);
@@ -222,7 +222,7 @@ std::vector<int> Board::checkPawnStep_Ang(uint16_t posX, uint16_t posY){
                 }
             }else if (figureSide != checkSide(j, i)){ // проверяем на одинаковую сторону фигуры
                 i += biasY, j += biasX;
-                if (board[i][j] == '0' && i < size && i >= 0 && j < size && j >= 0){
+                if (i < size && i >= 0 && j < size && j >= 0 && board[i][j] == '0'){
                     if (!isAttach){
                         possibles.clear();
                         isAttach = true;
@@ -267,7 +267,7 @@ std::vector<int>  Board::checkPawnStep_Rus(uint16_t posX, uint16_t posY){
                 }
             }else if (figureSide != checkSide(j, i)){ // проверяем на одинаковую сторону фигуры
                 i += biasY, j += biasX;
-                if (board[i][j] == '0' && i < size && i >= 0 && j < size && j >= 0){
+                if (i < size && i >= 0 && j < size && j >= 0 && board[i][j] == '0'){
                     if (!isAttach){
                         possibles.clear();
                         isAttach = true;
@@ -289,7 +289,7 @@ std::vector<int>  Board::checkPawnStep_Rus(uint16_t posX, uint16_t posY){
                 }
             }else if (figureSide != checkSide(j, i)){ // проверяем на одинаковую сторону фигуры
                 i += biasY, j += biasX;
-                if (board[i][j] == '0' && i < size && i >= 0 && j < size && j >= 0){
+                if (i < size && i >= 0 && j < size && j >= 0 && board[i][j] == '0'){
                     if (!isAttach){
                         possibles.clear();
                         isAttach = true;
@@ -337,7 +337,7 @@ std::vector<int> Board::checkKingStep_Ang(uint16_t posX, uint16_t posY){
                 }
             }else if (figureSide != checkSide(j, i)){ // проверяем на одинаковую сторону фигуры
                 i += biasY, j += biasX;
-                if (board[i][j] == '0' && i < size && i >= 0 && j < size && j >= 0){
+                if (i < size && i >= 0 && j < size && j >= 0 && board[i][j] == '0'){
                     if (!isAttach){
                         possibles.clear();
                         isAttach = true;
@@ -408,7 +408,7 @@ std::vector<int> Board::checkKingStep_Rus(uint16_t posX, uint16_t posY){
                 }
             } else if (figureSide != checkSide(j, i)){
                 i += biasY, j += biasX;
-                if (board[i][j] == '0' && i < size && i >= 0 && j < size && j >= 0){
+                if (i < size && i >= 0 && j < size && j >= 0 && board[i][j] == '0'){
                     if (!isAttach){
                         possibles.clear();
                         isAttach = true;
@@ -432,7 +432,7 @@ std::vector<int> Board::checkKingStep_Rus(uint16_t posX, uint16_t posY){
                 }
             } else if (figureSide != checkSide(j, i)){
                 i += biasY, j += biasX;
-                if (board[i][j] == '0' && i < size && i >= 0 && j < size && j >= 0){
+                if (i < size && i >= 0 && j < size && j >= 0 && board[i][j] == '0'){
                     if (!isAttach){
                         possibles.clear();
                         isAttach = true;
@@ -459,6 +459,7 @@ std::pair<uint16_t, uint16_t> Board::convertPos(uint16_t pos) const{
 }
 
 char Board::checkSide(uint16_t posX, uint16_t posY){
+    if (board[posY][posX] == '0') return '0';
     if (std::islower(board[posY][posX]))
         return 'w';
     else

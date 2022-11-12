@@ -30,7 +30,7 @@ public:
 
     std::pair<uint16_t, uint16_t> convertPos(uint16_t pos) const; // конвертирует номер позиции в координаты
 
-    char checkSide(uint16_t posX, uint16_t posY); // w - white, b - black
+    char checkSide(uint16_t posX, uint16_t posY); // w - white, b - black, 0 - ничего
 
     bool getIsWhiteBoard();
 
