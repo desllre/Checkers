@@ -60,7 +60,7 @@ Button::Button(const sf::Vector2<float> &size, float thickness,
 }
 
 void Button::playSongsPress() {
-    sf::Time time = sf::seconds(0.56);
+    sf::Time time = sf::seconds(0.6);
     music_press.play();
     sleep(time);
     music_press.stop();
@@ -166,15 +166,21 @@ InputFieldRounds::InputFieldRounds(const sf::Vector2<float> &size, float thickne
 void InputFieldRounds::setValue(bool is_mouse_on_left_round_arrows,
                                 bool is_mouse_on_right_round_arrows) {
     if (is_mouse_on_left_round_arrows) {
+        if (num == 0) {
+            return;
+        }
         --num;
         number_of_round.clear();
-        number_of_round.push_back(num);
+        number_of_round = std::to_string(num);
         text.setString(number_of_round);
     }
     else if (is_mouse_on_right_round_arrows) {
+        if (num == 5) {
+            return;
+        }
         ++num;
         number_of_round.clear();
-        number_of_round.push_back(num);
+        number_of_round = std::to_string(num);
         text.setString(number_of_round);
     }
 }

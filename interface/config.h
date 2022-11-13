@@ -58,6 +58,16 @@ const sf::Vector2<float> SIZE_FIGURE(SIZE_FIGURE_X, SIZE_FIGURE_Y);
 #define POS_TEXT_ROUND_X 90.f
 #define POS_TEXT_ROUND_Y 200.f
 
+/*For input number of rounds*/
+#define SIZE_INPUT_X 270.f
+#define SIZE_INPUT_Y 120.f
+#define POS_INPUT_ROUNDS_X 1000.f
+#define POS_INPUT_ROUNDS_Y 190.f
+const sf::Vector2<float> SIZE_INPUT_ROUND(SIZE_INPUT_X, SIZE_INPUT_Y);
+#define POS_INPUT_TEXT_ROUND_X 1105.f
+#define POS_INPUT_TEXT_ROUNDS_Y 205.f
+#define TEXT_INPUT_ROUND_SIZE 70L
+
 /**************Main class to create config game**************/
 class ConfigGame {
 public:
@@ -78,11 +88,10 @@ public:
                    TEXT_CONFIGS_SIZE, PATH_FONTS,
                    "SELECT NUMBER \n OF ROUNDS",
                    POS_TEXT_ROUND_X, POS_TEXT_ROUND_Y),
-        rounds(SIZE_FIGURE, THICKNESS, POS_FIGURE_X,
-                         POS_FIGURE_Y, COLOR_OUTLINE, COLOR_CONFIG_TEXT,
-                         TEXT_CONFIGS_SIZE, PATH_FONTS,
-                         "SELECT NUMBER \n OF ROUNDS",
-                         POS_TEXT_ROUND_X, POS_TEXT_ROUND_Y) {}
+        rounds(SIZE_INPUT_ROUND, THICKNESS, POS_INPUT_ROUNDS_X,
+               POS_INPUT_ROUNDS_Y, COLOR_OUTLINE, COLOR_CONFIG_TEXT,
+               TEXT_INPUT_ROUND_SIZE, PATH_FONTS,
+               "1", POS_INPUT_TEXT_ROUND_X, POS_INPUT_TEXT_ROUNDS_Y) {}
 
     ~ConfigGame() = default;
 

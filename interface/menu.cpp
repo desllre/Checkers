@@ -43,6 +43,7 @@ void Menu::activateButton(bool is_mouse_on_play_button, bool is_mouse_on_setting
         settings_button.setColorFigure(sf::Color::Black);
         settings_button.setColorText(sf::Color::Black);
         exit_button.setColorFigure(sf::Color::Black);
+        exit_button.setColorText(sf::Color::Black);
         if (is_pressed_button) {
             changeCursor(window, cursor_arrow);
             is_pressed_button = false;

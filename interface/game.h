@@ -1,5 +1,5 @@
-#pragma once
 #include "menu.h"
+#pragma once
 
 /**********Main function to create game**********/
 void game() {
@@ -12,11 +12,6 @@ void game() {
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
-            }
-            if (event.type == sf::Event::MouseButtonPressed) {
-                sf::Cursor cursor;
-                cursor.loadFromSystem(sf::Cursor::Hand);
-                window.setMouseCursor(cursor);
             }
         }
 
