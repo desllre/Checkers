@@ -98,6 +98,12 @@ public:
 
     bool getIsBackButtonPressed(); //Get value end of function
 
+    void setTextInput(); // Setting the field activity to enter text
+
+    void inputText(const uint32_t& inputSymbol); // Entering text in the selected field, if selected
+
+    void saveSettings(); // Saving the settings
+
 private:
     Background background;
     Button back_button;
