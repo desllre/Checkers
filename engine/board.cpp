@@ -70,7 +70,7 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
 
         if (endY == 0 && figureSide == 'w'){ // преобразование
             figureType = 'k';
-        } else if (endY == 7 && figureSide == 'b') {
+        } else if (endY == size - 1  && figureSide == 'b') {
             figureType = 'K';
         }
         board[endY][endX] = figureType;
@@ -556,5 +556,31 @@ void Board::setFigure(uint16_t x, uint16_t y, char figure){
         else
             blackFigures.emplace_back(x, y, std::tolower(figure));
 
+    }
+}
+
+void Board::restart(){
+    whiteFigures.clear();
+    blackFigures.clear();
+    for (uint16_t i = 0; i < size ; ++i){ // заполнение борда
+        if (i == size/2 || i == size/2 - 1) {
+            for (size_t j = 0; j < size ; ++j)
+                board[i][j] = '0';
+        } else {
+            for (size_t j = 0; j < size ; ++j) {
+                if (i < size / 2){
+                    if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
+                        board[i][j] = 'P';
+                        blackFigures.emplace_back(Figure(j, i,char('p')));
+                    }
+
+                } else{
+                    if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
+                        board[i][j] = 'p';
+                        whiteFigures.emplace_back(Figure(j,i,char('p')));
+                    }
+                }
+            }
+        }
     }
 }

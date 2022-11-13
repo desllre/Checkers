@@ -13,7 +13,8 @@ add_executable(Checkers main.cpp engine/board.cpp engine/board.h
         interface/config.h interface/config.cpp
         interface/exitWindow.h interface/exitWindow.cpp
         interface/settings.h interface/settings.cpp
-        interface/game_design.cpp interface/game_design.h)
+        interface/game_design.cpp interface/game_design.h
+        interface/gameExitWindow.cpp interface/gameExitWindow.h)
 
 target_link_libraries(Checkers sfml-graphics sfml-audio sfml-window)
 

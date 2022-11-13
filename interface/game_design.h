@@ -1,4 +1,5 @@
 #include "../engine/board.h"
+#include "gameExitWindow.h"
 #include "elements.h"
 
 #include "SFML/Graphics.hpp"
@@ -7,8 +8,6 @@
 #include "vector"
 #include "filesystem"
 #include "fstream"
-
-#include "iostream"
 
 // параметры поля игры
 #define BOARD_WIDTH 800
@@ -28,8 +27,6 @@
 
 #pragma once
 
-void GameExitWindow(sf::RenderWindow& window);
-
 void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSingleGame, GameType gameType, const char& figureColor);
 
 class Game{
@@ -37,6 +34,8 @@ public:
 
     Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool playerHasWhiteBoard,
          const uint16_t& boardSize);
+
+    ~Game() = default;
 
     void Draw(sf::RenderWindow& window);
 
@@ -46,11 +45,19 @@ public:
 
     void SetCurrentTIme(); // устанавливает текущее время продолжительности игры
 
-    void CheckActive(const sf::Vector2i& mousePos); // проверка на наведение на кнопку паузы
+    void CheckActive(sf::RenderWindow& window, const sf::Vector2i& mousePos); // проверка на наведение на кнопку паузы
+
+    void SetPauseActivity(bool activity);
 
     bool GetPauseActivity() const;
 
+    void Restart(); // обнуляет до начальных все параметры борда
+
+    void ClockRestart();
+
 private:
+    void ChangeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor);
+
     struct Object{
         void SetPosition(int x, int y); // установка позиции объекта
         void Draw(sf::RenderWindow& window) const;
@@ -105,7 +112,8 @@ private:
     sf::Text scoreText;
     sf::RectangleShape scoreRect;
 
-    sf::Clock gameTime; // время игры
+    sf::Clock gameClock; // время игры
+    sf::Time gameTime; // время игры
     std::string gameTimeString;
     sf::Text gameTimeText;
     sf::RectangleShape gameTimeRect;
@@ -121,5 +129,7 @@ private:
     Object pauseButton;
     Object activePauseButton;
     bool pauseIsActive = false;
+
+    sf::Cursor cursor;
 };
 

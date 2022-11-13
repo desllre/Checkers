@@ -21,13 +21,9 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
         sf::Event event;
 
         game.SetCurrentTIme();
-        game.CheckActive(sf::Mouse::getPosition(window));
+        game.CheckActive(window, sf::Mouse::getPosition(window));
 
         while (window.pollEvent(event)) {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
-                window.setActive(false);
-                return;
-            }
 
             if (event.type == sf::Event::Closed) {
                 if (std::filesystem::exists("../config/custom_settings.txt")){
@@ -37,11 +33,33 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
             }
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
                 if (game.GetPauseActivity()){ // проверка нажатия на кнопку паузы
+                    int gameState = -1;
                     window.setActive(false);
-                    sf::Thread GameExitThread(GameExitWindow, std::ref(window));
+
+                    game.SetPauseActivity(false);
+
+                    sf::Thread GameExitThread([&window, &gameState](){
+                        GameExitWindow(window, gameState);
+                    });
+
                     GameExitThread.launch();
                     GameExitThread.wait();
                     window.setActive(true);
+
+                    switch (gameState) {
+                        case 0:{
+                            break;
+                        }
+                        case 1:{
+                            game.Restart();
+                            break;
+                        }
+                        case 2:{
+                            window.setActive(false);
+                            return;
+                        }
+                    }
+                    game.ClockRestart(); // рестартим время, чтобы иммитировать паузу игры (т.е время было не изменно с момента остановки игры)
                 } else {
                     game.Move(sf::Mouse::getPosition(window));
                     game.FigureSelection(sf::Mouse::getPosition(window));
@@ -236,11 +254,11 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
 
     pauseButton.texture.loadFromFile(pauseButtonStr);
     pauseButton.sprite.setTexture(pauseButton.texture);
-    pauseButton.sprite.setPosition(1360, 400);
+    pauseButton.sprite.setPosition(1350, 400);
 
     activePauseButton.texture.loadFromFile(activePauseButtonStr);
     activePauseButton.sprite.setTexture(activePauseButton.texture);
-    activePauseButton.sprite.setPosition(1360, 400);
+    activePauseButton.sprite.setPosition(1350, 400);
 
 
     moveSelector.texture.loadFromFile(moveSelectorStr);
@@ -266,7 +284,7 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
     white_king.texture.loadFromFile(white_kingStr);
     white_king.sprite.setTexture(white_king.texture);
 
-    gameTime.restart();
+    gameClock.restart();
 }
 
 void Game::Draw(sf::RenderWindow& window){
@@ -330,7 +348,7 @@ void Game::FigureSelection(const sf::Vector2i& mousePos){
 
     bool isMissed = false; // проверка на нажатие не на фигуру. В таком случае выделения фигуры убираются
 
-    if (gameTime.getElapsedTime() <= sf::seconds(0.2)){
+    if (gameClock.getElapsedTime() <= sf::seconds(0.2)){
         return;
     }
 
@@ -393,7 +411,9 @@ void Game::Move(const sf::Vector2i& mousePos){
 }
 
 void Game::SetCurrentTIme(){
-    int time = static_cast<int>(gameTime.getElapsedTime().asSeconds());
+    gameTime += gameClock.getElapsedTime();
+    gameClock.restart();
+    int time = static_cast<int>(gameTime.asSeconds());
     int minutes = time / 60;
     int seconds = time % 60;
 
@@ -416,10 +436,21 @@ void Game::SetCurrentTIme(){
     gameTimeText.setString(gameTimeString);
 }
 
-void Game::CheckActive(const sf::Vector2i& mousePos){
-    if (mousePos.x >= 1360 && mousePos.x <= 1440 && mousePos.y >= 400 && mousePos.y <= 480){
+void Game::ChangeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor) {
+    cursor.loadFromSystem(type_cursor);
+    window.setMouseCursor(cursor);
+}
+
+void Game::CheckActive(sf::RenderWindow& window, const sf::Vector2i& mousePos){
+    if (mousePos.x >= 1350 && mousePos.x <= 1430 && mousePos.y >= 400 && mousePos.y <= 480){
+        if (!pauseIsActive){
+            ChangeCursor(window, sf::Cursor::Type::Hand);
+        }
         pauseIsActive = true;
     } else {
+        if (pauseIsActive){
+            ChangeCursor(window, sf::Cursor::Type::Arrow);
+        }
         pauseIsActive = false;
     }
 }
@@ -428,13 +459,30 @@ bool Game::GetPauseActivity() const{
     return pauseIsActive;
 }
 
+void Game::SetPauseActivity(bool activity){
+    pauseIsActive = activity;
+}
+
+void Game::Restart(){
+    isSelected = false;
+    currentRound = 1;
+    roundsText.setString("Round 1");
+    score.first = score.second = 0;
+    scoreText.setString("Score 0 : 0");
+    gameClock.restart();
+    gameTimeString = "";
+    gameTimeText.setString("00:00");
+    board.restart();
+}
+
+void Game::ClockRestart(){
+    gameClock.restart();
+}
+
+
 void Game::Object::SetPosition(int x, int y){
     sprite.setPosition(float(x), float(y));
 }
 void Game::Object::Draw(sf::RenderWindow& window) const{
     window.draw(sprite);
-}
-
-void GameExitWindow(sf::RenderWindow& window){
-    return;
 }

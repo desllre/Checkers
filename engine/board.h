@@ -40,6 +40,8 @@ public:
 
     void setFigure(uint16_t x, uint16_t y, char figure);
 
+    void restart();
+
 private:
     // функция инициализации борда
     void init();
