@@ -23,6 +23,11 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
         game.SetCurrentTIme();
         game.CheckActive(window, sf::Mouse::getPosition(window));
 
+        if(game.EndOfGame(window)){
+            window.setActive(false);
+            return;
+        }
+
         while (window.pollEvent(event)) {
 
             if (event.type == sf::Event::Closed) {
@@ -35,7 +40,7 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
                 if (game.GetPauseActivity()){ // проверка нажатия на кнопку паузы
                     int gameState = -1;
                     window.setActive(false);
-
+                    game.ChangeCursor(window, sf::Cursor::Type::Arrow);
                     game.SetPauseActivity(false);
 
                     sf::Thread GameExitThread([&window, &gameState](){
@@ -44,7 +49,7 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
 
                     GameExitThread.launch();
                     GameExitThread.wait();
-                    window.setActive(true);
+                    window.setActive();
 
                     switch (gameState) {
                         case 1:{
@@ -79,22 +84,25 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
             gameType(gameType), playerHasWhiteBoard(playerHasWhiteBoard),
             background("../textures/backgrounds/game_bg.png"){
 
-    int yPosPlayer1_NameField, yPosPlayer2_NameField;
+    int yPosPlayer1_NameField = LOW_POS_NAME_FIELD_Y, yPosPlayer2_NameField = HIGH_POS_NAME_FIELD_Y;
 
     if (playerHasWhiteBoard) { // распределение фигур между игроками в зависимости от цвета фигур игрока
         player1Way = true;
         player1Figures = &board.whiteFigures;
         player2Figures = &board.blackFigures;
-        yPosPlayer1_NameField = LOW_POS_NAME_FIELD_Y;
-        yPosPlayer2_NameField = HIGH_POS_NAME_FIELD_Y;
     } else{
         player1Way = false;
-        player1Figures = &board.blackFigures;
-        player2Figures = &board.whiteFigures;
         if (!isSingleGame){
+            player1Figures = &board.blackFigures;
+            player2Figures = &board.whiteFigures;
+
             yPosPlayer1_NameField = HIGH_POS_NAME_FIELD_Y;
             yPosPlayer2_NameField = LOW_POS_NAME_FIELD_Y;
+        } else {
+            player1Figures = &board.whiteFigures;
+            player2Figures = &board.blackFigures;
         }
+
     }
 
     if (gameType == GameType::International){
@@ -373,26 +381,49 @@ void Game::Draw(sf::RenderWindow& window){
             moveSelector.Draw(window);
         }
     }
+    if (playerHasWhiteBoard || isSingleGame){ // в зависимости от ситуации шашки у игроков имеют разные цвета
+        for(auto i: *player1Figures){
+            if (i.figureType == 'p'){
+                white_pawn.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
+                white_pawn.Draw(window);
+            } else {
+                white_king.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
+                white_king.Draw(window);
+            }
+        }
 
-    for(auto i: *player1Figures){
-        if (i.figureType == 'p'){
-            black_pawn.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
-            black_pawn.Draw(window);
-        } else {
-            black_king.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
-            black_king.Draw(window);
+        for(auto i: *player2Figures){
+            if (i.figureType == 'p'){
+                black_pawn.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
+                black_pawn.Draw(window);
+            } else {
+                black_king.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
+                black_king.Draw(window);
+            }
+        }
+    } else {
+        for(auto i: *player1Figures){
+            if (i.figureType == 'p'){
+                black_pawn.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
+                black_pawn.Draw(window);
+            } else {
+                black_king.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
+                black_king.Draw(window);
+            }
+        }
+
+        for(auto i: *player2Figures){
+            if (i.figureType == 'p'){
+                white_pawn.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
+                white_pawn.Draw(window);
+            } else {
+                white_king.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
+                white_king.Draw(window);
+            }
         }
     }
 
-    for(auto i: *player2Figures){
-        if (i.figureType == 'p'){
-            white_pawn.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
-            white_pawn.Draw(window);
-        } else {
-            white_king.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
-            white_king.Draw(window);
-        }
-    }
+
 }
 
 void Game::FigureSelection(const sf::Vector2i& mousePos){
@@ -534,6 +565,22 @@ void Game::Restart(){
     board.restart();
 }
 
+void Game::Restart(int a){
+
+    scoreText.setString("Score " + std::to_string(score.first) + " : " + std::to_string(score.second));
+
+    gameTime = sf::Time::Zero;
+    gameClock.restart();
+    isSelected = false;
+
+    roundsText.setString("Round 1");
+    score.first = score.second = 0;
+    gameTimeString = "";
+    gameTimeText.setString("00:00");
+
+    board.restart();
+}
+
 void Game::ClockRestart(){
     gameClock.restart();
 }
@@ -553,6 +600,64 @@ void Game::SetActivityPlayerWay(){
         player1Rect.setOutlineColor(sf::Color::Black);
     }
 
+}
+
+bool Game::EndOfGame(sf::RenderWindow& window){
+    int endValue = board.endOfGame();
+    if (endValue != 0){
+
+        if(endValue == 1){
+            if (playerHasWhiteBoard){
+                ++score.first;
+            } else {
+                ++score.second;
+            }
+        } else if (endValue == -1){
+            if (playerHasWhiteBoard){
+                ++score.second;
+            } else {
+                ++score.first;
+            }
+        }
+
+        int returnValue;
+        std::string winnerName;
+        if (endValue == 1){ // выигрыш того, кто отображается на доске снизу)))
+            if (player1Rect.getPosition().y > player2Rect.getPosition().y)
+                winnerName = player1Name;
+            else
+                winnerName = player2Name;
+        } else {
+            if (player1Rect.getPosition().y > player2Rect.getPosition().y)
+                winnerName = player2Name;
+            else
+                winnerName = player1Name;
+        }
+        window.setActive(false);
+        sf::Thread endOfGameWindowThread([&window, &endValue, &returnValue, &winnerName, this](){
+            EndOfGameWindow(window, roundsNum, currentRound, score, winnerName, returnValue);
+        });
+        endOfGameWindowThread.launch();
+        endOfGameWindowThread.wait();
+        window.setActive();
+        switch(returnValue){
+            case 0:{
+                Restart(endValue);
+            }
+            case 1:{
+                Restart();
+            }
+            case 2:{
+                return true;
+            }
+            default:
+                break;
+        }
+
+        if (roundsNum != currentRound)
+            ++currentRound;
+    }
+    return false;
 }
 
 void Game::Object::SetPosition(int x, int y){

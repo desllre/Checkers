@@ -25,19 +25,16 @@ void GameExitWindow(sf::RenderWindow& window, int& gameState){
                 case -1:{ // 0 - resume, 1 - restart, 2 - exit
                     break;
                 }
-
                 case 0:{
                     exitWindow.close();
                     gameState = 0;
                     break;
                 }
-
                 case 1:{
                     exitWindow.close();
                     gameState = 1;
                     break;
                 }
-
                 case 2:{
                     exitWindow.close();
                     gameState = 2;
@@ -53,9 +50,6 @@ void GameExitWindow(sf::RenderWindow& window, int& gameState){
         gameExit.Draw(exitWindow);
         exitWindow.display();
     }
-
-
-
     window.setActive(false);
 
 }

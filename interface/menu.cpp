@@ -2,6 +2,9 @@
 ////////////////////////////
 // Это нужно будет убрать. Заголовок добавлен, для тестирования game_design.cpp
 #include "../engine/board.h"
+#include "EndOfGameWindow.h"
+#include "iostream"
+#pragma once
 
 ////////////////////////////
 Menu::Menu():
@@ -91,16 +94,18 @@ void Menu::drawMenu(sf::RenderWindow &window) { //Function for draw and activate
 void Menu::pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_button, bool is_mouse_on_exit_button, bool is_press_mouse, sf::RenderWindow &window) {
     if (is_press_mouse && press_delay_timer.getElapsedTime() >= sf::seconds(0.2)){
         if (is_mouse_on_play_button) {
-
             changeCursor(window, sf::Cursor::Arrow);
 
             window.setActive(false);
+
             sf::Thread configGameThread([&window](){
-                Game_design(window, 1, false, GameType::English, 'b');
+                Game_design(window, 2, false, GameType::Russian, 'w');
             });
+
             configGameThread.launch();
             configGameThread.wait();
             window.setActive(true);
+
         }
 
         if (is_mouse_on_settings_button) {

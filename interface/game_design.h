@@ -1,6 +1,7 @@
 #include "../engine/board.h"
 #include "gameExitWindow.h"
 #include "elements.h"
+#include "EndOfGameWindow.h"
 
 #include "SFML/Graphics.hpp"
 
@@ -52,14 +53,18 @@ public:
 
     bool GetPauseActivity() const;
 
-    void Restart(); // обнуляет до начальных все параметры борда
+    void Restart(); // борд обнуляется до начальных все параметры борда
+
+    void Restart(int a); // продолжение игры (следующий раунд). int a - фиктивная перменная для перегрузки функции
+
+    bool EndOfGame(sf::RenderWindow& window); // Проверка на окончание игры/раунда. Вызывает окно окончания игры. Возвращаемые значения false - продолжение игры, true - выход из игры
 
     void ClockRestart();
 
+    void ChangeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor);
+
 private:
     void SetActivityPlayerWay(); // выделяет имя текущего ходящего игрока
-
-    void ChangeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor);
 
     struct Object{
         void SetPosition(int x, int y); // установка позиции объекта
