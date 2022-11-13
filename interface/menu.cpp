@@ -1,38 +1,40 @@
 #include "menu.h"
 
-void Menu::changeCursor(sf::RenderWindow& window, sf::Cursor::Type type_cursor) { //Change cursor
-    sf::Cursor cursor;
-    cursor.loadFromSystem(type_cursor);
+void Menu::setArrowCursor(sf::RenderWindow& window) { //Change cursor
+    cursor.loadFromSystem(sf::Cursor::Arrow);
+    window.setMouseCursor(cursor);
+}
+
+void Menu::setHandCursor(sf::RenderWindow& window) { //Change cursor
+    cursor.loadFromSystem(sf::Cursor::Hand);
     window.setMouseCursor(cursor);
 }
 
 void Menu::activateButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_button,
                           bool is_mouse_on_exit_button, sf::RenderWindow &window) {
-    sf::Cursor::Type cursor_hand = sf::Cursor::Hand;
-    sf::Cursor::Type cursor_arrow = sf::Cursor::Arrow;
 
     if (is_mouse_on_play_button) { //Activate play button
         play_button.setColorFigure(sf::Color::Red);
         play_button.setColorText(sf::Color::Red);
-        if (!is_pressed_button) {
-            changeCursor(window, cursor_hand);
-            is_pressed_button = true;
+        if (!is_set_cursor) {
+            setHandCursor(window);
+            is_set_cursor = true;
         }
     }
     if (is_mouse_on_settings_button) { //Activate settings button
         settings_button.setColorFigure(sf::Color::Red);
         settings_button.setColorText(sf::Color::Red);
-        if (!is_pressed_button) {
-            changeCursor(window, cursor_hand);
-            is_pressed_button = true;
+        if (!is_set_cursor) {
+            setHandCursor(window);
+            is_set_cursor = true;
         }
     }
     if (is_mouse_on_exit_button) { //Activate exit button
         exit_button.setColorFigure(sf::Color::Red);
         exit_button.setColorText(sf::Color::Red);
-        if (!is_pressed_button) {
-            changeCursor(window, cursor_hand);
-            is_pressed_button = true;
+        if (!is_set_cursor) {
+            setHandCursor(window);
+            is_set_cursor = true;
         }
     }
     else if (!is_mouse_on_play_button &&
@@ -44,9 +46,9 @@ void Menu::activateButton(bool is_mouse_on_play_button, bool is_mouse_on_setting
         settings_button.setColorText(sf::Color::Black);
         exit_button.setColorFigure(sf::Color::Black);
         exit_button.setColorText(sf::Color::Black);
-        if (is_pressed_button) {
-            changeCursor(window, cursor_arrow);
-            is_pressed_button = false;
+        if (is_set_cursor) {
+            setArrowCursor(window);
+            is_set_cursor = false;
         }
     }
 }

@@ -28,9 +28,13 @@ bool ConfigGame::getIsBackButtonPressed() {
     return is_back_button_pressed;
 }
 
-void ConfigGame::changeCursor(sf::RenderWindow& window, sf::Cursor::Type type_cursor) { //Change cursor
-    sf::Cursor cursor;
-    cursor.loadFromSystem(type_cursor);
+void ConfigGame::setArrowCursor(sf::RenderWindow& window) { //Change cursor
+    cursor.loadFromSystem(sf::Cursor::Arrow);
+    window.setMouseCursor(cursor);
+}
+
+void ConfigGame::setHandCursor(sf::RenderWindow& window) { //Change cursor
+    cursor.loadFromSystem(sf::Cursor::Hand);
     window.setMouseCursor(cursor);
 }
 
@@ -44,23 +48,23 @@ void ConfigGame::activateButtonArrows(bool is_mouse_on_back_button,
     if (is_mouse_on_back_button) { //Activate back button
         back_button.setColorFigure(sf::Color::Red);
         back_button.setColorText(sf::Color::Red);
-        if (!is_cursor_set) {
-            changeCursor(window, cursor_hand);
-            is_cursor_set = true;
+        if (!is_set_cursor) {
+            setHandCursor(window);
+            is_set_cursor = true;
         }
     }
     if (is_mouse_on_left_round_arrows) {
         arrow_round_left.setColor(is_mouse_on_left_round_arrows);
-        if (!is_cursor_set) {
-            changeCursor(window, cursor_hand);
-            is_cursor_set = true;
+        if (!is_set_cursor) {
+            setHandCursor(window);
+            is_set_cursor = true;
         }
     }
     if (is_mouse_on_right_round_arrows) {
         arrow_round_right.setColor(is_mouse_on_right_round_arrows);
-        if (!is_cursor_set) {
-            changeCursor(window, cursor_hand);
-            is_cursor_set = true;
+        if (!is_set_cursor) {
+            setHandCursor(window);
+            is_set_cursor = true;
         }
     }
     else if (!is_mouse_on_back_button &&
@@ -70,9 +74,9 @@ void ConfigGame::activateButtonArrows(bool is_mouse_on_back_button,
         back_button.setColorText(sf::Color::Black);
         arrow_round_left.setColor(is_mouse_on_left_round_arrows);
         arrow_round_right.setColor(is_mouse_on_right_round_arrows);
-        if (is_cursor_set) {
-            changeCursor(window, cursor_arrow);
-            is_cursor_set = false;
+        if (is_set_cursor) {
+            setArrowCursor(window);
+            is_set_cursor = false;
         }
     }
 }

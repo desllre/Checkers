@@ -106,7 +106,9 @@ public:
                            bool is_press_mouse,
                            sf::RenderWindow &window); //Press on button and on arrows
 
-    void changeCursor(sf::RenderWindow& window, sf::Cursor::Type type_cursor); //Change cursor
+    void setArrowCursor(sf::RenderWindow& window); //Change arrow cursor
+
+    void setHandCursor(sf::RenderWindow& window); //Change hand cursor
 
     void drawConfigGame(sf::RenderWindow& window); //Function for draw
 
@@ -117,6 +119,7 @@ public:
 private:
     Background background;
     Button back_button;
+    sf::Cursor cursor;
     const std::string path_settings = "../config/default_settings.txt";
 
     /*Config round*/
@@ -126,6 +129,6 @@ private:
     InputFieldRounds rounds;
 
     /*Config round*/
-    bool is_cursor_set = true;
+    bool is_set_cursor = false;
     bool is_back_button_pressed = false;
 };
