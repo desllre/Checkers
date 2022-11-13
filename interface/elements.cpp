@@ -60,7 +60,7 @@ Button::Button(const sf::Vector2<float> &size, float thickness,
 }
 
 void Button::playSongsPress() {
-    sf::Time time = sf::seconds(0.6);
+    sf::Time time = sf::seconds(0.56);
     music_press.play();
     sleep(time);
     music_press.stop();
@@ -82,7 +82,7 @@ void Button::drawButton(sf::RenderWindow &window) {
 Arrow::Arrow(sf::Vector2<float> size, float pos_arrow_x, float pos_arrow_y,
              const std::string &path_arrow, const std::string &path_arrow_activated,
              const std::string &string_music_touch, const std::string &string_music_press) {
-    texture_arrow.loadFromFile(path_arrow_activated);
+    texture_arrow_activated.loadFromFile(path_arrow_activated);
 
     texture_arrow.loadFromFile(path_arrow);
     sprite_arrow.setTexture(texture_arrow);
@@ -94,7 +94,7 @@ Arrow::Arrow(sf::Vector2<float> size, float pos_arrow_x, float pos_arrow_y,
     music_touch.openFromFile(string_music_touch);
 }
 
-void Arrow::setColor(const std::string &path_arrow, bool is_on_arrow) {
+void Arrow::setColor(bool is_on_arrow) {
     if (is_on_arrow) {
         sprite_arrow.setTexture(texture_arrow_activated);
     }
@@ -105,4 +105,38 @@ void Arrow::setColor(const std::string &path_arrow, bool is_on_arrow) {
 
 void Arrow::drawArrow(sf::RenderWindow &window) {
     window.draw(sprite_arrow);
+}
+
+void Arrow::playSongsPress() {
+    sf::Time time = sf::seconds(0.2);
+    music_press.play();
+    sleep(time);
+    music_press.stop();
+}
+
+Text::Text(const sf::Vector2<float> &size, float thickness,
+           float pos_figure_x, float pos_figure_y,
+           sf::Color color_outline, sf::Color color_text,
+           int text_size, const std::string& path_font,
+           const std::string& string_text,
+           float pos_text_x, float pos_text_y) {
+    figure.setFillColor(sf::Color::White);
+    figure.setOutlineColor(color_outline);
+    figure.setOutlineThickness(thickness);
+    figure.setSize(size);
+    figure.setPosition(pos_figure_x, pos_figure_y);
+
+    font.loadFromFile(path_font);
+
+    text.setColor(color_text);
+    text.setStyle(sf::Text::Bold);
+    text.setFont(font);
+    text.setCharacterSize(text_size);
+    text.setPosition(pos_text_x, pos_text_y);
+    text.setString(string_text);
+}
+
+void Text::drawText(sf::RenderWindow &window) {
+    window.draw(figure);
+    window.draw(text);
 }

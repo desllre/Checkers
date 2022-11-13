@@ -45,7 +45,7 @@ public:
 
     void drawButton(sf::RenderWindow& window); //Draw buttons
 
-    void playSongsPress();
+    void playSongsPress(); //Play song
 
 private:
     sf::RectangleShape figure;
@@ -67,12 +67,35 @@ public:
 
     void drawArrow(sf::RenderWindow &window); //Draw arrow
 
-    void setColor(const std::string &path_arrow_left, bool is_on_arrow); //Change left arrow's color
+    void playSongsPress(); //Play song
+
+    void setColor(bool is_on_arrow); //Change left arrow's color
 
 private:
-    sf::Texture texture_arrow;
     sf::Texture texture_arrow_activated;
+    sf::Texture texture_arrow;
     sf::Sprite sprite_arrow;
     sf::Music music_touch;
     sf::Music music_press;
+};
+
+class Text {
+public:
+    Text() = default;
+
+    Text(const sf::Vector2<float> &size, float thickness,
+         float pos_figure_x, float pos_figure_y,
+         sf::Color color_outline, sf::Color color_text,
+         int text_size, const std::string& path_font,
+         const std::string& string_text,
+         float pos_text_x, float pos_text_y);
+
+    ~Text() = default;
+
+    void drawText(sf::RenderWindow &window); //For draw text
+
+private:
+    sf::RectangleShape figure;
+    sf::Text text;
+    sf::Font font;
 };
