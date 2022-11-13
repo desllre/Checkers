@@ -1,1 +1,1 @@
-count_round 1
+number_of_rounds: 1

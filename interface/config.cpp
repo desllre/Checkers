@@ -87,22 +87,33 @@ void ConfigGame::pressButtonArrows(bool is_mouse_on_back_button,
         is_back_button_pressed = true;
     }
     if (is_mouse_on_left_round_arrows && is_press_mouse) {
+        rounds.setValue(is_mouse_on_left_round_arrows, is_mouse_on_right_round_arrows);
         arrow_round_left.playSongsPress();
+        saveSettings();
     }
     if (is_mouse_on_right_round_arrows && is_press_mouse) {
+        rounds.setValue(is_mouse_on_left_round_arrows, is_mouse_on_right_round_arrows);
         arrow_round_right.playSongsPress();
+        saveSettings();
     }
 }
 
 void ConfigGame::saveSettings(){
-    if (!rounds.empty()){
-        std::ofstream fout("../config/custom_settings.txt");
+    if (!rounds.isEmpty()) {
+        std::ofstream output(path_settings);
 
-        if (!fout.is_open()) {
+        if (!output.is_open()) {
             throw std::exception();
         }
 
-        fout << "Player_1 ";
+        output << "number_of_rounds: ";
+
+        if (!rounds.isEmpty()) {
+            output << rounds.getValue();
+        }
+        else {
+            output << "1";
+        }
     }
 }
 
@@ -125,4 +136,5 @@ void ConfigGame::drawConfigGame(sf::RenderWindow& window) { //Function for draw 
     arrow_round_left.drawArrow(window);
     arrow_round_right.drawArrow(window);
     text_round.drawText(window);
+    rounds.drawText(window);
 }

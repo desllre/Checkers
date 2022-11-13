@@ -3,10 +3,10 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
-#include <filesystem>
+#include <fstream>
 #endif
-#pragma once
 
+#pragma once
 /*Definition functions*/
 void config_game(sf::RenderWindow &window);
 void exit_window(sf::RenderWindow& window);

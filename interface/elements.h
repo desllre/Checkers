@@ -114,8 +114,9 @@ public:
                      float pos_text_x, float pos_text_y);
 
     void setValue(bool is_mouse_on_left_round_arrows,
-                  bool is_mouse_on_right_round_arrows,
-                  bool is_mouse_pressed); //Set rounds
+                  bool is_mouse_on_right_round_arrows); //Set rounds
+
+    bool isEmpty(); //Return false if is not empty
 
     std::string getValue(); //Get number of round
 

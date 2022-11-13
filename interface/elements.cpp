@@ -164,22 +164,30 @@ InputFieldRounds::InputFieldRounds(const sf::Vector2<float> &size, float thickne
 }
 
 void InputFieldRounds::setValue(bool is_mouse_on_left_round_arrows,
-                                bool is_mouse_on_right_round_arrows,
-                                bool is_mouse_pressed) {
-    if (is_mouse_on_left_round_arrows &&
-        is_mouse_pressed) {
+                                bool is_mouse_on_right_round_arrows) {
+    if (is_mouse_on_left_round_arrows) {
         --num;
         number_of_round.clear();
         number_of_round.push_back(num);
+        text.setString(number_of_round);
     }
-    else if (is_mouse_on_right_round_arrows &&
-            is_mouse_pressed) {
+    else if (is_mouse_on_right_round_arrows) {
         ++num;
         number_of_round.clear();
         number_of_round.push_back(num);
+        text.setString(number_of_round);
     }
 }
 
 std::string InputFieldRounds::getValue() {
     return number_of_round;
+}
+
+bool InputFieldRounds::isEmpty() {
+    if (number_of_round.compare("1")) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }

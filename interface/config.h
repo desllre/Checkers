@@ -114,7 +114,6 @@ private:
     Arrow arrow_round_left;
     Arrow arrow_round_right;
     Text text_round;
-    Text numbers_round;
     InputFieldRounds rounds;
 
     /*Config round*/
