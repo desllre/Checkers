@@ -77,7 +77,12 @@ public:
                    POS_FIGURE_Y, COLOR_OUTLINE, COLOR_CONFIG_TEXT,
                    TEXT_CONFIGS_SIZE, PATH_FONTS,
                    "SELECT NUMBER \n OF ROUNDS",
-                   POS_TEXT_ROUND_X, POS_TEXT_ROUND_Y) {}
+                   POS_TEXT_ROUND_X, POS_TEXT_ROUND_Y),
+        rounds(SIZE_FIGURE, THICKNESS, POS_FIGURE_X,
+                         POS_FIGURE_Y, COLOR_OUTLINE, COLOR_CONFIG_TEXT,
+                         TEXT_CONFIGS_SIZE, PATH_FONTS,
+                         "SELECT NUMBER \n OF ROUNDS",
+                         POS_TEXT_ROUND_X, POS_TEXT_ROUND_Y) {}
 
     ~ConfigGame() = default;
 
@@ -98,24 +103,21 @@ public:
 
     bool getIsBackButtonPressed(); //Get value end of function
 
-    void setTextInput(); // Setting the field activity to enter text
-
-    void inputText(const uint32_t& inputSymbol); // Entering text in the selected field, if selected
-
     void saveSettings(); // Saving the settings
 
 private:
     Background background;
     Button back_button;
+    const std::string path_settings = "../config/default_settings.txt";
 
     /*Config round*/
     Arrow arrow_round_left;
     Arrow arrow_round_right;
     Text text_round;
     Text numbers_round;
+    InputFieldRounds rounds;
 
     /*Config round*/
-
     bool is_cursor_set = true;
     bool is_back_button_pressed = false;
 };

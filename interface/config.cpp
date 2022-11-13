@@ -94,6 +94,18 @@ void ConfigGame::pressButtonArrows(bool is_mouse_on_back_button,
     }
 }
 
+void ConfigGame::saveSettings(){
+    if (!rounds.empty()){
+        std::ofstream fout("../config/custom_settings.txt");
+
+        if (!fout.is_open()) {
+            throw std::exception();
+        }
+
+        fout << "Player_1 ";
+    }
+}
+
 void ConfigGame::drawConfigGame(sf::RenderWindow& window) { //Function for draw and activate buttons
     auto mouse_position = sf::Mouse::getPosition(window);
     bool is_mouse_on_back_button = (mouse_position.x >= POS_BUTTON_X && mouse_position.y >= POS_BUTTON_Y) &&

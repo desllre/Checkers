@@ -94,8 +94,32 @@ public:
 
     void drawText(sf::RenderWindow &window); //For draw text
 
-private:
+protected:
     sf::RectangleShape figure;
     sf::Text text;
     sf::Font font;
+};
+
+class InputFieldRounds : public Text { // Class for working with name input fields
+public:
+    InputFieldRounds() = default;
+
+    ~InputFieldRounds() = default;
+
+    InputFieldRounds(const sf::Vector2<float> &size, float thickness,
+                     float pos_figure_x, float pos_figure_y,
+                     sf::Color color_outline, sf::Color color_text,
+                     int text_size, const std::string& path_font,
+                     const std::string& string_text,
+                     float pos_text_x, float pos_text_y);
+
+    void setValue(bool is_mouse_on_left_round_arrows,
+                  bool is_mouse_on_right_round_arrows,
+                  bool is_mouse_pressed); //Set rounds
+
+    std::string getValue(); //Get number of round
+
+private:
+    int num = 1;
+    std::string number_of_round = "1";
 };

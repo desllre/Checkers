@@ -140,3 +140,46 @@ void Text::drawText(sf::RenderWindow &window) {
     window.draw(figure);
     window.draw(text);
 }
+
+InputFieldRounds::InputFieldRounds(const sf::Vector2<float> &size, float thickness,
+                                   float pos_figure_x, float pos_figure_y,
+                                   sf::Color color_outline, sf::Color color_text,
+                                   int text_size, const std::string& path_font,
+                                   const std::string& string_text,
+                                   float pos_text_x, float pos_text_y) {
+    figure.setFillColor(sf::Color::White);
+    figure.setOutlineColor(color_outline);
+    figure.setOutlineThickness(thickness);
+    figure.setSize(size);
+    figure.setPosition(pos_figure_x, pos_figure_y);
+
+    font.loadFromFile(path_font);
+
+    text.setColor(color_text);
+    text.setStyle(sf::Text::Bold);
+    text.setFont(font);
+    text.setCharacterSize(text_size);
+    text.setPosition(pos_text_x, pos_text_y);
+    text.setString(string_text);
+}
+
+void InputFieldRounds::setValue(bool is_mouse_on_left_round_arrows,
+                                bool is_mouse_on_right_round_arrows,
+                                bool is_mouse_pressed) {
+    if (is_mouse_on_left_round_arrows &&
+        is_mouse_pressed) {
+        --num;
+        number_of_round.clear();
+        number_of_round.push_back(num);
+    }
+    else if (is_mouse_on_right_round_arrows &&
+            is_mouse_pressed) {
+        ++num;
+        number_of_round.clear();
+        number_of_round.push_back(num);
+    }
+}
+
+std::string InputFieldRounds::getValue() {
+    return number_of_round;
+}
