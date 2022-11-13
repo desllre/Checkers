@@ -15,6 +15,15 @@ enum GameType{
     International // международные шашки
 };
 
+struct Figure{
+    Figure() = default;
+    Figure(uint16_t x, uint16_t y, char figureType): x(x), y(y), figureType(figureType) {};
+
+    char figureType; // p - пешка(pawn), k - дамка(king)
+    uint16_t x = 0;
+    uint16_t y = 0;
+};
+
 class Board{
 private:
 
@@ -60,16 +69,6 @@ private:
     std::vector<int> checkKingStep_Ang(uint16_t posX, uint16_t posY);
 
     std::vector<int> checkKingStep_Rus(uint16_t posX, uint16_t posY);
-
-private:
-    struct Figure{
-        Figure() = default;
-        Figure(uint16_t x, uint16_t y, char figureType): x(x), y(y), figureType(figureType) {};
-
-        char figureType; // p - пешка(pawn), k - дамка(king)
-        uint16_t x = 0;
-        uint16_t y = 0;
-    };
 
 private:
     char** board;

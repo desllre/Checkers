@@ -8,10 +8,11 @@
 #include "vector"
 #include "filesystem"
 #include "fstream"
+#include "array"
 
-// параметры поля игры
-#define BOARD_WIDTH 800
-#define BOARD_HEIGHT 800
+// расположение поля имён игроков по y
+#define HIGH_POS_NAME_FIELD_Y 20
+#define LOW_POS_NAME_FIELD_Y 862
 
 // константы для большого поля (междуанродные шашки)
 #define BIG_FIRST_FIGURE_POSITION_X 42
@@ -56,6 +57,8 @@ public:
     void ClockRestart();
 
 private:
+    void SetActivityPlayerWay(); // выделяет имя текущего ходящего игрока
+
     void ChangeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor);
 
     struct Object{
@@ -129,6 +132,11 @@ private:
     Object pauseButton;
     Object activePauseButton;
     bool pauseIsActive = false;
+
+    std::list<Figure>* player1Figures;
+    std::list<Figure>* player2Figures;
+
+    bool player1Way; // Переменная хранит ответ на вопрос: Ходит ли на данный момент первый игрок?
 
     sf::Cursor cursor;
 };

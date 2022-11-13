@@ -359,7 +359,7 @@ std::vector<int> Board::checkKingStep_Ang(uint16_t posX, uint16_t posY){
                 }
             }else if (figureSide != checkSide(j, i)){ // проверяем на одинаковую сторону фигуры
                 i += biasY, j += biasX;
-                if (board[i][j] == '0' && i < size && i >= 0 && j < size && j >= 0){
+                if (i < size && i >= 0 && j < size && j >= 0 && board[i][j] == '0'){
                     if (!isAttach){
                         possibles.clear();
                         isAttach = true;

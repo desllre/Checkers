@@ -47,9 +47,6 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
                     window.setActive(true);
 
                     switch (gameState) {
-                        case 0:{
-                            break;
-                        }
                         case 1:{
                             game.Restart();
                             break;
@@ -58,6 +55,8 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
                             window.setActive(false);
                             return;
                         }
+                        default:
+                            break;
                     }
                     game.ClockRestart(); // рестартим время, чтобы иммитировать паузу игры (т.е время было не изменно с момента остановки игры)
                 } else {
@@ -77,7 +76,26 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
 
 Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool playerHasWhiteBoard, const uint16_t& boardSize):
             board(boardSize, playerHasWhiteBoard, gameType), roundsNum(roundsNum),isSingleGame(isSingleGame),
-            gameType(gameType), playerHasWhiteBoard(playerHasWhiteBoard), background("../textures/backgrounds/game_bg.png"){
+            gameType(gameType), playerHasWhiteBoard(playerHasWhiteBoard),
+            background("../textures/backgrounds/game_bg.png"){
+
+    int yPosPlayer1_NameField, yPosPlayer2_NameField;
+
+    if (playerHasWhiteBoard) { // распределение фигур между игроками в зависимости от цвета фигур игрока
+        player1Way = true;
+        player1Figures = &board.whiteFigures;
+        player2Figures = &board.blackFigures;
+        yPosPlayer1_NameField = LOW_POS_NAME_FIELD_Y;
+        yPosPlayer2_NameField = HIGH_POS_NAME_FIELD_Y;
+    } else{
+        player1Way = false;
+        player1Figures = &board.blackFigures;
+        player2Figures = &board.whiteFigures;
+        if (!isSingleGame){
+            yPosPlayer1_NameField = HIGH_POS_NAME_FIELD_Y;
+            yPosPlayer2_NameField = LOW_POS_NAME_FIELD_Y;
+        }
+    }
 
     if (gameType == GameType::International){
         FIRST_FIGURE_POSITION_X = BIG_FIRST_FIGURE_POSITION_X;
@@ -138,38 +156,71 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
                 boardStyleStr = "../textures/boards/big_yellow.png";
                 moveSelectorStr = "../textures/elements/move_selector.png";
                 figureSelectorStr = "../textures/elements/figure_selector.png";
-                black_pawnStr = "../textures/figures/Standart/black_pawn.png";
-                black_kingStr = "../textures/figures/Standart/black_king.png";
-                white_pawnStr = "../textures/figures/Standart/white_pawn.png";
-                white_kingStr = "../textures/figures/Standart/white_king.png";
+
+                if (playerHasWhiteBoard || !isSingleGame){ // будут отображаться снизу белые фигуры
+                    black_pawnStr = "../textures/figures/Standart/black_pawn.png";
+                    black_kingStr = "../textures/figures/Standart/black_king.png";
+                    white_pawnStr = "../textures/figures/Standart/white_pawn.png";
+                    white_kingStr = "../textures/figures/Standart/white_king.png";
+                } else if(isSingleGame){ // будут отображаться снизу белые фигуры
+                    white_pawnStr = "../textures/figures/Standart/black_pawn.png";
+                    white_kingStr = "../textures/figures/Standart/black_king.png";
+                    black_pawnStr = "../textures/figures/Standart/white_pawn.png";
+                    black_kingStr = "../textures/figures/Standart/white_king.png";
+                }
 
             } else {
                 boardStyleStr = "../textures/boards/yellow.png";
                 moveSelectorStr = "../textures/elements/big_move_selector.png";
                 figureSelectorStr = "../textures/elements/big_figure_selector.png";
-                black_pawnStr = "../textures/figures/Standart/big_black_pawn.png";
-                black_kingStr = "../textures/figures/Standart/big_black_king.png";
-                white_pawnStr = "../textures/figures/Standart/big_white_pawn.png";
-                white_kingStr = "../textures/figures/Standart/big_white_king.png";
+
+                if (playerHasWhiteBoard || !isSingleGame){ // будут отображаться снизу белые фигуры
+                    black_pawnStr = "../textures/figures/Standart/big_black_pawn.png";
+                    black_kingStr = "../textures/figures/Standart/big_black_king.png";
+                    white_pawnStr = "../textures/figures/Standart/big_white_pawn.png";
+                    white_kingStr = "../textures/figures/Standart/big_white_king.png";
+                } else if(isSingleGame){ // будут отображаться снизу белые фигуры
+                    white_pawnStr = "../textures/figures/Standart/big_black_pawn.png";
+                    white_kingStr = "../textures/figures/Standart/big_black_king.png";
+                    black_pawnStr = "../textures/figures/Standart/big_white_pawn.png";
+                    black_kingStr = "../textures/figures/Standart/big_white_king.png";
+                }
             }
+
         } else if (buff == "black_and_white"){
-            if (gameType == GameType::International){
+            if (gameType == GameType::International){ // black_and_white
                 boardStyleStr = "../textures/boards/big_bw.png";
                 moveSelectorStr = "../textures/elements/move_selector.png";
                 figureSelectorStr = "../textures/elements/figure_selector.png";
-                black_pawnStr = "../textures/figures/black_and_white/black_pawn.png";
-                black_kingStr = "../textures/figures/black_and_white/black_king.png";
-                white_pawnStr = "../textures/figures/black_and_white/white_pawn.png";
-                white_kingStr = "../textures/figures/black_and_white/white_king.png";
+
+                if (playerHasWhiteBoard || !isSingleGame){ // будут отображаться снизу белые фигуры
+                    black_pawnStr = "../textures/figures/black_and_white/black_pawn.png";
+                    black_kingStr = "../textures/figures/black_and_white/black_king.png";
+                    white_pawnStr = "../textures/figures/black_and_white/white_pawn.png";
+                    white_kingStr = "../textures/figures/black_and_white/white_king.png";
+                } else if(isSingleGame){ // будут отображаться снизу белые фигуры
+                    white_pawnStr = "../textures/figures/black_and_white/black_pawn.png";
+                    white_kingStr = "../textures/figures/black_and_white/black_king.png";
+                    black_pawnStr = "../textures/figures/black_and_white/white_pawn.png";
+                    black_kingStr = "../textures/figures/black_and_white/white_king.png";
+                }
 
             } else {
                 boardStyleStr = "../textures/boards/bw.png";
                 moveSelectorStr = "../textures/elements/big_move_selector.png";
                 figureSelectorStr = "../textures/elements/big_figure_selector.png";
-                black_pawnStr = "../textures/figures/black_and_white/big_black_pawn.png";
-                black_kingStr = "../textures/figures/black_and_white/big_black_king.png";
-                white_pawnStr = "../textures/figures/black_and_white/big_white_pawn.png";
-                white_kingStr = "../textures/figures/black_and_white/big_white_king.png";
+
+                if (playerHasWhiteBoard || !isSingleGame){ // будут отображаться снизу белые фигуры
+                    black_pawnStr = "../textures/figures/black_and_white/big_black_pawn.png";
+                    black_kingStr = "../textures/figures/black_and_white/big_black_king.png";
+                    white_pawnStr = "../textures/figures/black_and_white/big_white_pawn.png";
+                    white_kingStr = "../textures/figures/black_and_white/big_white_king.png";
+                } else if(isSingleGame){ // будут отображаться снизу белые фигуры
+                    white_pawnStr = "../textures/figures/black_and_white/big_black_pawn.png";
+                    white_kingStr = "../textures/figures/black_and_white/big_black_king.png";
+                    black_pawnStr = "../textures/figures/black_and_white/big_white_pawn.png";
+                    black_kingStr = "../textures/figures/black_and_white/big_white_king.png";
+                }
             }
         }
     }
@@ -227,7 +278,7 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
     player1TextName.setFillColor(sf::Color::Black);
     player1TextName.setFont(textFont);
     player1TextName.setCharacterSize(20);
-    player1TextName.setPosition(45, 23);
+    player1TextName.setPosition(45, yPosPlayer1_NameField + 3);
     player1TextName.setString(player1Name);
     player1TextName.setStyle(sf::Text::Bold);
 
@@ -235,13 +286,13 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
     player1Rect.setFillColor(sf::Color::White);
     player1Rect.setOutlineColor(sf::Color::Black);
     player1Rect.setOutlineThickness(3);
-    player1Rect.setPosition(43, 20);
+    player1Rect.setPosition(43, yPosPlayer1_NameField);
 
 
     player2TextName.setFillColor(sf::Color::Black);
     player2TextName.setFont(textFont);
     player2TextName.setCharacterSize(20);
-    player2TextName.setPosition(45, 865);
+    player2TextName.setPosition(45, yPosPlayer2_NameField + 3);
     player2TextName.setString(player2Name);
     player2TextName.setStyle(sf::Text::Bold);
 
@@ -249,7 +300,7 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
     player2Rect.setFillColor(sf::Color::White);
     player2Rect.setOutlineColor(sf::Color::Black);
     player2Rect.setOutlineThickness(3);
-    player2Rect.setPosition(43, 862);
+    player2Rect.setPosition(43, yPosPlayer2_NameField);
 
 
     pauseButton.texture.loadFromFile(pauseButtonStr);
@@ -318,12 +369,12 @@ void Game::Draw(sf::RenderWindow& window){
         std::pair<uint16_t, uint16_t> pos;
         for(auto i: movePos){
             pos = board.convertPos(i);
-            moveSelector.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*pos.first + 1, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*pos.second);
+            moveSelector.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*pos.first, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*pos.second);
             moveSelector.Draw(window);
         }
     }
 
-    for(auto i: board.blackFigures){
+    for(auto i: *player1Figures){
         if (i.figureType == 'p'){
             black_pawn.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
             black_pawn.Draw(window);
@@ -333,7 +384,7 @@ void Game::Draw(sf::RenderWindow& window){
         }
     }
 
-    for(auto i: board.whiteFigures){
+    for(auto i: *player2Figures){
         if (i.figureType == 'p'){
             white_pawn.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
             white_pawn.Draw(window);
@@ -348,43 +399,45 @@ void Game::FigureSelection(const sf::Vector2i& mousePos){
 
     bool isMissed = false; // проверка на нажатие не на фигуру. В таком случае выделения фигуры убираются
 
-    if (gameClock.getElapsedTime() <= sf::seconds(0.2)){
+    if (gameTime <= sf::seconds(0.2)){
         return;
     }
 
-    for (auto i: board.whiteFigures){
-        if (mousePos.x >= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x &&
+    if (player1Way){
+        for (auto i: *player1Figures){
+            if (mousePos.x >= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x &&
                 mousePos.x <= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*(i.x + 1) &&
                 mousePos.y >= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y &&
                 mousePos.y <= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*(i.y + 1)){
-            isSelected = true;
-            isMissed = true;
+                isSelected = true;
+                isMissed = true;
 
-            selectedPos.first = i.x;
-            selectedPos.second = i.y;
+                selectedPos.first = i.x;
+                selectedPos.second = i.y;
 
-            figureSelector.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
+                figureSelector.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
 
-            movePos = board.possibles(i.x, i.y);
-            break;
+                movePos = board.possibles(i.x, i.y);
+                break;
+            }
         }
-    }
+    } else {
+        for (auto i: *player2Figures){
+            if (mousePos.x >= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x &&
+                mousePos.x <= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*(i.x + 1) &&
+                mousePos.y >= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y &&
+                mousePos.y <= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*(i.y + 1)){
+                isSelected = true;
+                isMissed = true;
 
-    for (auto i: board.blackFigures){
-        if (mousePos.x >= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x &&
-            mousePos.x <= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*(i.x + 1) &&
-            mousePos.y >= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y &&
-            mousePos.y <= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*(i.y + 1)){
-            isSelected = true;
-            isMissed = true;
+                selectedPos.first = i.x;
+                selectedPos.second = i.y;
 
-            selectedPos.first = i.x;
-            selectedPos.second = i.y;
+                figureSelector.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x + 1, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
 
-            figureSelector.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x + 1, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
-
-            movePos = board.possibles(i.x, i.y);
-            break;
+                movePos = board.possibles(i.x, i.y);
+                break;
+            }
         }
     }
 
@@ -406,6 +459,7 @@ void Game::Move(const sf::Vector2i& mousePos){
            mousePos.y >= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*pos.second &&
            mousePos.y <= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*(pos.second + 1)){
             board.move(selectedPos.first, selectedPos.second, pos.first, pos.second);
+            player1Way = !player1Way;
         }
     }
 }
@@ -442,6 +496,10 @@ void Game::ChangeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor) 
 }
 
 void Game::CheckActive(sf::RenderWindow& window, const sf::Vector2i& mousePos){
+    if (!isSingleGame){
+        SetActivityPlayerWay();
+    }
+
     if (mousePos.x >= 1350 && mousePos.x <= 1430 && mousePos.y >= 400 && mousePos.y <= 480){
         if (!pauseIsActive){
             ChangeCursor(window, sf::Cursor::Type::Hand);
@@ -464,6 +522,7 @@ void Game::SetPauseActivity(bool activity){
 }
 
 void Game::Restart(){
+    gameTime = sf::Time::Zero;
     isSelected = false;
     currentRound = 1;
     roundsText.setString("Round 1");
@@ -479,6 +538,22 @@ void Game::ClockRestart(){
     gameClock.restart();
 }
 
+void Game::SetActivityPlayerWay(){
+    if (player1Way){
+        player1TextName.setColor(sf::Color::Red);
+        player1Rect.setOutlineColor(sf::Color::Red);
+
+        player2TextName.setColor(sf::Color::Black);
+        player2Rect.setOutlineColor(sf::Color::Black);
+    } else {
+        player2TextName.setColor(sf::Color::Red);
+        player2Rect.setOutlineColor(sf::Color::Red);
+
+        player1TextName.setColor(sf::Color::Black);
+        player1Rect.setOutlineColor(sf::Color::Black);
+    }
+
+}
 
 void Game::Object::SetPosition(int x, int y){
     sprite.setPosition(float(x), float(y));
@@ -486,3 +561,4 @@ void Game::Object::SetPosition(int x, int y){
 void Game::Object::Draw(sf::RenderWindow& window) const{
     window.draw(sprite);
 }
+
