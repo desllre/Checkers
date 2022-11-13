@@ -60,17 +60,18 @@ public:
     Arrow() = default;
 
     Arrow(sf::Vector2<float> size_arrow, float pos_arrow_x, float pos_arrow_y,
-          const std::string &path_arrow, const std::string &string_music_touch,
-          const std::string &string_music_press); //Construction for arrow
+          const std::string &path_arrow, const std::string &path_arrow_activated,
+          const std::string &string_music_touch, const std::string &string_music_press); //Construction for arrow
 
     ~Arrow() = default;
 
     void drawArrow(sf::RenderWindow &window); //Draw arrow
 
-    void setColor(const std::string &path_arrow_left); //Change left arrow's color
+    void setColor(const std::string &path_arrow_left, bool is_on_arrow); //Change left arrow's color
 
 private:
     sf::Texture texture_arrow;
+    sf::Texture texture_arrow_activated;
     sf::Sprite sprite_arrow;
     sf::Music music_touch;
     sf::Music music_press;

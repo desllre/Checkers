@@ -65,8 +65,8 @@ void ConfigGame::pressButtonArrows(bool is_mouse_on_back_button, bool is_press_m
 
 void ConfigGame::drawConfigGame(sf::RenderWindow& window) { //Function for draw and activate buttons
     auto mouse_position = sf::Mouse::getPosition(window);
-    bool is_mouse_on_back_button = (mouse_position.x >= POS_X && mouse_position.y >= POS_Y) &&
-                                   (mouse_position.x <= POS_X + SIZE_X && mouse_position.y <= POS_Y + SIZE_Y);
+    bool is_mouse_on_back_button = (mouse_position.x >= POS_BUTTON_X && mouse_position.y >= POS_BUTTON_Y) &&
+                                   (mouse_position.x <= POS_BUTTON_X + SIZE_BUTTON_X && mouse_position.y <= POS_BUTTON_Y + SIZE_BUTTON_Y);
 
     bool is_press_mouse = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 
@@ -76,4 +76,5 @@ void ConfigGame::drawConfigGame(sf::RenderWindow& window) { //Function for draw 
 
     background.drawBackground(window);
     back_button.drawButton(window);
+    arrow_round_left.drawArrow(window);
 }

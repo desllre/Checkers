@@ -80,13 +80,12 @@ void Button::drawButton(sf::RenderWindow &window) {
 }
 
 Arrow::Arrow(sf::Vector2<float> size, float pos_arrow_x, float pos_arrow_y,
-             const std::string &path_arrow, const std::string &string_music_touch,
-             const std::string &string_music_press) {
+             const std::string &path_arrow, const std::string &path_arrow_activated,
+             const std::string &string_music_touch, const std::string &string_music_press) {
+    texture_arrow.loadFromFile(path_arrow_activated);
+
     texture_arrow.loadFromFile(path_arrow);
     sprite_arrow.setTexture(texture_arrow);
-
-    sprite_arrow.setPosition(pos_arrow_x, pos_arrow_y);
-    sprite_arrow.setScale(size);
 
     sprite_arrow.setPosition(pos_arrow_x, pos_arrow_y);
     sprite_arrow.setScale(size);
@@ -95,9 +94,13 @@ Arrow::Arrow(sf::Vector2<float> size, float pos_arrow_x, float pos_arrow_y,
     music_touch.openFromFile(string_music_touch);
 }
 
-void Arrow::setColor(const std::string &path_arrow) {
-    texture_arrow.loadFromFile(path_arrow);
-    sprite_arrow.setTexture(texture_arrow);
+void Arrow::setColor(const std::string &path_arrow, bool is_on_arrow) {
+    if (is_on_arrow) {
+        sprite_arrow.setTexture(texture_arrow_activated);
+    }
+    else {
+        sprite_arrow.setTexture(texture_arrow);
+    }
 }
 
 void Arrow::drawArrow(sf::RenderWindow &window) {
