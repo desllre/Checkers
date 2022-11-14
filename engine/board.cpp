@@ -1,6 +1,14 @@
 #include "board.h"
 
 Board::Board(uint16_t size, bool isWhiteBoard, GameType typeOfGame): size(size), isWhiteBoard(isWhiteBoard), typeOfGame(typeOfGame) {
+    if (isWhiteBoard)
+        whiteWay = true;
+    else
+        whiteWay = false;
+
+    attackingFigurePos.first = -1;
+    attackingFigurePos.second = -1;
+
     init();
 }
 
@@ -52,13 +60,19 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
 
     char figureType = board[beginY][beginX];
     char figureSide = checkSide(beginX, beginY);
+
     if (figureType == '0') return false;
 
-    std::vector<int> possiblePos = possibles(beginX, beginY);
+    if (whiteWay && figureSide != 'w') // проверка фигуры на цвет, ходящий на данный момент
+        return false;
+    else if(!whiteWay && figureSide != 'b')
+        return false;
+
+    std::pair<bool, std::vector<int>> possiblesPair = possibles(beginX, beginY);
 
     int endPos = endY * size + endX;
 
-    for (auto i: possiblePos) { // проверка на наличие возможности походить
+    for (auto i: possiblesPair.second) { // проверка на наличие возможности походить
         if (endPos == i){
             isMoving = true;
             break;
@@ -140,65 +154,111 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
         board[enemyPosY][enemyPosX] = '0';
     }
 
+    if (isMoving){
+        if (sideIsAttach){
+            if (possibles(endX, endY).first){
+                attackingFigurePos.first = endX;
+                attackingFigurePos.second = endY;
+            } else{
+                attackingFigurePos.first = -1;
+                attackingFigurePos.second = -1;
+                whiteWay = !whiteWay;
+                sideIsChange = true;
+                sideIsAttach = false;
+            }
+        } else{
+            whiteWay = !whiteWay;
+            sideIsChange = true;
+            sideIsAttach = false;
+        }
+    }
+
     return isMoving;
 }
 
 
-std::vector<int> Board::possibles(uint16_t posX, uint16_t posY){
+std::pair<bool, std::vector<int>> Board::possibles(uint16_t posX, uint16_t posY){
+
+    if (sideIsChange)
+        setSideAttach();
+
     std::vector<int> possibles;
+    std::pair<bool, std::vector<int>> returnPair;
+
+    char figureSide = checkSide(posX, posY);
     char figureType = board[posY][posX];
-    if (figureType == '0') return possibles;
+
+    if (figureType == '0' || (whiteWay && figureSide != 'w') || (!whiteWay && figureSide != 'b')) {
+        returnPair.first = false;
+        return returnPair;
+    }
+
+    if (attackingFigurePos.first != -1 && attackingFigurePos.second != -1 && attackingFigurePos.first != posX && attackingFigurePos.second != posY){
+        returnPair.first = false;
+        return returnPair;
+    }
 
     if (typeOfGame == GameType::Russian|| typeOfGame == GameType::Giveaway || typeOfGame == GameType::International){
-        std::vector<int> buff;
+        std::pair<bool, std::vector<int>> buff;
         if (figureType == 'p' || figureType == 'P'){
             buff = checkPawnStep_Rus(posX, posY);
-            if (buff[0] != -1){
-                for (auto i: buff){
+            if (buff.first == sideIsAttach && buff.second[0] != -1){
+                for (auto i: buff.second){
                     possibles.emplace_back(i);
                 }
             }
         } else{
             buff = checkKingStep_Rus(posX, posY);
-            if (buff[0] != -1){
-                for (auto i: buff){
+            if (buff.first == sideIsAttach && buff.second[0] != -1){
+                for (auto i: buff.second){
                     possibles.emplace_back(i);
                 }
             }
         }
     } else {
-        std::vector<int> buff;
+        std::pair<bool, std::vector<int>> buff;
         if (figureType == 'p' || figureType == 'P'){
             buff = checkPawnStep_Ang(posX, posY);
-            if (buff[0] != -1){
-                for (auto i: buff){
+            if (buff.first == sideIsAttach && buff.second[0] != -1){
+                for (auto i: buff.second){
                     possibles.emplace_back(i);
                 }
             }
         } else{
             buff = checkKingStep_Ang(posX, posY);
-            if (buff[0] != -1){
-                for (auto i: buff){
+            if (buff.first == sideIsAttach && buff.second[0] != -1){
+                for (auto i: buff.second){
                     possibles.emplace_back(i);
                 }
             }
         }
     }
 
-    return possibles;
+    if (possibles.empty())
+        returnPair.first = false;
+    else
+        returnPair.first = sideIsAttach;
+
+    returnPair.second = possibles;
+
+    return returnPair;
 }
 
 
-std::vector<int> Board::checkPawnStep_Ang(uint16_t posX, uint16_t posY){
+std::pair<bool, std::vector<int>> Board::checkPawnStep_Ang(uint16_t posX, uint16_t posY){
 
     std::vector<int> possibles;
+
+    std::pair<bool, std::vector<int>> returnPair;
 
     char figureType = board[posY][posX];
     char figureSide = checkSide(posX, posY);
 
     if (figureType != 'p' && figureType != 'P'){
         possibles.emplace_back(-1);
-        return possibles;
+        returnPair.first = false;
+        returnPair.second = possibles;
+        return returnPair;
     }
 
     int biasX = -1, biasY;
@@ -236,19 +296,26 @@ std::vector<int> Board::checkPawnStep_Ang(uint16_t posX, uint16_t posY){
     if (possibles.empty()){
         possibles.emplace_back(-1);
     }
-    return possibles;
+
+    returnPair.first = isAttach;
+    returnPair.second = possibles;
+    return returnPair;
 }
 
-std::vector<int>  Board::checkPawnStep_Rus(uint16_t posX, uint16_t posY){
+std::pair<bool, std::vector<int>>  Board::checkPawnStep_Rus(uint16_t posX, uint16_t posY){
 
     std::vector<int> possibles;
+
+    std::pair<bool, std::vector<int>> returnPair;
 
     char figureType = board[posY][posX];
     char figureSide = checkSide(posX, posY);
 
     if (figureType != 'p' && figureType != 'P'){
         possibles.emplace_back(-1);
-        return possibles;
+        returnPair.first = false;
+        returnPair.second = possibles;
+        return returnPair;
     }
 
     int biasX = -1, biasY;
@@ -306,20 +373,26 @@ std::vector<int>  Board::checkPawnStep_Rus(uint16_t posX, uint16_t posY){
     if (possibles.empty())
         possibles.emplace_back(-1);
 
-    return possibles;
+    returnPair.first = isAttach;
+    returnPair.second = possibles;
+    return returnPair;
 }
 
 
-std::vector<int> Board::checkKingStep_Ang(uint16_t posX, uint16_t posY){
+std::pair<bool, std::vector<int>> Board::checkKingStep_Ang(uint16_t posX, uint16_t posY){
 
     std::vector<int> possibles;
+
+    std::pair<bool, std::vector<int>> returnPair;
 
     char figureType = board[posY][posX];
     char figureSide = checkSide(posX, posY);
 
     if (figureType != 'k' && figureType != 'K'){
         possibles.emplace_back(-1);
-        return possibles;
+        returnPair.first = false;
+        returnPair.second = possibles;
+        return returnPair;
     }
 
     int biasX = -1, biasY;
@@ -376,19 +449,25 @@ std::vector<int> Board::checkKingStep_Ang(uint16_t posX, uint16_t posY){
     if (possibles.empty())
         possibles.emplace_back(-1);
 
-    return possibles;
+    returnPair.first = isAttach;
+    returnPair.second = possibles;
+    return returnPair;
 }
 
-std::vector<int> Board::checkKingStep_Rus(uint16_t posX, uint16_t posY){
+std::pair<bool, std::vector<int>> Board::checkKingStep_Rus(uint16_t posX, uint16_t posY){
 
     std::vector<int> possibles;
+
+    std::pair<bool, std::vector<int>> returnPair;
 
     char figureType = board[posY][posX];
     char figureSide = checkSide(posX, posY);
 
     if (figureType != 'k' && figureType != 'K'){
         possibles.emplace_back(-1);
-        return possibles;
+        returnPair.first = false;
+        returnPair.second = possibles;
+        return returnPair;
     }
 
     int biasX = -1, biasY;
@@ -449,7 +528,80 @@ std::vector<int> Board::checkKingStep_Rus(uint16_t posX, uint16_t posY){
     if (possibles.empty())
         possibles.emplace_back(-1);
 
-    return possibles;
+    returnPair.first = isAttach;
+    returnPair.second = possibles;
+    return returnPair;
+}
+
+
+void Board::setSideAttach(){
+    sideIsChange = false;
+    if (whiteWay){
+        if (typeOfGame == GameType::Russian|| typeOfGame == GameType::Giveaway || typeOfGame == GameType::International) {
+            for (auto i: whiteFigures){
+                if (i.figureType == 'p'){
+                    if (checkPawnStep_Rus(i.x, i.y).first){
+                        sideIsAttach = true;
+                        return;
+                    }
+                } else {
+                    if (checkKingStep_Rus(i.x, i.y).first){
+                        sideIsAttach = true;
+                        return;
+                    }
+                }
+            }
+        } else {
+            for (auto i: whiteFigures){
+                if (i.figureType == 'p'){
+                    if (checkPawnStep_Ang(i.x, i.y).first){
+                        sideIsAttach = true;
+                        return;
+                    }
+                } else {
+                    if (checkKingStep_Ang(i.x, i.y).first){
+                        sideIsAttach = true;
+                        return;
+                    }
+                }
+            }
+        }
+    } else {
+        if (typeOfGame == GameType::Russian|| typeOfGame == GameType::Giveaway || typeOfGame == GameType::International) {
+            for (auto i: blackFigures){
+                if (i.figureType == 'p'){
+                    if (checkPawnStep_Rus(i.x, i.y).first){
+                        sideIsAttach = true;
+                        return;
+                    }
+                } else {
+                    if (checkKingStep_Rus(i.x, i.y).first){
+                        sideIsAttach = true;
+                        return;
+                    }
+                }
+            }
+        } else {
+            for (auto i: blackFigures){
+                if (i.figureType == 'p'){
+                    if (checkPawnStep_Ang(i.x, i.y).first){
+                        sideIsAttach = true;
+                        return;
+                    }
+                } else {
+                    if (checkKingStep_Ang(i.x, i.y).first){
+                        sideIsAttach = true;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+    sideIsAttach = false;
+}
+
+bool Board::GetSideChanging(){
+    return sideIsChange;
 }
 
 
@@ -479,7 +631,7 @@ int Board::endOfGame() {
 
         int counter = 0;
         for (auto& i: whiteFigures) {
-            if (!possibles(i.x, i.y).empty())
+            if (!possibles(i.x, i.y).second.empty())
                 break;
             ++counter;
         }
@@ -488,7 +640,7 @@ int Board::endOfGame() {
 
         counter = 0;
         for (auto& i: blackFigures) {
-            if (!possibles(i.x, i.y).empty())
+            if (!possibles(i.x, i.y).second.empty())
                 break;
             ++counter;
         }
@@ -503,7 +655,7 @@ int Board::endOfGame() {
 
         int counter = 0;
         for (auto& i: whiteFigures) {
-            if (!possibles(i.x, i.y).empty())
+            if (!possibles(i.x, i.y).second.empty())
                 break;
             ++counter;
         }
@@ -512,7 +664,7 @@ int Board::endOfGame() {
 
         counter = 0;
         for (auto& i: blackFigures) {
-            if (!possibles(i.x, i.y).empty())
+            if (!possibles(i.x, i.y).second.empty())
                 break;
             ++counter;
         }

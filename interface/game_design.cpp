@@ -375,7 +375,7 @@ void Game::Draw(sf::RenderWindow& window){
         figureSelector.Draw(window);
 
         std::pair<uint16_t, uint16_t> pos;
-        for(auto i: movePos){
+        for(auto i: movePos.second){
             pos = board.convertPos(i);
             moveSelector.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*pos.first, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*pos.second);
             moveSelector.Draw(window);
@@ -476,23 +476,28 @@ void Game::FigureSelection(const sf::Vector2i& mousePos){
         selectedPos.first = 99;
         selectedPos.second = 99;
         isSelected = false;
-        movePos.clear();
+
+        movePos.first = false;
+        movePos.second.clear();
     }
 }
 
 void Game::Move(const sf::Vector2i& mousePos){
     std::pair<uint16_t, uint16_t> pos;
-    for(auto i: movePos){
+    for(auto i: movePos.second){
         pos = board.convertPos(i);
-
         if(mousePos.x >= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*pos.first &&
            mousePos.x <= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*(pos.first + 1) &&
            mousePos.y >= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*pos.second &&
            mousePos.y <= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*(pos.second + 1)){
             board.move(selectedPos.first, selectedPos.second, pos.first, pos.second);
-            player1Way = !player1Way;
+            if (board.GetSideChanging()){
+                player1Way = !player1Way;
+            }
+            return;
         }
     }
+
 }
 
 void Game::SetCurrentTIme(){
@@ -603,7 +608,7 @@ void Game::SetActivityPlayerWay(){
 }
 
 bool Game::EndOfGame(sf::RenderWindow& window){
-    int endValue = board.endOfGame();
+    /*int endValue = board.endOfGame();
     if (endValue != 0){
 
         if(endValue == 1){
@@ -656,7 +661,7 @@ bool Game::EndOfGame(sf::RenderWindow& window){
 
         if (roundsNum != currentRound)
             ++currentRound;
-    }
+    }*/
     return false;
 }
 

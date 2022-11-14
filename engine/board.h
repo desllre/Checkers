@@ -35,7 +35,9 @@ public:
 
     bool move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY); // движение фигуры. Возвращает true, если фигура успешно перемещена
 
-    std::vector<int> possibles(uint16_t posX, uint16_t posY); // проверка на возмножность походить
+    // проверка на возмножность походить
+    // first - true, если фигура бьёт, false - если не бьёт или нет ходов. second - веткор пустой - если нет ходов или содержит координаты возможных ходов
+    std::pair<bool, std::vector<int>> possibles(uint16_t posX, uint16_t posY);
 
     std::pair<uint16_t, uint16_t> convertPos(uint16_t pos) const; // конвертирует номер позиции в координаты
 
@@ -51,30 +53,45 @@ public:
 
     void restart();
 
+    bool GetSideChanging(); // возвращает true, если на предыдущем шаге поменялся цвет фигур
+
 private:
     // функция инициализации борда
     void init();
 
-    // проверка хода в конкретном направлении на 1 шаг вперёд для пешек
-    // Возвращает -1 если не возможно походить в заданном направлении или если под указанными координатами не находится фигура
-    // если возможно походить, возваращает номер позиции возможного хода (след клетка или через 1, если бьём)
-    std::vector<int> checkPawnStep_Ang(uint16_t posX, uint16_t posY);
+    // проверка хода пешек
+    // возвращаемые значения: std::pair<bool, std::vector<int>> тут bool - true, если фигура бьёт и false в противном случае
+    // возвращает -1 (в векторе), если не возможно походить или если под указанными координатами не находится фигура
+    // если возможно походить, возваращает номера позиций возможных ходов
+    std::pair<bool, std::vector<int>> checkPawnStep_Ang(uint16_t posX, uint16_t posY);
 
-    std::vector<int>  checkPawnStep_Rus(uint16_t posX, uint16_t posY);
+    std::pair<bool, std::vector<int>>  checkPawnStep_Rus(uint16_t posX, uint16_t posY);
 
 
-    // проверка хода для дамок в заданном направлении
+    // проверка хода для дамок
+    // возвращаемые значения: std::pair<bool, std::vector<int>> тут bool - true, если фигура бьёт и false в противном случае
+    // возвращает -1 (в векторе), если не возможно походить или если под указанными координатами не находится фигура
     // возваращает вектор номеров возможных позиций хождения дамки
-    // если нет места для ходов вернёт - -1
-    std::vector<int> checkKingStep_Ang(uint16_t posX, uint16_t posY);
+    std::pair<bool, std::vector<int>> checkKingStep_Ang(uint16_t posX, uint16_t posY);
 
-    std::vector<int> checkKingStep_Rus(uint16_t posX, uint16_t posY);
+    std::pair<bool, std::vector<int>> checkKingStep_Rus(uint16_t posX, uint16_t posY);
+
+    void setSideAttach();
 
 private:
     char** board;
     uint16_t size;
     bool isWhiteBoard; // хранит информацию о том, какой стороне принадлежит борд
     GameType typeOfGame;
+
+    // следующие переменные нужны для ограничения возможности хода, если возможно бить фигуру:
+    bool whiteWay; // Переменная хранит ответ на вопрос: Ходят ли на данный момент белые?
+    bool sideIsChange = true; // хранит true, если с момента последнего хода(или начала игры) не была вызвана фукнкция checkSideAttach
+    bool sideIsAttach; // true, если спрашиваемая сторона должна атаковать и false в противном случае
+
+    std::pair<uint32_t, uint32_t> attackingFigurePos; // позиция фигуры, которая уже сбила фигуру на данном ходу и может ещё раз бить
+    // содержит координаты по x и y это фигуры или -1 и -1, если эта фигура не обнаружена на данном ходу
+
 
 public:
     std::list<Figure> whiteFigures;
