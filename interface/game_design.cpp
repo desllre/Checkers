@@ -646,7 +646,6 @@ bool Game::EndOfGame(sf::RenderWindow& window){
                 ++score.first;
             }
         }
-
         int returnValue;
         std::string winnerName;
         if (endValue == 1){ // выигрыш того, кто отображается на доске снизу)))
@@ -669,10 +668,12 @@ bool Game::EndOfGame(sf::RenderWindow& window){
         window.setActive();
         switch(returnValue){
             case 0:{
-                Restart(endValue);
+                Restart(1);
+                break;
             }
             case 1:{
                 Restart();
+                break;
             }
             case 2:{
                 return true;

@@ -123,35 +123,45 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
         int diffX = static_cast<int>(endX) - static_cast<int>(beginX);
         int diffY = static_cast<int>(endY) - static_cast<int>(beginY);
 
-        int enemyPosX = endX, enemyPosY = endY; // убираем сбитую фигуру
-
+        int enemyPosX, enemyPosY;
+        int posX = beginX, posY = beginY; // убираем сбитую фигуру
+        int biasX = 0, biasY = 0;
         if (diffX < 0)
-            enemyPosX += 1;
+            biasX += -1;
         else
-            enemyPosX += -1;
+            biasX += 1;
 
         if (diffY < 0)
-            enemyPosY += 1;
+            biasY += -1;
         else
-            enemyPosY += -1;
+            biasY += 1;
 
-        if (checkSide(enemyPosX, enemyPosY) == 'w'){
-            for (auto i = whiteFigures.begin(); i != whiteFigures.end() ; ++i) {
-                if (i->x == enemyPosX && i->y == enemyPosY){
-                    whiteFigures.erase(i);
-                    break;
+        posX += biasX;
+        posY += biasY;
+
+        for (;posX != endX && posY != endY; posX+=biasX, posY+=biasY) {
+            if (board[posY][posX] != '0'){
+                enemyPosX = posX;
+                enemyPosY = posY;
+
+                if (checkSide(enemyPosX, enemyPosY) == 'w'){
+                    for (auto i = whiteFigures.begin(); i != whiteFigures.end() ; ++i) {
+                        if (i->x == enemyPosX && i->y == enemyPosY){
+                            whiteFigures.erase(i);
+                            break;
+                        }
+                    }
+                } else if(checkSide(enemyPosX, enemyPosY) == 'b'){
+                    for (auto i = blackFigures.begin(); i != blackFigures.end() ; ++i) {
+                        if (i->x == enemyPosX && i->y == enemyPosY){
+                            blackFigures.erase(i);
+                            break;
+                        }
+                    }
                 }
-            }
-        } else if(checkSide(enemyPosX, enemyPosY) == 'b'){
-            for (auto i = blackFigures.begin(); i != blackFigures.end() ; ++i) {
-                if (i->x == enemyPosX && i->y == enemyPosY){
-                    blackFigures.erase(i);
-                    break;
-                }
+                board[enemyPosY][enemyPosX] = '0';
             }
         }
-
-        board[enemyPosY][enemyPosX] = '0';
     }
 
     if (isMoving){
@@ -481,9 +491,10 @@ std::pair<bool, std::vector<int>> Board::checkKingStep_Rus(uint16_t posX, uint16
         i = posY + biasY;
         j = posX + biasX;
 
+        bool continueAfterAttach = false;
         for ( ; i < size && i >= 0 && j < size && j >= 0; i += biasY, j += biasX){
             if (board[i][j] == '0') {
-                if (!isAttach){
+                if (!isAttach || continueAfterAttach){
                     possibles.emplace_back(i*size + j);
                 }
             } else if (figureSide != checkSide(j, i)){
@@ -493,9 +504,9 @@ std::pair<bool, std::vector<int>> Board::checkKingStep_Rus(uint16_t posX, uint16
                         possibles.clear();
                         isAttach = true;
                     }
+                    continueAfterAttach = true;
                     possibles.emplace_back(i*size + j);
                 }
-                break;
             } else {
                 break;
             }
@@ -505,9 +516,10 @@ std::pair<bool, std::vector<int>> Board::checkKingStep_Rus(uint16_t posX, uint16
         i = posY + biasY;
         j = posX + biasX;
 
+        continueAfterAttach = false;
         for ( ; i < size && i >= 0 && j < size && j >= 0; i += biasY, j += biasX){
             if (board[i][j] == '0') {
-                if (!isAttach){
+                if (!isAttach || continueAfterAttach){
                     possibles.emplace_back(i*size + j);
                 }
             } else if (figureSide != checkSide(j, i)){
@@ -517,9 +529,9 @@ std::pair<bool, std::vector<int>> Board::checkKingStep_Rus(uint16_t posX, uint16
                         possibles.clear();
                         isAttach = true;
                     }
+                    continueAfterAttach = true;
                     possibles.emplace_back(i*size + j);
                 }
-                break;
             } else {
                 break;
             }
