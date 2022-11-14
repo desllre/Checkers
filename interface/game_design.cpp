@@ -660,10 +660,10 @@ bool Game::EndOfGame(sf::RenderWindow& window){
     return false;
 }
 
+
 void Game::Object::SetPosition(int x, int y){
     sprite.setPosition(float(x), float(y));
 }
 void Game::Object::Draw(sf::RenderWindow& window) const{
     window.draw(sprite);
 }
-
