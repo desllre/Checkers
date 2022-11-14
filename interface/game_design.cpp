@@ -558,6 +558,15 @@ void Game::SetPauseActivity(bool activity){
 }
 
 void Game::Restart(){
+
+    board.restart();
+
+    if (playerHasWhiteBoard) {
+        player1Way = true;
+    } else{
+        player1Way = false;
+    }
+
     gameTime = sf::Time::Zero;
     isSelected = false;
     currentRound = 1;
@@ -567,10 +576,26 @@ void Game::Restart(){
     gameClock.restart();
     gameTimeString = "";
     gameTimeText.setString("00:00");
-    board.restart();
 }
 
 void Game::Restart(int a){
+
+    board.restart();
+
+    if (playerHasWhiteBoard) { // распределение фигур между игроками в зависимости от цвета фигур игрока
+        player1Way = true;
+        player1Figures = &board.whiteFigures;
+        player2Figures = &board.blackFigures;
+    } else{
+        player1Way = false;
+        if (!isSingleGame){
+            player1Figures = &board.blackFigures;
+            player2Figures = &board.whiteFigures;
+        } else {
+            player1Figures = &board.whiteFigures;
+            player2Figures = &board.blackFigures;
+        }
+    }
 
     scoreText.setString("Score " + std::to_string(score.first) + " : " + std::to_string(score.second));
 
@@ -582,8 +607,6 @@ void Game::Restart(int a){
     score.first = score.second = 0;
     gameTimeString = "";
     gameTimeText.setString("00:00");
-
-    board.restart();
 }
 
 void Game::ClockRestart(){
@@ -608,9 +631,8 @@ void Game::SetActivityPlayerWay(){
 }
 
 bool Game::EndOfGame(sf::RenderWindow& window){
-    /*int endValue = board.endOfGame();
+    int endValue = board.endOfGame();
     if (endValue != 0){
-
         if(endValue == 1){
             if (playerHasWhiteBoard){
                 ++score.first;
@@ -661,7 +683,7 @@ bool Game::EndOfGame(sf::RenderWindow& window){
 
         if (roundsNum != currentRound)
             ++currentRound;
-    }*/
+    }
     return false;
 }
 

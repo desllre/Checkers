@@ -156,10 +156,9 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
 
     if (isMoving){
         if (sideIsAttach){
-            if (possibles(endX, endY).first){
-                attackingFigurePos.first = endX;
-                attackingFigurePos.second = endY;
-            } else{
+            attackingFigurePos.first = endX;
+            attackingFigurePos.second = endY;
+            if (!possibles(endX, endY).first) {
                 attackingFigurePos.first = -1;
                 attackingFigurePos.second = -1;
                 whiteWay = !whiteWay;
@@ -193,9 +192,11 @@ std::pair<bool, std::vector<int>> Board::possibles(uint16_t posX, uint16_t posY)
         return returnPair;
     }
 
-    if (attackingFigurePos.first != -1 && attackingFigurePos.second != -1 && attackingFigurePos.first != posX && attackingFigurePos.second != posY){
-        returnPair.first = false;
-        return returnPair;
+    if (attackingFigurePos.first != -1 && attackingFigurePos.second != -1){
+        if (attackingFigurePos.first != posX && attackingFigurePos.second != posY){
+            returnPair.first = false;
+            return returnPair;
+        }
     }
 
     if (typeOfGame == GameType::Russian|| typeOfGame == GameType::Giveaway || typeOfGame == GameType::International){
@@ -623,53 +624,61 @@ bool Board::getIsWhiteBoard(){
 }
 
 int Board::endOfGame() {
+    // проверка на конец игры. Возвращает 1 если выиграли белые, -1 - чёрные, 0 - игра ещё не окончена
     if (typeOfGame == GameType::Russian || typeOfGame == GameType::English || typeOfGame == GameType::International){
-        if (whiteFigures.empty())
-            return -1;
-        if (blackFigures.empty())
-            return 1;
-
         int counter = 0;
-        for (auto& i: whiteFigures) {
-            if (!possibles(i.x, i.y).second.empty())
-                break;
-            ++counter;
-        }
-        if (counter == whiteFigures.size())
-            return -1;
+        if (whiteWay){
+            if (whiteFigures.empty())
+                return -1;
 
-        counter = 0;
-        for (auto& i: blackFigures) {
-            if (!possibles(i.x, i.y).second.empty())
-                break;
-            ++counter;
+            for (auto& i: whiteFigures) {
+                if (!possibles(i.x, i.y).second.empty())
+                    break;
+                ++counter;
+            }
+            if (counter == whiteFigures.size())
+                return -1;
+        } else {
+            if (blackFigures.empty())
+                return 1;
+
+            counter = 0;
+            for (auto& i: blackFigures) {
+                if (!possibles(i.x, i.y).second.empty())
+                    break;
+                ++counter;
+            }
+            if (counter == blackFigures.size())
+                return 1;
         }
-        if (counter == blackFigures.size())
-            return 1;
 
     } else {
-        if (whiteFigures.empty())
-            return 1;
-        if (blackFigures.empty())
-            return -1;
 
         int counter = 0;
-        for (auto& i: whiteFigures) {
-            if (!possibles(i.x, i.y).second.empty())
-                break;
-            ++counter;
-        }
-        if (counter == whiteFigures.size())
-            return 1;
+        if (whiteWay){
+            if (whiteFigures.empty())
+                return 1;
 
-        counter = 0;
-        for (auto& i: blackFigures) {
-            if (!possibles(i.x, i.y).second.empty())
-                break;
-            ++counter;
+            for (auto& i: whiteFigures) {
+                if (!possibles(i.x, i.y).second.empty())
+                    break;
+                ++counter;
+            }
+            if (counter == whiteFigures.size())
+                return 1;
+        } else {
+            if (blackFigures.empty())
+                return -1;
+
+            counter = 0;
+            for (auto& i: blackFigures) {
+                if (!possibles(i.x, i.y).second.empty())
+                    break;
+                ++counter;
+            }
+            if (counter == blackFigures.size())
+                return -1;
         }
-        if (counter == blackFigures.size())
-            return -1;
     }
     return 0;
 }
@@ -712,6 +721,15 @@ void Board::setFigure(uint16_t x, uint16_t y, char figure){
 }
 
 void Board::restart(){
+    sideIsAttach = false;
+    sideIsChange = true;
+    if (isWhiteBoard){
+        whiteWay = true;
+    } else{
+        whiteWay = false;
+    }
+
+
     whiteFigures.clear();
     blackFigures.clear();
     for (uint16_t i = 0; i < size ; ++i){ // заполнение борда
