@@ -1,4 +1,5 @@
 #include "header.h"
+#include "../engine/board.h"
 #pragma once
 
 /********All elements which using in game********/
@@ -111,16 +112,14 @@ public:
                      sf::Color color_outline, sf::Color color_text,
                      int text_size, const std::string& path_font,
                      const std::string& string_text,
-                     float pos_text_x, float pos_text_y);
+                     float pos_text_x, float pos_text_y, uint32_t &roundsNum);
 
     void setValue(bool is_mouse_on_left_round_arrows,
                   bool is_mouse_on_right_round_arrows); //Set rounds
 
-    bool isEmpty(); //Return false if is not empty
-
-    std::string getValue(); //Get number of round
+    std::string getStringValue(); //Get number of round
 
 private:
-    int num = 1;
+    uint32_t roundsNum = 1;
     std::string number_of_round = "1";
 };

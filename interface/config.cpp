@@ -42,9 +42,6 @@ void ConfigGame::activateButtonArrows(bool is_mouse_on_back_button,
                                       bool is_mouse_on_left_round_arrows,
                                       bool is_mouse_on_right_round_arrows,
                                       sf::RenderWindow &window) { //Activate buttons and arrows
-    sf::Cursor::Type cursor_hand = sf::Cursor::Hand;
-    sf::Cursor::Type cursor_arrow = sf::Cursor::Arrow;
-
     if (is_mouse_on_back_button) { //Activate back button
         back_button.setColorFigure(sf::Color::Red);
         back_button.setColorText(sf::Color::Red);
@@ -102,23 +99,8 @@ void ConfigGame::pressButtonArrows(bool is_mouse_on_back_button,
     }
 }
 
-void ConfigGame::saveSettings(){
-    if (!rounds.isEmpty()) {
-        std::ofstream output(path_settings);
+void ConfigGame::saveSettings() {
 
-        if (!output.is_open()) {
-            throw std::exception();
-        }
-
-        output << "number_of_rounds: ";
-
-        if (!rounds.isEmpty()) {
-            output << rounds.getValue();
-        }
-        else {
-            output << "1";
-        }
-    }
 }
 
 void ConfigGame::drawConfigGame(sf::RenderWindow& window) { //Function for draw and activate buttons
@@ -137,6 +119,7 @@ void ConfigGame::drawConfigGame(sf::RenderWindow& window) { //Function for draw 
 
     background.drawBackground(window);
     back_button.drawButton(window);
+    begin_button.drawButton(window);
     arrow_round_left.drawArrow(window);
     arrow_round_right.drawArrow(window);
     text_round.drawText(window);

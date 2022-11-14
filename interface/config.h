@@ -1,5 +1,6 @@
 #include "header.h"
 #include "elements.h"
+#include "../engine/board.h"
 #pragma once
 
 /*Music*/
@@ -67,6 +68,19 @@ const sf::Vector2<float> SIZE_INPUT_ROUND(SIZE_INPUT_X, SIZE_INPUT_Y);
 #define POS_INPUT_TEXT_ROUND_X 1105.f
 #define POS_INPUT_TEXT_ROUNDS_Y 205.f
 #define TEXT_INPUT_ROUND_SIZE 70L
+uint32_t ROUNDS_NUM = 1;
+
+/*For begin button*/
+#define COLOR_OUTLINE sf::Color::Black
+#define SIZE_BUTTON_BEGIN_X 265.f
+#define SIZE_BUTTON_BEGIN_Y 90.f
+#define POS_BUTTON_BEGIN_X 580.f
+#define POS_BUTTON_BEGIN_Y 790.f
+const sf::Vector2<float> SIZE_BUTTON_BEGIN(SIZE_BUTTON_BEGIN_X, SIZE_BUTTON_BEGIN_Y);
+#define COLOR_BEGIN_TEXT sf::Color::Black
+#define TEXT_BEGIN_SIZE 40L
+#define POS_TEXT_BEGIN_X 595.f
+#define POS_TEXT_BEGIN_Y 810.f
 
 /**************Main class to create config game**************/
 class ConfigGame {
@@ -88,10 +102,14 @@ public:
                    TEXT_CONFIGS_SIZE, PATH_FONTS,
                    "SELECT NUMBER \n OF ROUNDS",
                    POS_TEXT_ROUND_X, POS_TEXT_ROUND_Y),
+        begin_button(SIZE_BUTTON_BEGIN, THICKNESS, POS_BUTTON_BEGIN_X,
+                     POS_BUTTON_BEGIN_Y, COLOR_OUTLINE, COLOR_BEGIN_TEXT,
+                     TEXT_BEGIN_SIZE, PATH_FONTS, POS_TEXT_BEGIN_X,
+                     POS_TEXT_BEGIN_Y, MUSIC_TOUCH, MUSIC_PRESS, "BEGIN"),
         rounds(SIZE_INPUT_ROUND, THICKNESS, POS_INPUT_ROUNDS_X,
                POS_INPUT_ROUNDS_Y, COLOR_OUTLINE, COLOR_CONFIG_TEXT,
                TEXT_INPUT_ROUND_SIZE, PATH_FONTS,
-               "1", POS_INPUT_TEXT_ROUND_X, POS_INPUT_TEXT_ROUNDS_Y) {}
+               "1", POS_INPUT_TEXT_ROUND_X, POS_INPUT_TEXT_ROUNDS_Y, ROUNDS_NUM) {}
 
     ~ConfigGame() = default;
 
@@ -119,6 +137,7 @@ public:
 private:
     Background background;
     Button back_button;
+    Button begin_button;
     sf::Cursor cursor;
     const std::string path_settings = "../config/default_settings.txt";
 
@@ -128,7 +147,13 @@ private:
     Text text_round;
     InputFieldRounds rounds;
 
-    /*Config round*/
-    bool is_set_cursor = false;
+    /*Configs game*/
+    uint32_t roundsNum;
+    bool isSingleGame;
+    char figureColor;
+    GameType gameType;
+
+    /*For working window*/
+    bool is_set_cursor = true;
     bool is_back_button_pressed = false;
 };
