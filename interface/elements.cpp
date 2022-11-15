@@ -146,7 +146,7 @@ InputFieldRounds::InputFieldRounds(const sf::Vector2<float> &size, float thickne
                                    sf::Color color_outline, sf::Color color_text,
                                    int text_size, const std::string& path_font,
                                    const std::string& string_text,
-                                   float pos_text_x, float pos_text_y, uint32_t &roundsNum) : roundsNum(roundsNum) {
+                                   float pos_text_x, float pos_text_y, uint32_t roundsNum) {
     figure.setFillColor(sf::Color::White);
     figure.setOutlineColor(color_outline);
     figure.setOutlineThickness(thickness);
@@ -167,12 +167,10 @@ void InputFieldRounds::setValue(bool is_mouse_on_left_round_arrows,
                                 bool is_mouse_on_right_round_arrows) {
     if (is_mouse_on_left_round_arrows && roundsNum > 1) {
         --roundsNum;
-        number_of_round.clear();
         number_of_round = std::to_string(roundsNum);
         text.setString(number_of_round);
     }
     else if (is_mouse_on_right_round_arrows && roundsNum < 5) {
-        number_of_round.clear();
         ++roundsNum;
         number_of_round = std::to_string(roundsNum);
         text.setString(number_of_round);

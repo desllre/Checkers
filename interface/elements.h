@@ -112,7 +112,7 @@ public:
                      sf::Color color_outline, sf::Color color_text,
                      int text_size, const std::string& path_font,
                      const std::string& string_text,
-                     float pos_text_x, float pos_text_y, uint32_t &roundsNum);
+                     float pos_text_x, float pos_text_y, uint32_t roundsNum);
 
     void setValue(bool is_mouse_on_left_round_arrows,
                   bool is_mouse_on_right_round_arrows); //Set rounds
@@ -122,4 +122,22 @@ public:
 private:
     uint32_t roundsNum = 1;
     std::string number_of_round = "1";
+};
+
+class InputFieldTypeRules : public Text {
+    InputFieldTypeRules() = default;
+
+    ~InputFieldTypeRules() = default;
+
+    InputFieldTypeRules(const sf::Vector2<float> &size, float thickness,
+                     float pos_figure_x, float pos_figure_y,
+                     sf::Color color_outline, sf::Color color_text,
+                     int text_size, const std::string& path_font,
+                     const std::string& string_text,
+                     float pos_text_x, float pos_text_y, uint32_t &roundsNum);
+
+    void setValue(bool is_mouse_on_left_round_arrows,
+                  bool is_mouse_on_right_round_arrows); //Set type rules
+
+    std::string getStringValue(); //Get number of round
 };

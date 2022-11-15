@@ -39,12 +39,21 @@ void ConfigGame::setHandCursor(sf::RenderWindow& window) { //Change cursor
 }
 
 void ConfigGame::activateButtonArrows(bool is_mouse_on_back_button,
+                                      bool is_mouse_on_begin_button,
                                       bool is_mouse_on_left_round_arrows,
                                       bool is_mouse_on_right_round_arrows,
                                       sf::RenderWindow &window) { //Activate buttons and arrows
     if (is_mouse_on_back_button) { //Activate back button
         back_button.setColorFigure(sf::Color::Red);
         back_button.setColorText(sf::Color::Red);
+        if (!is_set_cursor) {
+            setHandCursor(window);
+            is_set_cursor = true;
+        }
+    }
+    if (is_mouse_on_begin_button) {
+        begin_button.setColorFigure(sf::Color::Red);
+        begin_button.setColorText(sf::Color::Red);
         if (!is_set_cursor) {
             setHandCursor(window);
             is_set_cursor = true;
@@ -66,9 +75,12 @@ void ConfigGame::activateButtonArrows(bool is_mouse_on_back_button,
     }
     else if (!is_mouse_on_back_button &&
              !is_mouse_on_left_round_arrows &&
+             !is_mouse_on_begin_button &&
              !is_mouse_on_right_round_arrows) {
         back_button.setColorFigure(sf::Color::Black);
         back_button.setColorText(sf::Color::Black);
+        begin_button.setColorFigure(sf::Color::Black);
+        begin_button.setColorText(sf::Color::Black);
         arrow_round_left.setColor(is_mouse_on_left_round_arrows);
         arrow_round_right.setColor(is_mouse_on_right_round_arrows);
         if (is_set_cursor) {
@@ -79,6 +91,7 @@ void ConfigGame::activateButtonArrows(bool is_mouse_on_back_button,
 }
 
 void ConfigGame::pressButtonArrows(bool is_mouse_on_back_button,
+                                   bool is_mouse_on_begin_button,
                                    bool is_mouse_on_left_round_arrows,
                                    bool is_mouse_on_right_round_arrows,
                                    bool is_press_mouse,
@@ -97,6 +110,10 @@ void ConfigGame::pressButtonArrows(bool is_mouse_on_back_button,
         arrow_round_right.playSongsPress();
         saveSettings();
     }
+    if (is_mouse_on_begin_button && is_press_mouse) {
+        begin_button.playSongsPress();
+
+    }
 }
 
 void ConfigGame::saveSettings() {
@@ -111,11 +128,13 @@ void ConfigGame::drawConfigGame(sf::RenderWindow& window) { //Function for draw 
                                          (mouse_position.x <= POS_ARROW_LEFT_ROUND_X + FIX_ARROW_SIZE_X && mouse_position.y <= POS_ARROW_LEFT_ROUND_Y + FIX_ARROW_SIZE_Y);
     bool is_mouse_on_right_round_arrows = (mouse_position.x >= POS_ARROW_RIGHT_ROUND_X && mouse_position.y >= POS_ARROW_RIGHT_ROUND_Y + FIX_ARROW_Y) &&
                                          (mouse_position.x <= POS_ARROW_RIGHT_ROUND_X + FIX_ARROW_SIZE_X && mouse_position.y <= POS_ARROW_RIGHT_ROUND_Y + FIX_ARROW_SIZE_Y);
+    bool is_mouse_on_begin_button = (mouse_position.x >= POS_BUTTON_BEGIN_X && mouse_position.y >= POS_BUTTON_BEGIN_Y) &&
+                                     (mouse_position.x <= POS_BUTTON_BEGIN_X + SIZE_BUTTON_BEGIN_X && mouse_position.y <= POS_BUTTON_BEGIN_Y + SIZE_BUTTON_BEGIN_Y);
     bool is_press_mouse = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 
-    activateButtonArrows(is_mouse_on_back_button, is_mouse_on_left_round_arrows, is_mouse_on_right_round_arrows, window);
+    activateButtonArrows(is_mouse_on_back_button, is_mouse_on_begin_button, is_mouse_on_left_round_arrows, is_mouse_on_right_round_arrows, window);
 
-    pressButtonArrows(is_mouse_on_back_button,is_mouse_on_left_round_arrows, is_mouse_on_right_round_arrows, is_press_mouse, window);
+    pressButtonArrows(is_mouse_on_back_button, is_mouse_on_begin_button, is_mouse_on_left_round_arrows, is_mouse_on_right_round_arrows, is_press_mouse, window);
 
     background.drawBackground(window);
     back_button.drawButton(window);
@@ -123,5 +142,6 @@ void ConfigGame::drawConfigGame(sf::RenderWindow& window) { //Function for draw 
     arrow_round_left.drawArrow(window);
     arrow_round_right.drawArrow(window);
     text_round.drawText(window);
+    text_game_type.drawText(window);
     rounds.drawText(window);
 }

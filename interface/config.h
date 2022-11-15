@@ -68,7 +68,6 @@ const sf::Vector2<float> SIZE_INPUT_ROUND(SIZE_INPUT_X, SIZE_INPUT_Y);
 #define POS_INPUT_TEXT_ROUND_X 1105.f
 #define POS_INPUT_TEXT_ROUNDS_Y 205.f
 #define TEXT_INPUT_ROUND_SIZE 70L
-uint32_t ROUNDS_NUM = 1;
 
 /*For begin button*/
 #define COLOR_OUTLINE sf::Color::Black
@@ -81,6 +80,17 @@ const sf::Vector2<float> SIZE_BUTTON_BEGIN(SIZE_BUTTON_BEGIN_X, SIZE_BUTTON_BEGI
 #define TEXT_BEGIN_SIZE 40L
 #define POS_TEXT_BEGIN_X 595.f
 #define POS_TEXT_BEGIN_Y 810.f
+
+/*For game type text*/
+#define SIZE_GAME_TYPE_X 650.f
+#define SIZE_GAME_TYPE_Y 120.f
+#define POS_GAME_TYPE_X 75.f
+#define POS_GAME_TYPE_Y 380.f
+const sf::Vector2<float> SIZE_GAME_TYPE(SIZE_GAME_TYPE_X, SIZE_GAME_TYPE_Y);
+#define COLOR_GAME_TYPE_TEXT sf::Color::Black
+#define TEXT_GAME_TYPE_SIZE 40L
+#define POS_GAME_TYPE_TEXT_ROUND_X 90.f
+#define POS_GAME_TYPE_TEXT_ROUND_Y 390.f
 
 /**************Main class to create config game**************/
 class ConfigGame {
@@ -100,8 +110,8 @@ public:
         text_round(SIZE_FIGURE, THICKNESS, POS_FIGURE_X,
                    POS_FIGURE_Y, COLOR_OUTLINE, COLOR_CONFIG_TEXT,
                    TEXT_CONFIGS_SIZE, PATH_FONTS,
-                   "SELECT NUMBER \n OF ROUNDS",
-                   POS_TEXT_ROUND_X, POS_TEXT_ROUND_Y),
+                   "NUMBER\nOF ROUNDS",
+                    POS_TEXT_ROUND_X, POS_TEXT_ROUND_Y),
         begin_button(SIZE_BUTTON_BEGIN, THICKNESS, POS_BUTTON_BEGIN_X,
                      POS_BUTTON_BEGIN_Y, COLOR_OUTLINE, COLOR_BEGIN_TEXT,
                      TEXT_BEGIN_SIZE, PATH_FONTS, POS_TEXT_BEGIN_X,
@@ -109,16 +119,22 @@ public:
         rounds(SIZE_INPUT_ROUND, THICKNESS, POS_INPUT_ROUNDS_X,
                POS_INPUT_ROUNDS_Y, COLOR_OUTLINE, COLOR_CONFIG_TEXT,
                TEXT_INPUT_ROUND_SIZE, PATH_FONTS,
-               "1", POS_INPUT_TEXT_ROUND_X, POS_INPUT_TEXT_ROUNDS_Y, ROUNDS_NUM) {}
+               "1", POS_INPUT_TEXT_ROUND_X, POS_INPUT_TEXT_ROUNDS_Y, roundsNum),
+        text_game_type(SIZE_GAME_TYPE, THICKNESS, POS_GAME_TYPE_X,
+                       POS_GAME_TYPE_Y, COLOR_OUTLINE, COLOR_GAME_TYPE_TEXT,
+                       TEXT_GAME_TYPE_SIZE, PATH_FONTS,
+                       "TYPE OF\nRULES GAME", POS_GAME_TYPE_TEXT_ROUND_X, POS_GAME_TYPE_TEXT_ROUND_Y) {};
 
     ~ConfigGame() = default;
 
     void activateButtonArrows(bool is_mouse_on_back_button,
+                              bool is_mouse_on_begin_button,
                               bool is_mouse_on_left_round_arrows,
                               bool is_mouse_on_right_round_arrows,
                               sf::RenderWindow &window); //Activate buttons and arrows
 
     void pressButtonArrows(bool is_mouse_on_back_button,
+                           bool is_mouse_on_begin_button,
                            bool is_mouse_on_left_round_arrows,
                            bool is_mouse_on_right_round_arrows,
                            bool is_press_mouse,
@@ -139,19 +155,19 @@ private:
     Button back_button;
     Button begin_button;
     sf::Cursor cursor;
-    const std::string path_settings = "../config/default_settings.txt";
 
     /*Config round*/
     Arrow arrow_round_left;
     Arrow arrow_round_right;
     Text text_round;
+    Text text_game_type;
     InputFieldRounds rounds;
 
     /*Configs game*/
-    uint32_t roundsNum;
-    bool isSingleGame;
-    char figureColor;
-    GameType gameType;
+    uint32_t roundsNum = 1;
+    GameType gameType = Russian;
+    char figureColor = 'w';
+    bool isSingleGame = true;
 
     /*For working window*/
     bool is_set_cursor = true;
