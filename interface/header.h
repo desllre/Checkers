@@ -4,6 +4,7 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
 #include <fstream>
+#include <array>
 #endif
 
 #pragma once

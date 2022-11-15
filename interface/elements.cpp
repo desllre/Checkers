@@ -180,3 +180,42 @@ void InputFieldRounds::setValue(bool is_mouse_on_left_round_arrows,
 std::string InputFieldRounds::getStringValue() {
     return number_of_round;
 }
+
+InputFieldTypeRules::InputFieldTypeRules(const sf::Vector2<float> &size, float thickness,
+                                   float pos_figure_x, float pos_figure_y,
+                                   sf::Color color_outline, sf::Color color_text,
+                                   int text_size, const std::string& path_font,
+                                   const std::string& string_text,
+                                   float pos_text_x, float pos_text_y, GameType game_type) {
+    figure.setFillColor(sf::Color::White);
+    figure.setOutlineColor(color_outline);
+    figure.setOutlineThickness(thickness);
+    figure.setSize(size);
+    figure.setPosition(pos_figure_x, pos_figure_y);
+
+    font.loadFromFile(path_font);
+
+    text.setColor(color_text);
+    text.setStyle(sf::Text::Bold);
+    text.setFont(font);
+    text.setCharacterSize(text_size);
+    text.setPosition(pos_text_x, pos_text_y);
+    text.setString(string_text);
+}
+
+void InputFieldTypeRules::setValue(bool is_mouse_on_left_round_arrows,
+                                bool is_mouse_on_right_round_arrows) {
+    if (is_mouse_on_left_round_arrows && index > 0) {
+        --index;
+        text.setString(array_type_of_game[index].c_str());
+    }
+    else if (is_mouse_on_right_round_arrows && index < 3) {
+        ++index;
+        text.setString(array_type_of_game[index]);
+    }
+}
+
+GameType InputFieldTypeRules::getStringValue() {
+    return game_type;
+}
+

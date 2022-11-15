@@ -31,9 +31,9 @@ const sf::Vector2<float> SIZE_BUTTON(SIZE_BUTTON_X, SIZE_BUTTON_Y);
 #define FIX_SETTINGS_TEXT_X 100.f
 
 /*For arrows round*/
-#define POS_ARROW_RIGHT_ROUND_X 1300.f
+#define POS_ARROW_RIGHT_ROUND_X 1205.f
 #define POS_ARROW_RIGHT_ROUND_Y 220.f
-#define POS_ARROW_LEFT_ROUND_X 880.f
+#define POS_ARROW_LEFT_ROUND_X 780.f
 #define POS_ARROW_LEFT_ROUND_Y 220.f
 #define SIZE_ARROWS_X 1.f
 #define SIZE_ARROWS_Y 1.f
@@ -49,7 +49,7 @@ const sf::Vector2<float> SIZE_ARROWS(SIZE_ARROWS_X, SIZE_ARROWS_Y);
 #define FIX_ARROW_SIZE_Y 40.f
 
 /*For round text*/
-#define SIZE_FIGURE_X 650.f
+#define SIZE_FIGURE_X 520.f
 #define SIZE_FIGURE_Y 120.f
 #define POS_FIGURE_X 75.f
 #define POS_FIGURE_Y 190.f
@@ -62,10 +62,10 @@ const sf::Vector2<float> SIZE_FIGURE(SIZE_FIGURE_X, SIZE_FIGURE_Y);
 /*For input number of rounds*/
 #define SIZE_INPUT_X 270.f
 #define SIZE_INPUT_Y 120.f
-#define POS_INPUT_ROUNDS_X 1000.f
+#define POS_INPUT_ROUNDS_X 900.f
 #define POS_INPUT_ROUNDS_Y 190.f
 const sf::Vector2<float> SIZE_INPUT_ROUND(SIZE_INPUT_X, SIZE_INPUT_Y);
-#define POS_INPUT_TEXT_ROUND_X 1105.f
+#define POS_INPUT_TEXT_ROUND_X 1005.f
 #define POS_INPUT_TEXT_ROUNDS_Y 205.f
 #define TEXT_INPUT_ROUND_SIZE 70L
 
@@ -82,7 +82,7 @@ const sf::Vector2<float> SIZE_BUTTON_BEGIN(SIZE_BUTTON_BEGIN_X, SIZE_BUTTON_BEGI
 #define POS_TEXT_BEGIN_Y 810.f
 
 /*For game type text*/
-#define SIZE_GAME_TYPE_X 650.f
+#define SIZE_GAME_TYPE_X 520.f
 #define SIZE_GAME_TYPE_Y 120.f
 #define POS_GAME_TYPE_X 75.f
 #define POS_GAME_TYPE_Y 380.f
@@ -91,6 +91,22 @@ const sf::Vector2<float> SIZE_GAME_TYPE(SIZE_GAME_TYPE_X, SIZE_GAME_TYPE_Y);
 #define TEXT_GAME_TYPE_SIZE 40L
 #define POS_GAME_TYPE_TEXT_ROUND_X 90.f
 #define POS_GAME_TYPE_TEXT_ROUND_Y 390.f
+
+/*For input type of game*/
+#define SIZE_INPUT_TYPE_X 650.f
+#define SIZE_INPUT_TYPE_Y 120.f
+#define POS_INPUT_TYPE_ROUNDS_X 720.f
+#define POS_INPUT_TYPE_ROUNDS_Y 380.f
+const sf::Vector2<float> SIZE_INPUT_TYPE_ROUND(SIZE_INPUT_TYPE_X, SIZE_INPUT_TYPE_Y);
+#define POS_INPUT_TYPE_TEXT_ROUND_X 825.f
+#define POS_INPUT_TYPE_TEXT_ROUNDS_Y 410.f
+#define TEXT_INPUT_TYPE_SIZE 50L
+
+/*For arrows type game*/
+#define POS_ARROW_RIGHT_TYPE_X 1090.f
+#define POS_ARROW_RIGHT_TYPE_Y 530.f
+#define POS_ARROW_LEFT_TYPE_X 890.f
+#define POS_ARROW_LEFT_TYPE_Y 530.f
 
 /**************Main class to create config game**************/
 class ConfigGame {
@@ -120,10 +136,20 @@ public:
                POS_INPUT_ROUNDS_Y, COLOR_OUTLINE, COLOR_CONFIG_TEXT,
                TEXT_INPUT_ROUND_SIZE, PATH_FONTS,
                "1", POS_INPUT_TEXT_ROUND_X, POS_INPUT_TEXT_ROUNDS_Y, roundsNum),
+        arrow_type_left(SIZE_ARROWS, POS_ARROW_LEFT_TYPE_X, POS_ARROW_LEFT_TYPE_Y,
+                         ARROW_LEFT, ARROW_LEFT_ACTIVATED, MUSIC_TOUCH,
+                         MUSIC_PRESS),
+        arrow_type_right(SIZE_ARROWS, POS_ARROW_RIGHT_TYPE_X, POS_ARROW_RIGHT_TYPE_Y,
+                          ARROW_RIGHT, ARROW_RIGHT_ACTIVATED, MUSIC_TOUCH,
+                          MUSIC_PRESS),
         text_game_type(SIZE_GAME_TYPE, THICKNESS, POS_GAME_TYPE_X,
                        POS_GAME_TYPE_Y, COLOR_OUTLINE, COLOR_GAME_TYPE_TEXT,
                        TEXT_GAME_TYPE_SIZE, PATH_FONTS,
-                       "TYPE OF\nRULES GAME", POS_GAME_TYPE_TEXT_ROUND_X, POS_GAME_TYPE_TEXT_ROUND_Y) {};
+                       "TYPE OF\nRULES GAME", POS_GAME_TYPE_TEXT_ROUND_X, POS_GAME_TYPE_TEXT_ROUND_Y),
+        rules(SIZE_INPUT_TYPE_ROUND, THICKNESS, POS_INPUT_TYPE_ROUNDS_X,
+              POS_INPUT_TYPE_ROUNDS_Y, COLOR_OUTLINE, COLOR_CONFIG_TEXT,
+              TEXT_INPUT_TYPE_SIZE, PATH_FONTS,
+              "Russian", POS_INPUT_TYPE_TEXT_ROUND_X, POS_INPUT_TYPE_TEXT_ROUNDS_Y, game_type) {};
 
     ~ConfigGame() = default;
 
@@ -131,12 +157,16 @@ public:
                               bool is_mouse_on_begin_button,
                               bool is_mouse_on_left_round_arrows,
                               bool is_mouse_on_right_round_arrows,
+                              bool is_mouse_on_left_text_arrows,
+                              bool is_mouse_on_right_text_arrows,
                               sf::RenderWindow &window); //Activate buttons and arrows
 
     void pressButtonArrows(bool is_mouse_on_back_button,
                            bool is_mouse_on_begin_button,
                            bool is_mouse_on_left_round_arrows,
                            bool is_mouse_on_right_round_arrows,
+                           bool is_mouse_on_left_type_arrows,
+                           bool is_mouse_on_right_type_arrows,
                            bool is_press_mouse,
                            sf::RenderWindow &window); //Press on button and on arrows
 
@@ -159,13 +189,16 @@ private:
     /*Config round*/
     Arrow arrow_round_left;
     Arrow arrow_round_right;
+    Arrow arrow_type_left;
+    Arrow arrow_type_right;
     Text text_round;
     Text text_game_type;
     InputFieldRounds rounds;
+    InputFieldTypeRules rules;
 
     /*Configs game*/
     uint32_t roundsNum = 1;
-    GameType gameType = Russian;
+    GameType game_type = Russian;
     char figureColor = 'w';
     bool isSingleGame = true;
 
