@@ -57,5 +57,8 @@ private:
     bool is_mouse_on_button = false;
 
     sf::Clock press_delay_timer; // a delay on pressing so that the buttons are not pressed again when leaving the selected item
+
+    bool is_set_cursor = false;
+
 };
 

@@ -1,12 +1,7 @@
 #include "menu.h"
-////////////////////////////
-// Это нужно будет убрать. Заголовок добавлен, для тестирования game_design.cpp
-#include "../engine/board.h"
-#include "EndOfGameWindow.h"
-#include "iostream"
+
 #pragma once
 
-////////////////////////////
 Menu::Menu():
         background(PATH_MENU_BACKGROUND),
         play_button(SIZE_MENU_BUTTON, THICKNESS, POS_X,
@@ -144,4 +139,3 @@ void Menu::pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_b
     }
 
 }
-

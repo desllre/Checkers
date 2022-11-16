@@ -1,4 +1,5 @@
 #include "menu.h"
+#pragma once
 
 #pragma once
 /**********Main function to create game**********/
