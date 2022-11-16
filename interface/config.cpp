@@ -42,10 +42,12 @@ void ConfigGame::activateButtonArrows(bool is_mouse_on_back_button,
                                       bool is_mouse_on_begin_button,
                                       bool is_mouse_on_left_round_arrows,
                                       bool is_mouse_on_right_round_arrows,
-                                      bool is_mouse_on_left_type_arrows,
-                                      bool is_mouse_on_right_type_arrows,
+                                      bool is_mouse_on_left_text_arrows,
+                                      bool is_mouse_on_right_text_arrows,
                                       bool is_mouse_on_left_color_arrows,
                                       bool is_mouse_on_right_color_arrows,
+                                      bool is_mouse_on_left_multiplayer_arrows,
+                                      bool is_mouse_on_right_multiplayer_arrows,
                                       sf::RenderWindow &window) { //Activate buttons and arrows
     if (is_mouse_on_back_button) { //Activate back button
         back_button.setColorFigure(sf::Color::Red);
@@ -73,14 +75,14 @@ void ConfigGame::activateButtonArrows(bool is_mouse_on_back_button,
             setHandCursor(window);
             is_set_cursor = true;
         }
-    } else if (is_mouse_on_left_type_arrows) {
-        arrow_type_left.setColor(is_mouse_on_left_type_arrows);
+    } else if (is_mouse_on_left_text_arrows) {
+        arrow_type_left.setColor(is_mouse_on_left_text_arrows);
         if (!is_set_cursor) {
             setHandCursor(window);
             is_set_cursor = true;
         }
-    } else if (is_mouse_on_right_type_arrows) {
-        arrow_type_right.setColor(is_mouse_on_right_type_arrows);
+    } else if (is_mouse_on_right_text_arrows) {
+        arrow_type_right.setColor(is_mouse_on_right_text_arrows);
         if (!is_set_cursor) {
             setHandCursor(window);
             is_set_cursor = true;
@@ -97,14 +99,24 @@ void ConfigGame::activateButtonArrows(bool is_mouse_on_back_button,
             setHandCursor(window);
             is_set_cursor = true;
         }
+    } else if(is_mouse_on_left_multiplayer_arrows){
+        if (!is_set_cursor) {
+            setHandCursor(window);
+            is_set_cursor = true;
+        }
+    } else if(is_mouse_on_right_multiplayer_arrows){
+        if (!is_set_cursor) {
+            setHandCursor(window);
+            is_set_cursor = true;
+        }
     } else if (!is_mouse_on_back_button &&
-             !is_mouse_on_left_round_arrows &&
-             !is_mouse_on_begin_button &&
-             !is_mouse_on_right_round_arrows &&
-             !is_mouse_on_left_type_arrows &&
-             !is_mouse_on_right_type_arrows &&
-             !is_mouse_on_left_color_arrows &&
-             !is_mouse_on_right_color_arrows) {
+               !is_mouse_on_left_round_arrows &&
+               !is_mouse_on_begin_button &&
+               !is_mouse_on_right_round_arrows &&
+               !is_mouse_on_left_text_arrows &&
+               !is_mouse_on_right_text_arrows &&
+               !is_mouse_on_left_color_arrows &&
+               !is_mouse_on_right_color_arrows) {
         back_button.setColorFigure(sf::Color::Black);
         back_button.setColorText(sf::Color::Black);
         begin_button.setColorFigure(sf::Color::Black);
@@ -130,6 +142,8 @@ void ConfigGame::pressButtonArrows(bool is_mouse_on_back_button,
                                    bool is_mouse_on_right_type_arrows,
                                    bool is_mouse_on_left_color_arrows,
                                    bool is_mouse_on_right_color_arrows,
+                                   bool is_mouse_on_left_multiplayer_arrows,
+                                   bool is_mouse_on_right_multiplayer_arrows,
                                    bool is_press_mouse,
                                    sf::RenderWindow &window) { //Press on button
     if (is_mouse_on_back_button && is_press_mouse) {
@@ -138,35 +152,27 @@ void ConfigGame::pressButtonArrows(bool is_mouse_on_back_button,
     } else if (is_mouse_on_left_round_arrows && is_press_mouse) {
         rounds.setValue(is_mouse_on_left_round_arrows, is_mouse_on_right_round_arrows);
         arrow_round_left.playSongsPress();
-        saveSettings();
     } else if (is_mouse_on_right_round_arrows && is_press_mouse) {
         rounds.setValue(is_mouse_on_left_round_arrows, is_mouse_on_right_round_arrows);
         arrow_round_right.playSongsPress();
-        saveSettings();
     } else if (is_mouse_on_left_type_arrows && is_press_mouse) {
         rules.setValue(is_mouse_on_left_type_arrows, is_mouse_on_right_type_arrows);
         arrow_type_left.playSongsPress();
-        saveSettings();
     } else if (is_mouse_on_right_type_arrows && is_press_mouse) {
         rules.setValue(is_mouse_on_left_type_arrows, is_mouse_on_right_type_arrows);
         arrow_type_right.playSongsPress();
-        saveSettings();
     } else if (is_mouse_on_right_color_arrows && is_press_mouse) {
         color.setValue(is_mouse_on_left_color_arrows, is_mouse_on_right_color_arrows);
         arrow_color_right.playSongsPress();
-        saveSettings();
     } else if (is_mouse_on_left_color_arrows && is_press_mouse) {
         color.setValue(is_mouse_on_left_color_arrows, is_mouse_on_right_color_arrows);
         arrow_color_left.playSongsPress();
-        saveSettings();
     } else if (is_mouse_on_begin_button && is_press_mouse) {
         begin_button.playSongsPress();
-        saveSettings();
+    } else if((is_mouse_on_left_multiplayer_arrows || is_mouse_on_right_multiplayer_arrows) && is_press_mouse){
+        multiplayer.setValue(is_mouse_on_left_multiplayer_arrows, is_mouse_on_right_multiplayer_arrows);
+        arrow_multiplayer_left.playSongsPress();
     }
-}
-
-void ConfigGame::saveSettings() {
-
 }
 
 void ConfigGame::drawConfigGame(sf::RenderWindow& window) { //Function for draw and activate buttons
@@ -187,17 +193,25 @@ void ConfigGame::drawConfigGame(sf::RenderWindow& window) { //Function for draw 
                                          (mouse_position.x <= POS_ARROW_LEFT_COLOR_X + FIX_ARROW_SIZE_X && mouse_position.y <= POS_ARROW_LEFT_COLOR_Y + FIX_ARROW_SIZE_Y);
     bool is_mouse_on_right_color_arrows = (mouse_position.x >= POS_ARROW_RIGHT_COLOR_X + 40 && mouse_position.y >= POS_ARROW_RIGHT_COLOR_Y + FIX_ARROW_Y + 10) &&
                                           (mouse_position.x <= POS_ARROW_RIGHT_COLOR_X + FIX_ARROW_SIZE_X && mouse_position.y <= POS_ARROW_RIGHT_COLOR_Y + FIX_ARROW_SIZE_Y + 10);
+    bool is_mouse_on_left_multiplayer_arrows = (mouse_position.x >= POS_ARROW_LEFT_MULTIPLAYER_X + 40 && mouse_position.y >= POS_ARROW_LEFT_MULTIPLAYER_Y + FIX_ARROW_Y) &&
+                                         (mouse_position.x <= POS_ARROW_LEFT_MULTIPLAYER_X + FIX_ARROW_SIZE_X && mouse_position.y <= POS_ARROW_LEFT_MULTIPLAYER_Y + FIX_ARROW_SIZE_Y);
+    bool is_mouse_on_right_multiplayer_arrows = (mouse_position.x >= POS_ARROW_RIGHT_MULTIPLAYER_X + 40 && mouse_position.y >= POS_ARROW_RIGHT_COLOR_Y + FIX_ARROW_Y + 10) &&
+                                          (mouse_position.x <= POS_ARROW_RIGHT_MULTIPLAYER_X + FIX_ARROW_SIZE_X && mouse_position.y <= POS_ARROW_RIGHT_MULTIPLAYER_Y + FIX_ARROW_SIZE_Y + 10);
+
     bool is_press_mouse = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 
     activateButtonArrows(is_mouse_on_back_button, is_mouse_on_begin_button,
                          is_mouse_on_left_round_arrows, is_mouse_on_right_round_arrows,
                          is_mouse_on_left_type_arrows, is_mouse_on_right_type_arrows,
-                         is_mouse_on_left_color_arrows, is_mouse_on_right_color_arrows, window);
+                         is_mouse_on_left_color_arrows, is_mouse_on_right_color_arrows,
+                         is_mouse_on_left_multiplayer_arrows, is_mouse_on_right_multiplayer_arrows, window);
 
     pressButtonArrows(is_mouse_on_back_button, is_mouse_on_begin_button,
                       is_mouse_on_left_round_arrows, is_mouse_on_right_round_arrows,
                       is_mouse_on_left_type_arrows, is_mouse_on_right_type_arrows,
-                      is_mouse_on_left_color_arrows, is_mouse_on_right_color_arrows, is_press_mouse, window);
+                      is_mouse_on_left_color_arrows, is_mouse_on_right_color_arrows,
+                      is_mouse_on_left_multiplayer_arrows, is_mouse_on_right_multiplayer_arrows,
+                      is_press_mouse, window);
 
     background.drawBackground(window);
     back_button.drawButton(window);
@@ -214,4 +228,9 @@ void ConfigGame::drawConfigGame(sf::RenderWindow& window) { //Function for draw 
     arrow_color_left.drawArrow(window);
     arrow_color_right.drawArrow(window);
     color.drawText(window);
+
+    text_multiplayer.drawText(window);
+    multiplayer.drawText(window);
+    arrow_multiplayer_left.drawArrow(window);
+    arrow_multiplayer_right.drawArrow(window);
 }

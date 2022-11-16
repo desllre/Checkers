@@ -117,7 +117,9 @@ public:
     void setValue(bool is_mouse_on_left_round_arrows,
                   bool is_mouse_on_right_round_arrows); //Set rounds
 
-    std::string getStringValue(); //Get number of round
+    std::string getStringValue(); //Get number of round(string)
+
+    uint32_t getCurrentRound(); // Get number of round(uint32_t)
 
 private:
     uint32_t roundsNum = 1;
@@ -170,4 +172,28 @@ private:
     std::array<std::string, 2> array_color_of_checkers = {"White", "Black"};
     uint8_t index = 0;
     char color_of_checkers = 'w';
+};
+
+class InputFieldMultiplayer : public Text { // Class for working with name input fields
+public:
+    InputFieldMultiplayer() = default;
+
+    ~InputFieldMultiplayer() = default;
+
+    InputFieldMultiplayer(const sf::Vector2<float> &size, float thickness,
+                    float pos_figure_x, float pos_figure_y,
+                    sf::Color color_outline, sf::Color color_text,
+                    int text_size, const std::string& path_font,
+                    const std::string& string_text,
+                    float pos_text_x, float pos_text_y);
+
+    void setValue(bool is_mouse_on_left_multiplayer_arrows,
+                  bool is_mouse_on_right_multiplayer_arrows);
+
+    bool getValue(); // Get variable is_single_game
+
+private:
+    std::array<std::string, 2> array_multiplayer_of_checkers = {"Single Player", "Multi Player"};
+    uint8_t index = 0;
+    bool is_single_game = true;
 };

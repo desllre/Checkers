@@ -32,9 +32,9 @@ const sf::Vector2<float> SIZE_BUTTON(SIZE_BUTTON_X, SIZE_BUTTON_Y);
 
 /*For arrows round*/
 #define POS_ARROW_RIGHT_ROUND_X 1170.f
-#define POS_ARROW_RIGHT_ROUND_Y 180.f
+#define POS_ARROW_RIGHT_ROUND_Y 150.f
 #define POS_ARROW_LEFT_ROUND_X 780.f
-#define POS_ARROW_LEFT_ROUND_Y 185.f
+#define POS_ARROW_LEFT_ROUND_Y 145.f
 #define SIZE_ARROWS_X 1.f
 #define SIZE_ARROWS_Y 1.f
 const sf::Vector2<float> SIZE_ARROWS(SIZE_ARROWS_X, SIZE_ARROWS_Y);
@@ -52,20 +52,20 @@ const sf::Vector2<float> SIZE_ARROWS(SIZE_ARROWS_X, SIZE_ARROWS_Y);
 #define SIZE_FIGURE_X 500.f
 #define SIZE_FIGURE_Y 100.f
 #define POS_FIGURE_X 75.f
-#define POS_FIGURE_Y 190.f
+#define POS_FIGURE_Y 150.f
 const sf::Vector2<float> SIZE_FIGURE(SIZE_FIGURE_X, SIZE_FIGURE_Y);
 #define TEXT_CONFIGS_SIZE 35L
 #define POS_TEXT_ROUND_X 90.f
-#define POS_TEXT_ROUND_Y 195.f
+#define POS_TEXT_ROUND_Y 155.f
 
 /*For input number of rounds*/
 #define SIZE_INPUT_X 270.f
 #define SIZE_INPUT_Y 100.f
 #define POS_INPUT_ROUNDS_X 900.f
-#define POS_INPUT_ROUNDS_Y 190.f
+#define POS_INPUT_ROUNDS_Y 150.f
 const sf::Vector2<float> SIZE_INPUT_ROUND(SIZE_INPUT_X, SIZE_INPUT_Y);
 #define POS_INPUT_TEXT_ROUND_X 1005.f
-#define POS_INPUT_TEXT_ROUNDS_Y 200.f
+#define POS_INPUT_TEXT_ROUNDS_Y 160.f
 #define TEXT_INPUT_ROUND_SIZE 60L
 
 /*For begin button*/
@@ -82,53 +82,82 @@ const sf::Vector2<float> SIZE_BUTTON_BEGIN(SIZE_BUTTON_BEGIN_X, SIZE_BUTTON_BEGI
 #define SIZE_GAME_TYPE_X 500.f
 #define SIZE_GAME_TYPE_Y 100.f
 #define POS_GAME_TYPE_X 75.f
-#define POS_GAME_TYPE_Y 380.f
+#define POS_GAME_TYPE_Y 310.f
 const sf::Vector2<float> SIZE_GAME_TYPE(SIZE_GAME_TYPE_X, SIZE_GAME_TYPE_Y);
 #define TEXT_GAME_TYPE_SIZE 35L
 #define POS_GAME_TYPE_TEXT_ROUND_X 90.f
-#define POS_GAME_TYPE_TEXT_ROUND_Y 385.f
+#define POS_GAME_TYPE_TEXT_ROUND_Y 315.f
 
 /*For input type of game*/
 #define SIZE_INPUT_TYPE_X 600.f
 #define SIZE_INPUT_TYPE_Y 100.f
 #define POS_INPUT_TYPE_ROUNDS_X 740.f
-#define POS_INPUT_TYPE_ROUNDS_Y 380.f
+#define POS_INPUT_TYPE_ROUNDS_Y 310.f
 const sf::Vector2<float> SIZE_INPUT_TYPE_ROUND(SIZE_INPUT_TYPE_X, SIZE_INPUT_TYPE_Y);
 #define POS_INPUT_TYPE_TEXT_ROUND_X 755.f
-#define POS_INPUT_TYPE_TEXT_ROUNDS_Y 410.f
+#define POS_INPUT_TYPE_TEXT_ROUNDS_Y 340.f
 #define TEXT_INPUT_TYPE_SIZE 35L
 
 /*For arrows type game*/
 #define POS_ARROW_RIGHT_TYPE_X 1335.f
-#define POS_ARROW_RIGHT_TYPE_Y 365.f
+#define POS_ARROW_RIGHT_TYPE_Y 295.f
 #define POS_ARROW_LEFT_TYPE_X 620.f
-#define POS_ARROW_LEFT_TYPE_Y 375.f
+#define POS_ARROW_LEFT_TYPE_Y 305.f
 
 /*For color checkers text*/
 #define SIZE_COLOR_X 500.f
 #define SIZE_COLOR_Y 100.f
 #define POS_COLOR_X 75.f
-#define POS_COLOR_Y 575.f
+#define POS_COLOR_Y 475.f
 const sf::Vector2<float> SIZE_COLOR_TYPE(SIZE_COLOR_X, SIZE_COLOR_Y);
 #define TEXT_COLOR_SIZE 35L
 #define POS_GAME_COLOR_ROUND_X 90.f
-#define POS_GAME_COLOR_ROUND_Y 580.f
+#define POS_GAME_COLOR_ROUND_Y 480.f
 
 /*For input color of checkers*/
 #define SIZE_INPUT_COLOR_X 270.f
 #define SIZE_INPUT_COLOR_Y 100.f
 #define POS_INPUT_COLOR_X 900.f
-#define POS_INPUT_COLOR_Y 575.f
+#define POS_INPUT_COLOR_Y 475.f
 const sf::Vector2<float> SIZE_INPUT_COLOR_ROUND(SIZE_INPUT_COLOR_X, SIZE_INPUT_COLOR_Y);
 #define POS_INPUT_COLOR_TEXT_X 910.f
-#define POS_INPUT_COLOR_TEXT_Y 605.f
+#define POS_INPUT_COLOR_TEXT_Y 505.f
 #define TEXT_INPUT_COLOR_SIZE 35L
 
 /*For arrows type game*/
 #define POS_ARROW_RIGHT_COLOR_X 1175.f
-#define POS_ARROW_RIGHT_COLOR_Y 560.f
+#define POS_ARROW_RIGHT_COLOR_Y 460.f
 #define POS_ARROW_LEFT_COLOR_X 780.f
-#define POS_ARROW_LEFT_COLOR_Y 570.f
+#define POS_ARROW_LEFT_COLOR_Y 470.f
+
+
+/*For multiplayer checkers text*/
+#define SIZE_MULTIPLAYER_X 500.f
+#define SIZE_MULTIPLAYER_Y 100.f
+#define POS_MULTIPLAYER_X 75.f
+#define POS_MULTIPLAYER_Y 640.f
+const sf::Vector2<float> SIZE_MULTIPLAYER_TYPE(SIZE_MULTIPLAYER_X, SIZE_MULTIPLAYER_Y);
+#define TEXT_MULTIPLAYER_SIZE 32L
+#define POS_GAME_MULTIPLAYER_X 90.f
+#define POS_GAME_MULTIPLAYER_Y 670.f
+
+/*For input multiplayer of checkers*/
+#define SIZE_INPUT_MULTIPLAYER_X 600.f
+#define SIZE_INPUT_MULTIPLAYER_Y 100.f
+#define POS_INPUT_MULTIPLAYER_X 740.f
+#define POS_INPUT_MULTIPLAYER_Y 640.f
+const sf::Vector2<float> SIZE_INPUT_MULTIPLAYER_ROUND(SIZE_INPUT_MULTIPLAYER_X, SIZE_INPUT_MULTIPLAYER_Y);
+#define POS_INPUT_MULTIPLAYER_TEXT_X 750.f
+#define POS_INPUT_MULTIPLAYER_TEXT_Y 670.f
+#define TEXT_INPUT_MULTIPLAYER_SIZE 35L
+
+/*For multiplayer arrows*/
+#define POS_ARROW_RIGHT_MULTIPLAYER_X 1335.f
+#define POS_ARROW_RIGHT_MULTIPLAYER_Y 625.f
+#define POS_ARROW_LEFT_MULTIPLAYER_X 620.f
+#define POS_ARROW_LEFT_MULTIPLAYER_Y 635.f
+
+#pragma once
 
 /**************Main class to create config game**************/
 class ConfigGame {
@@ -180,7 +209,20 @@ public:
                          ARROW_LEFT, ARROW_LEFT_ACTIVATED, MUSIC_TOUCH,
                          MUSIC_PRESS),
         arrow_color_right(SIZE_ARROWS, POS_ARROW_RIGHT_COLOR_X, POS_ARROW_RIGHT_COLOR_Y,
-                          ARROW_RIGHT, ARROW_RIGHT_ACTIVATED, MUSIC_TOUCH, MUSIC_PRESS) {};
+                          ARROW_RIGHT, ARROW_RIGHT_ACTIVATED, MUSIC_TOUCH, MUSIC_PRESS),
+        text_multiplayer(SIZE_MULTIPLAYER_TYPE, THICKNESS, POS_MULTIPLAYER_X, POS_MULTIPLAYER_Y,
+                   COLOR_OUTLINE, COLOR_TEXT, TEXT_MULTIPLAYER_SIZE, PATH_FONTS,
+                   "MULTIPLAYER?", POS_GAME_MULTIPLAYER_X, POS_GAME_MULTIPLAYER_Y),
+        multiplayer(SIZE_INPUT_MULTIPLAYER_ROUND, THICKNESS, POS_INPUT_MULTIPLAYER_X,
+              POS_INPUT_MULTIPLAYER_Y, COLOR_OUTLINE, COLOR_TEXT,
+              TEXT_INPUT_MULTIPLAYER_SIZE, PATH_FONTS,
+              "Single Player", POS_INPUT_MULTIPLAYER_TEXT_X, POS_INPUT_MULTIPLAYER_TEXT_Y),
+        arrow_multiplayer_left(SIZE_ARROWS, POS_ARROW_LEFT_MULTIPLAYER_X, POS_ARROW_LEFT_MULTIPLAYER_Y,
+                         ARROW_LEFT, ARROW_LEFT_ACTIVATED, MUSIC_TOUCH,
+                         MUSIC_PRESS),
+        arrow_multiplayer_right(SIZE_ARROWS, POS_ARROW_RIGHT_MULTIPLAYER_X, POS_ARROW_RIGHT_MULTIPLAYER_Y,
+                          ARROW_RIGHT, ARROW_RIGHT_ACTIVATED, MUSIC_TOUCH, MUSIC_PRESS)
+        {};
 
     ~ConfigGame() = default;
 
@@ -192,6 +234,8 @@ public:
                               bool is_mouse_on_right_text_arrows,
                               bool is_mouse_on_left_color_arrows,
                               bool is_mouse_on_right_color_arrows,
+                              bool is_mouse_on_left_multiplayer_arrows,
+                              bool is_mouse_on_right_multiplayer_arrows,
                               sf::RenderWindow &window); //Activate buttons and arrows
 
     void pressButtonArrows(bool is_mouse_on_back_button,
@@ -202,6 +246,8 @@ public:
                            bool is_mouse_on_right_type_arrows,
                            bool is_mouse_on_left_color_arrows,
                            bool is_mouse_on_right_color_arrows,
+                           bool is_mouse_on_left_multiplayer_arrows,
+                           bool is_mouse_on_right_multiplayer_arrows,
                            bool is_press_mouse,
                            sf::RenderWindow &window); //Press on button and on arrows
 
@@ -212,8 +258,6 @@ public:
     void drawConfigGame(sf::RenderWindow& window); //Function for draw
 
     bool getIsBackButtonPressed(); //Get value end of function
-
-    void saveSettings(); // Saving the settings
 
 private:
     Background background;
@@ -229,11 +273,16 @@ private:
     Text text_round;
     Text text_game_type;
     Text text_color;
+    Text text_multiplayer;
     InputFieldRounds rounds;
     InputFieldTypeRules rules;
     InputFieldColor color;
     Arrow arrow_color_left;
     Arrow arrow_color_right;
+
+    InputFieldMultiplayer multiplayer;
+    Arrow arrow_multiplayer_left;
+    Arrow arrow_multiplayer_right;
 
     /*Configs game*/
     uint32_t roundsNum = 1;

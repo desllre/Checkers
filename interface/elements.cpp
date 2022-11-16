@@ -178,6 +178,10 @@ std::string InputFieldRounds::getStringValue() {
     return number_of_round;
 }
 
+uint32_t InputFieldRounds::getCurrentRound(){
+    return roundsNum;
+}
+
 InputFieldTypeRules::InputFieldTypeRules(const sf::Vector2<float> &size, float thickness,
                                    float pos_figure_x, float pos_figure_y,
                                    sf::Color color_outline, sf::Color color_text,
@@ -270,4 +274,44 @@ void InputFieldColor::setValue(bool is_mouse_on_left_color_arrows, bool is_mouse
 
 char InputFieldColor::getStringValue() {
     return color_of_checkers;
+}
+
+
+
+InputFieldMultiplayer::InputFieldMultiplayer(const sf::Vector2<float> &size, float thickness,
+                                 float pos_figure_x, float pos_figure_y,
+                                 sf::Color color_outline, sf::Color color_text,
+                                 int text_size, const std::string& path_font,
+                                 const std::string& string_text,
+                                 float pos_text_x, float pos_text_y) {
+    figure.setFillColor(sf::Color::White);
+    figure.setOutlineColor(color_outline);
+    figure.setOutlineThickness(thickness);
+    figure.setSize(size);
+    figure.setPosition(pos_figure_x, pos_figure_y);
+
+    font.loadFromFile(path_font);
+
+    text.setColor(color_text);
+    text.setStyle(sf::Text::Bold);
+    text.setFont(font);
+    text.setCharacterSize(text_size);
+    text.setPosition(pos_text_x, pos_text_y);
+    text.setString(string_text);
+}
+
+void InputFieldMultiplayer::setValue(bool is_mouse_on_left_multiplayer_arrows,
+                                    bool is_mouse_on_right_multiplayer_arrows){
+    if (is_mouse_on_right_multiplayer_arrows && index == 0){
+        index = 1;
+        is_single_game = false;
+    } else if (is_mouse_on_left_multiplayer_arrows && index == 1){
+        index = 0;
+        is_single_game = true;
+    }
+    text.setString(array_multiplayer_of_checkers[index].c_str());
+}
+
+bool InputFieldMultiplayer::getValue(){
+    return is_single_game;
 }
