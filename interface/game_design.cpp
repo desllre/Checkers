@@ -93,11 +93,11 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
     } else{
         player1Way = false;
         if (!isSingleGame){
-            player1Figures = &board.blackFigures;
-            player2Figures = &board.whiteFigures;
+            player1Figures = &board.whiteFigures;
+            player2Figures = &board.blackFigures;
 
-            yPosPlayer1_NameField = HIGH_POS_NAME_FIELD_Y;
-            yPosPlayer2_NameField = LOW_POS_NAME_FIELD_Y;
+            yPosPlayer1_NameField = LOW_POS_NAME_FIELD_Y;
+            yPosPlayer2_NameField = HIGH_POS_NAME_FIELD_Y;
         } else {
             player1Figures = &board.whiteFigures;
             player2Figures = &board.blackFigures;

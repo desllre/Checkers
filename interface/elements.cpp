@@ -97,6 +97,10 @@ Arrow::Arrow(sf::Vector2<float> size, float pos_arrow_x, float pos_arrow_y,
     sprite_arrow.setTexture(texture_arrow);
 
     sprite_arrow.setPosition(pos_arrow_x, pos_arrow_y);
+    sprite_arrow.setScale(size);
+
+    music_press.openFromFile(string_music_press);
+    music_touch.openFromFile(string_music_touch);
 }
 
 Arrow::Arrow(float pos_arrow_x, float pos_arrow_y,
@@ -230,16 +234,16 @@ void InputFieldTypeRules::setValue(bool is_mouse_on_left_round_arrows,
         text.setString(array_type_of_game[index].c_str());
     }
 
-    if (array_type_of_game[index].compare("Russian")) {
+    if (array_type_of_game[index] == "Russian") {
         game_type = Russian;
     }
-    else if (array_type_of_game[index].compare("English")) {
+    else if (array_type_of_game[index] == "English") {
         game_type = English;
     }
-    else if (array_type_of_game[index].compare("Giveaway")) {
+    else if (array_type_of_game[index] == "Giveaway") {
         game_type = Giveaway;
     }
-    else if (array_type_of_game[index].compare("International")) {
+    else if (array_type_of_game[index] == "International") {
         game_type = International;
     }
 }
@@ -279,10 +283,10 @@ void InputFieldColor::setValue(bool is_mouse_on_left_color_arrows, bool is_mouse
         ++index;
         text.setString(array_color_of_checkers[index].c_str());
     }
-    if (array_color_of_checkers[index].compare("White")) {
+    if (array_color_of_checkers[index] == "White") {
         color_of_checkers = 'w';
     }
-    else if (array_color_of_checkers[index].compare("Black")) {
+    else if (array_color_of_checkers[index] == "Black") {
         color_of_checkers = 'b';
     }
 }

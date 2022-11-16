@@ -1,8 +1,9 @@
 #include "header.h"
 #include "elements.h"
 #include "../engine/board.h"
+#include "game_design.h"
+
 #include "filesystem"
-#pragma once
 
 /*Music*/
 #define MUSIC_PRESS "../songs/pressbutton.wav"
@@ -294,4 +295,7 @@ private:
     /*For working window*/
     bool is_set_cursor = true;
     bool is_back_button_pressed = false;
+
+public:
+    bool goToMenu = false;
 };

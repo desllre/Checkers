@@ -94,7 +94,7 @@ void Menu::pressButton(bool is_mouse_on_play_button, bool is_mouse_on_settings_b
             window.setActive(false);
 
             sf::Thread configGameThread([&window](){
-                Game_design(window, 1, false, GameType::International, 'w');
+                config_game(window);
             });
 
             configGameThread.launch();

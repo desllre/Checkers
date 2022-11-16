@@ -14,7 +14,7 @@ void config_game(sf::RenderWindow &window) {
                 }
                 window.close();
             }
-            if (config.getIsBackButtonPressed()) {
+            if (config.getIsBackButtonPressed() || config.goToMenu) {
                 return;
             }
         }
@@ -172,6 +172,16 @@ void ConfigGame::pressButtonArrows(bool is_mouse_on_back_button,
         arrow_color_left.playSongsPress();
     } else if (is_mouse_on_begin_button && is_press_mouse) {
         begin_button.playSongsPress();
+        window.setActive(false);
+
+        sf::Thread GameThread([&window, this](){
+            Game_design(window, rounds.getCurrentRound(), multiplayer.getValue(), rules.getStringValue(), color.getStringValue());
+        });
+
+        GameThread.launch();
+        GameThread.wait();
+        window.setActive(true);
+        goToMenu = true;
     } else if((is_mouse_on_left_multiplayer_arrows || is_mouse_on_right_multiplayer_arrows) && is_press_mouse){
         multiplayer.setValue(is_mouse_on_left_multiplayer_arrows, is_mouse_on_right_multiplayer_arrows);
         arrow_multiplayer_left.playSongsPress();
