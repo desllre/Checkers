@@ -144,7 +144,7 @@ public:
 
 private:
     GameType game_type = Russian;
-    std::array<std::string, 4> array_type_of_game = {"Russian", "English", "Giveaway", "Internat."};
+    std::array<std::string, 4> array_type_of_game = {"Russian", "English", "Giveaway", "International"};
     uint8_t index = 0;
 };
 
