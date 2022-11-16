@@ -161,8 +161,8 @@ public:
                      const std::string& string_text,
                      float pos_text_x, float pos_text_y, char &color_of_checkers);
 
-    void setValue(bool is_mouse_on_left_round_arrows,
-                  bool is_mouse_on_right_round_arrows); //Set rounds
+    void setValue(bool is_mouse_on_left_color_arrows,
+                  bool is_mouse_on_right_color_arrows); //Set rounds
 
     char getStringValue(); //Get number of round
 

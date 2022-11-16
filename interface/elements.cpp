@@ -208,7 +208,7 @@ void InputFieldTypeRules::setValue(bool is_mouse_on_left_round_arrows,
     }
     else if (is_mouse_on_right_round_arrows && index < 3) {
         ++index;
-        text.setString(array_type_of_game[index]);
+        text.setString(array_type_of_game[index].c_str());
     }
 
     if (array_type_of_game[index].compare("Russian")) {
@@ -251,14 +251,14 @@ InputFieldColor::InputFieldColor(const sf::Vector2<float> &size, float thickness
     text.setString(string_text);
 }
 
-void InputFieldColor::setValue(bool is_mouse_on_left_round_arrows, bool is_mouse_on_right_round_arrows) {
-    if (is_mouse_on_left_round_arrows && index > 0) {
+void InputFieldColor::setValue(bool is_mouse_on_left_color_arrows, bool is_mouse_on_right_color_arrows) {
+    if (is_mouse_on_left_color_arrows && index > 0) {
         --index;
         text.setString(array_color_of_checkers[index].c_str());
     }
-    else if (is_mouse_on_right_round_arrows && index < 1) {
+    else if (is_mouse_on_right_color_arrows && index < 1) {
         ++index;
-        text.setString(array_color_of_checkers[index]);
+        text.setString(array_color_of_checkers[index].c_str());
     }
     if (array_color_of_checkers[index].compare("White")) {
         color_of_checkers = 'w';

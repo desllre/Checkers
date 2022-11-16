@@ -114,26 +114,39 @@ const sf::Vector2<float> SIZE_COLOR_TYPE(SIZE_COLOR_X, SIZE_COLOR_Y);
 #define POS_GAME_COLOR_ROUND_X 90.f
 #define POS_GAME_COLOR_ROUND_Y 630.f
 
+/*For input color of checkers*/
+#define SIZE_INPUT_COLOR_X 270.f
+#define SIZE_INPUT_COLOR_Y 120.f
+#define POS_INPUT_COLOR_X 900.f
+#define POS_INPUT_COLOR_Y 620.f
+const sf::Vector2<float> SIZE_INPUT_COLOR_ROUND(SIZE_INPUT_COLOR_X, SIZE_INPUT_COLOR_Y);
+#define POS_INPUT_COLOR_TEXT_X 910.f
+#define POS_INPUT_COLOR_TEXT_Y 660.f
+#define TEXT_INPUT_COLOR_SIZE 35L
+
+/*For arrows type game*/
+#define POS_ARROW_RIGHT_COLOR_X 1205.f
+#define POS_ARROW_RIGHT_COLOR_Y 660.f
+#define POS_ARROW_LEFT_COLOR_X 780.f
+#define POS_ARROW_LEFT_COLOR_Y 660.f
+
 /**************Main class to create config game**************/
 class ConfigGame {
 public:
     ConfigGame() :
         background(PATH_MENU_BACKGROUND),
         back_button(SIZE_BUTTON, THICKNESS, POS_BUTTON_X,
-                        POS_BUTTON_Y, COLOR_OUTLINE, COLOR_TEXT,
-                        TEXT_SIZE, PATH_FONTS, POS_TEXT_X,
-                        POS_TEXT_Y, MUSIC_TOUCH, MUSIC_PRESS, "BACK"),
+                    POS_BUTTON_Y, COLOR_OUTLINE, COLOR_TEXT,
+                    TEXT_SIZE, PATH_FONTS, POS_TEXT_X,
+                    POS_TEXT_Y, MUSIC_TOUCH, MUSIC_PRESS, "BACK"),
         arrow_round_left(SIZE_ARROWS, POS_ARROW_LEFT_ROUND_X, POS_ARROW_LEFT_ROUND_Y,
-                             ARROW_LEFT, ARROW_LEFT_ACTIVATED, MUSIC_TOUCH,
-                             MUSIC_PRESS),
+                         ARROW_LEFT, ARROW_LEFT_ACTIVATED, MUSIC_TOUCH, MUSIC_PRESS),
         arrow_round_right(SIZE_ARROWS, POS_ARROW_RIGHT_ROUND_X, POS_ARROW_RIGHT_ROUND_Y,
-                          ARROW_RIGHT, ARROW_RIGHT_ACTIVATED, MUSIC_TOUCH,
-                          MUSIC_PRESS),
+                          ARROW_RIGHT, ARROW_RIGHT_ACTIVATED, MUSIC_TOUCH, MUSIC_PRESS),
         text_round(SIZE_FIGURE, THICKNESS, POS_FIGURE_X,
                    POS_FIGURE_Y, COLOR_OUTLINE, COLOR_TEXT,
                    TEXT_CONFIGS_SIZE, PATH_FONTS,
-                   "NUMBER\nOF ROUNDS",
-                    POS_TEXT_ROUND_X, POS_TEXT_ROUND_Y),
+                   "NUMBER\nOF ROUNDS", POS_TEXT_ROUND_X, POS_TEXT_ROUND_Y),
         begin_button(SIZE_BUTTON_BEGIN, THICKNESS, POS_BUTTON_BEGIN_X,
                      POS_BUTTON_BEGIN_Y, COLOR_OUTLINE, COLOR_TEXT,
                      TEXT_BEGIN_SIZE, PATH_FONTS, POS_TEXT_BEGIN_X,
@@ -143,11 +156,11 @@ public:
                TEXT_INPUT_ROUND_SIZE, PATH_FONTS,
                "1", POS_INPUT_TEXT_ROUND_X, POS_INPUT_TEXT_ROUNDS_Y, roundsNum),
         arrow_type_left(SIZE_ARROWS, POS_ARROW_LEFT_TYPE_X, POS_ARROW_LEFT_TYPE_Y,
-                         ARROW_LEFT, ARROW_LEFT_ACTIVATED, MUSIC_TOUCH,
-                         MUSIC_PRESS),
+                        ARROW_LEFT, ARROW_LEFT_ACTIVATED, MUSIC_TOUCH,
+                        MUSIC_PRESS),
         arrow_type_right(SIZE_ARROWS, POS_ARROW_RIGHT_TYPE_X, POS_ARROW_RIGHT_TYPE_Y,
-                          ARROW_RIGHT, ARROW_RIGHT_ACTIVATED, MUSIC_TOUCH,
-                          MUSIC_PRESS),
+                         ARROW_RIGHT, ARROW_RIGHT_ACTIVATED, MUSIC_TOUCH,
+                         MUSIC_PRESS),
         text_game_type(SIZE_GAME_TYPE, THICKNESS, POS_GAME_TYPE_X,
                        POS_GAME_TYPE_Y, COLOR_OUTLINE, COLOR_TEXT,
                        TEXT_GAME_TYPE_SIZE, PATH_FONTS,
@@ -158,7 +171,16 @@ public:
               "Russian", POS_INPUT_TYPE_TEXT_ROUND_X, POS_INPUT_TYPE_TEXT_ROUNDS_Y, game_type),
         text_color(SIZE_COLOR_TYPE, THICKNESS, POS_COLOR_X, POS_COLOR_Y,
                    COLOR_OUTLINE, COLOR_TEXT, TEXT_COLOR_SIZE, PATH_FONTS,
-                   "COLOR OF\nCHECKERS", POS_GAME_COLOR_ROUND_X, POS_GAME_COLOR_ROUND_Y){};
+                   "COLOR OF\nCHECKERS", POS_GAME_COLOR_ROUND_X, POS_GAME_COLOR_ROUND_Y),
+        color(SIZE_INPUT_COLOR_ROUND, THICKNESS, POS_INPUT_COLOR_X,
+              POS_INPUT_COLOR_Y, COLOR_OUTLINE, COLOR_TEXT,
+              TEXT_INPUT_COLOR_SIZE, PATH_FONTS,
+              "White", POS_INPUT_COLOR_TEXT_X, POS_INPUT_COLOR_TEXT_Y, color_of_checkers),
+        arrow_color_left(SIZE_ARROWS, POS_ARROW_LEFT_COLOR_X, POS_ARROW_LEFT_COLOR_Y,
+                         ARROW_LEFT, ARROW_LEFT_ACTIVATED, MUSIC_TOUCH,
+                         MUSIC_PRESS),
+        arrow_color_right(SIZE_ARROWS, POS_ARROW_RIGHT_COLOR_X, POS_ARROW_RIGHT_COLOR_Y,
+                          ARROW_RIGHT, ARROW_RIGHT_ACTIVATED, MUSIC_TOUCH, MUSIC_PRESS) {};
 
     ~ConfigGame() = default;
 
@@ -168,6 +190,8 @@ public:
                               bool is_mouse_on_right_round_arrows,
                               bool is_mouse_on_left_text_arrows,
                               bool is_mouse_on_right_text_arrows,
+                              bool is_mouse_on_left_color_arrows,
+                              bool is_mouse_on_right_color_arrows,
                               sf::RenderWindow &window); //Activate buttons and arrows
 
     void pressButtonArrows(bool is_mouse_on_back_button,
@@ -176,6 +200,8 @@ public:
                            bool is_mouse_on_right_round_arrows,
                            bool is_mouse_on_left_type_arrows,
                            bool is_mouse_on_right_type_arrows,
+                           bool is_mouse_on_left_color_arrows,
+                           bool is_mouse_on_right_color_arrows,
                            bool is_press_mouse,
                            sf::RenderWindow &window); //Press on button and on arrows
 
@@ -205,6 +231,9 @@ private:
     Text text_color;
     InputFieldRounds rounds;
     InputFieldTypeRules rules;
+    InputFieldColor color;
+    Arrow arrow_color_left;
+    Arrow arrow_color_right;
 
     /*Configs game*/
     uint32_t roundsNum = 1;
