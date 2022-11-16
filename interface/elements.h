@@ -112,7 +112,7 @@ public:
                      sf::Color color_outline, sf::Color color_text,
                      int text_size, const std::string& path_font,
                      const std::string& string_text,
-                     float pos_text_x, float pos_text_y, uint32_t roundsNum);
+                     float pos_text_x, float pos_text_y, uint32_t &roundsNum);
 
     void setValue(bool is_mouse_on_left_round_arrows,
                   bool is_mouse_on_right_round_arrows); //Set rounds
@@ -133,7 +133,7 @@ public:
                      sf::Color color_outline, sf::Color color_text,
                      int text_size, const std::string& path_font,
                      const std::string& string_text,
-                     float pos_text_x, float pos_text_y, GameType game_type);
+                     float pos_text_x, float pos_text_y, GameType &game_type);
 
     void setValue(bool is_mouse_on_left_round_arrows,
                   bool is_mouse_on_right_round_arrows); //Set type rules
@@ -146,4 +146,28 @@ private:
     GameType game_type = Russian;
     std::array<std::string, 4> array_type_of_game = {"Russian", "English", "Giveaway", "Internat."};
     uint8_t index = 0;
+};
+
+class InputFieldColor : public Text { // Class for working with name input fields
+public:
+    InputFieldColor() = default;
+
+    ~InputFieldColor() = default;
+
+    InputFieldColor(const sf::Vector2<float> &size, float thickness,
+                     float pos_figure_x, float pos_figure_y,
+                     sf::Color color_outline, sf::Color color_text,
+                     int text_size, const std::string& path_font,
+                     const std::string& string_text,
+                     float pos_text_x, float pos_text_y, char &color_of_checkers);
+
+    void setValue(bool is_mouse_on_left_round_arrows,
+                  bool is_mouse_on_right_round_arrows); //Set rounds
+
+    char getStringValue(); //Get number of round
+
+private:
+    std::array<std::string, 2> array_color_of_checkers = {"White", "Black"};
+    uint8_t index = 0;
+    char color_of_checkers = 'w';
 };

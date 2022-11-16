@@ -54,7 +54,6 @@ const sf::Vector2<float> SIZE_ARROWS(SIZE_ARROWS_X, SIZE_ARROWS_Y);
 #define POS_FIGURE_X 75.f
 #define POS_FIGURE_Y 190.f
 const sf::Vector2<float> SIZE_FIGURE(SIZE_FIGURE_X, SIZE_FIGURE_Y);
-#define COLOR_CONFIG_TEXT sf::Color::Black
 #define TEXT_CONFIGS_SIZE 40L
 #define POS_TEXT_ROUND_X 90.f
 #define POS_TEXT_ROUND_Y 200.f
@@ -70,13 +69,11 @@ const sf::Vector2<float> SIZE_INPUT_ROUND(SIZE_INPUT_X, SIZE_INPUT_Y);
 #define TEXT_INPUT_ROUND_SIZE 70L
 
 /*For begin button*/
-#define COLOR_OUTLINE sf::Color::Black
 #define SIZE_BUTTON_BEGIN_X 265.f
 #define SIZE_BUTTON_BEGIN_Y 90.f
 #define POS_BUTTON_BEGIN_X 580.f
 #define POS_BUTTON_BEGIN_Y 790.f
 const sf::Vector2<float> SIZE_BUTTON_BEGIN(SIZE_BUTTON_BEGIN_X, SIZE_BUTTON_BEGIN_Y);
-#define COLOR_BEGIN_TEXT sf::Color::Black
 #define TEXT_BEGIN_SIZE 40L
 #define POS_TEXT_BEGIN_X 595.f
 #define POS_TEXT_BEGIN_Y 810.f
@@ -87,7 +84,6 @@ const sf::Vector2<float> SIZE_BUTTON_BEGIN(SIZE_BUTTON_BEGIN_X, SIZE_BUTTON_BEGI
 #define POS_GAME_TYPE_X 75.f
 #define POS_GAME_TYPE_Y 380.f
 const sf::Vector2<float> SIZE_GAME_TYPE(SIZE_GAME_TYPE_X, SIZE_GAME_TYPE_Y);
-#define COLOR_GAME_TYPE_TEXT sf::Color::Black
 #define TEXT_GAME_TYPE_SIZE 40L
 #define POS_GAME_TYPE_TEXT_ROUND_X 90.f
 #define POS_GAME_TYPE_TEXT_ROUND_Y 390.f
@@ -104,9 +100,19 @@ const sf::Vector2<float> SIZE_INPUT_TYPE_ROUND(SIZE_INPUT_TYPE_X, SIZE_INPUT_TYP
 
 /*For arrows type game*/
 #define POS_ARROW_RIGHT_TYPE_X 1090.f
-#define POS_ARROW_RIGHT_TYPE_Y 530.f
+#define POS_ARROW_RIGHT_TYPE_Y 520.f
 #define POS_ARROW_LEFT_TYPE_X 890.f
-#define POS_ARROW_LEFT_TYPE_Y 530.f
+#define POS_ARROW_LEFT_TYPE_Y 520.f
+
+/*For color checkers text*/
+#define SIZE_COLOR_X 520.f
+#define SIZE_COLOR_Y 120.f
+#define POS_COLOR_X 75.f
+#define POS_COLOR_Y 620.f
+const sf::Vector2<float> SIZE_COLOR_TYPE(SIZE_COLOR_X, SIZE_COLOR_Y);
+#define TEXT_COLOR_SIZE 40L
+#define POS_GAME_COLOR_ROUND_X 90.f
+#define POS_GAME_COLOR_ROUND_Y 630.f
 
 /**************Main class to create config game**************/
 class ConfigGame {
@@ -124,16 +130,16 @@ public:
                           ARROW_RIGHT, ARROW_RIGHT_ACTIVATED, MUSIC_TOUCH,
                           MUSIC_PRESS),
         text_round(SIZE_FIGURE, THICKNESS, POS_FIGURE_X,
-                   POS_FIGURE_Y, COLOR_OUTLINE, COLOR_CONFIG_TEXT,
+                   POS_FIGURE_Y, COLOR_OUTLINE, COLOR_TEXT,
                    TEXT_CONFIGS_SIZE, PATH_FONTS,
                    "NUMBER\nOF ROUNDS",
                     POS_TEXT_ROUND_X, POS_TEXT_ROUND_Y),
         begin_button(SIZE_BUTTON_BEGIN, THICKNESS, POS_BUTTON_BEGIN_X,
-                     POS_BUTTON_BEGIN_Y, COLOR_OUTLINE, COLOR_BEGIN_TEXT,
+                     POS_BUTTON_BEGIN_Y, COLOR_OUTLINE, COLOR_TEXT,
                      TEXT_BEGIN_SIZE, PATH_FONTS, POS_TEXT_BEGIN_X,
                      POS_TEXT_BEGIN_Y, MUSIC_TOUCH, MUSIC_PRESS, "BEGIN"),
         rounds(SIZE_INPUT_ROUND, THICKNESS, POS_INPUT_ROUNDS_X,
-               POS_INPUT_ROUNDS_Y, COLOR_OUTLINE, COLOR_CONFIG_TEXT,
+               POS_INPUT_ROUNDS_Y, COLOR_OUTLINE, COLOR_TEXT,
                TEXT_INPUT_ROUND_SIZE, PATH_FONTS,
                "1", POS_INPUT_TEXT_ROUND_X, POS_INPUT_TEXT_ROUNDS_Y, roundsNum),
         arrow_type_left(SIZE_ARROWS, POS_ARROW_LEFT_TYPE_X, POS_ARROW_LEFT_TYPE_Y,
@@ -143,13 +149,16 @@ public:
                           ARROW_RIGHT, ARROW_RIGHT_ACTIVATED, MUSIC_TOUCH,
                           MUSIC_PRESS),
         text_game_type(SIZE_GAME_TYPE, THICKNESS, POS_GAME_TYPE_X,
-                       POS_GAME_TYPE_Y, COLOR_OUTLINE, COLOR_GAME_TYPE_TEXT,
+                       POS_GAME_TYPE_Y, COLOR_OUTLINE, COLOR_TEXT,
                        TEXT_GAME_TYPE_SIZE, PATH_FONTS,
                        "TYPE OF\nRULES GAME", POS_GAME_TYPE_TEXT_ROUND_X, POS_GAME_TYPE_TEXT_ROUND_Y),
         rules(SIZE_INPUT_TYPE_ROUND, THICKNESS, POS_INPUT_TYPE_ROUNDS_X,
-              POS_INPUT_TYPE_ROUNDS_Y, COLOR_OUTLINE, COLOR_CONFIG_TEXT,
+              POS_INPUT_TYPE_ROUNDS_Y, COLOR_OUTLINE, COLOR_TEXT,
               TEXT_INPUT_TYPE_SIZE, PATH_FONTS,
-              "Russian", POS_INPUT_TYPE_TEXT_ROUND_X, POS_INPUT_TYPE_TEXT_ROUNDS_Y, game_type) {};
+              "Russian", POS_INPUT_TYPE_TEXT_ROUND_X, POS_INPUT_TYPE_TEXT_ROUNDS_Y, game_type),
+        text_color(SIZE_COLOR_TYPE, THICKNESS, POS_COLOR_X, POS_COLOR_Y,
+                   COLOR_OUTLINE, COLOR_TEXT, TEXT_COLOR_SIZE, PATH_FONTS,
+                   "COLOR OF\nCHECKERS", POS_GAME_COLOR_ROUND_X, POS_GAME_COLOR_ROUND_Y){};
 
     ~ConfigGame() = default;
 
@@ -193,14 +202,15 @@ private:
     Arrow arrow_type_right;
     Text text_round;
     Text text_game_type;
+    Text text_color;
     InputFieldRounds rounds;
     InputFieldTypeRules rules;
 
     /*Configs game*/
     uint32_t roundsNum = 1;
     GameType game_type = Russian;
-    char figureColor = 'w';
-    bool isSingleGame = true;
+    char color_of_checkers = 'w';
+    bool is_single_game = true;
 
     /*For working window*/
     bool is_set_cursor = true;

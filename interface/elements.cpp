@@ -60,10 +60,7 @@ Button::Button(const sf::Vector2<float> &size, float thickness,
 }
 
 void Button::playSongsPress() {
-    sf::Time time = sf::seconds(0.6);
-    music_press.play();
-    sleep(time);
-    music_press.stop();
+
 }
 
 void Button::setColorText(const sf::Color color_text) {
@@ -146,7 +143,7 @@ InputFieldRounds::InputFieldRounds(const sf::Vector2<float> &size, float thickne
                                    sf::Color color_outline, sf::Color color_text,
                                    int text_size, const std::string& path_font,
                                    const std::string& string_text,
-                                   float pos_text_x, float pos_text_y, uint32_t roundsNum) {
+                                   float pos_text_x, float pos_text_y, uint32_t &roundsNum) {
     figure.setFillColor(sf::Color::White);
     figure.setOutlineColor(color_outline);
     figure.setOutlineThickness(thickness);
@@ -186,7 +183,7 @@ InputFieldTypeRules::InputFieldTypeRules(const sf::Vector2<float> &size, float t
                                    sf::Color color_outline, sf::Color color_text,
                                    int text_size, const std::string& path_font,
                                    const std::string& string_text,
-                                   float pos_text_x, float pos_text_y, GameType game_type) {
+                                   float pos_text_x, float pos_text_y, GameType &game_type) {
     figure.setFillColor(sf::Color::White);
     figure.setOutlineColor(color_outline);
     figure.setOutlineThickness(thickness);
@@ -213,9 +210,64 @@ void InputFieldTypeRules::setValue(bool is_mouse_on_left_round_arrows,
         ++index;
         text.setString(array_type_of_game[index]);
     }
+
+    if (array_type_of_game[index].compare("Russian")) {
+        game_type = Russian;
+    }
+    else if (array_type_of_game[index].compare("English")) {
+        game_type = English;
+    }
+    else if (array_type_of_game[index].compare("Giveaway")) {
+        game_type = Giveaway;
+    }
+    else if (array_type_of_game[index].compare("International")) {
+        game_type = International;
+    }
 }
 
 GameType InputFieldTypeRules::getStringValue() {
     return game_type;
 }
 
+InputFieldColor::InputFieldColor(const sf::Vector2<float> &size, float thickness,
+                                 float pos_figure_x, float pos_figure_y,
+                                 sf::Color color_outline, sf::Color color_text,
+                                 int text_size, const std::string& path_font,
+                                 const std::string& string_text,
+                                 float pos_text_x, float pos_text_y, char &color_of_checkers) {
+    figure.setFillColor(sf::Color::White);
+    figure.setOutlineColor(color_outline);
+    figure.setOutlineThickness(thickness);
+    figure.setSize(size);
+    figure.setPosition(pos_figure_x, pos_figure_y);
+
+    font.loadFromFile(path_font);
+
+    text.setColor(color_text);
+    text.setStyle(sf::Text::Bold);
+    text.setFont(font);
+    text.setCharacterSize(text_size);
+    text.setPosition(pos_text_x, pos_text_y);
+    text.setString(string_text);
+}
+
+void InputFieldColor::setValue(bool is_mouse_on_left_round_arrows, bool is_mouse_on_right_round_arrows) {
+    if (is_mouse_on_left_round_arrows && index > 0) {
+        --index;
+        text.setString(array_color_of_checkers[index].c_str());
+    }
+    else if (is_mouse_on_right_round_arrows && index < 1) {
+        ++index;
+        text.setString(array_color_of_checkers[index]);
+    }
+    if (array_color_of_checkers[index].compare("White")) {
+        color_of_checkers = 'w';
+    }
+    else if (array_color_of_checkers[index].compare("Black")) {
+        color_of_checkers = 'b';
+    }
+}
+
+char InputFieldColor::getStringValue() {
+    return color_of_checkers;
+}

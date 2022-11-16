@@ -184,4 +184,5 @@ void ConfigGame::drawConfigGame(sf::RenderWindow& window) { //Function for draw 
     rules.drawText(window);
     arrow_type_right.drawArrow(window);
     arrow_type_left.drawArrow(window);
+    text_color.drawText(window);
 }
