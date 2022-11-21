@@ -36,6 +36,8 @@ void Board::init(){
                         board[i][j] = 'P';
                         blackFigures.emplace_back(Figure(j, i,char('P')));
                         blackFigures.back().figureColor = 'b';
+                    } else {
+                        board[i][j] = '0';
                     }
 
                 } else{
@@ -43,6 +45,8 @@ void Board::init(){
                         board[i][j] = 'p';
                         whiteFigures.emplace_back(Figure(j,i,char('p')));
                         whiteFigures.back().figureColor = 'w';
+                    } else {
+                        board[i][j] = '0';
                     }
                 }
             }
@@ -70,7 +74,7 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
     else if(!whiteWay && figureSide != 'b')
         return false;
 
-    std::pair<bool, std::vector<int>> possiblesPair = possibles(beginX, beginY);
+    std::pair<bool, std::list<int>> possiblesPair = possibles(beginX, beginY);
 
     int endPos = endY * size + endX;
 
@@ -213,13 +217,13 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
 }
 
 
-std::pair<bool, std::vector<int>> Board::possibles(uint16_t posX, uint16_t posY){
+std::pair<bool, std::list<int>> Board::possibles(uint16_t posX, uint16_t posY){
 
     if (sideIsChange)
         setSideAttach();
 
-    std::vector<int> possibles;
-    std::pair<bool, std::vector<int>> returnPair;
+    std::list<int> possibles;
+    std::pair<bool, std::list<int>> returnPair;
 
     char figureSide = checkSide(posX, posY);
     char figureType = board[posY][posX];
@@ -237,34 +241,34 @@ std::pair<bool, std::vector<int>> Board::possibles(uint16_t posX, uint16_t posY)
     }
 
     if (typeOfGame == GameType::Russian|| typeOfGame == GameType::Giveaway || typeOfGame == GameType::International){
-        std::pair<bool, std::vector<int>> buff;
+        std::pair<bool, std::list<int>> buff;
         if (figureType == 'p' || figureType == 'P'){
             buff = checkPawnStep_Rus(posX, posY);
-            if (buff.first == sideIsAttach && buff.second[0] != -1){
+            if (buff.first == sideIsAttach && buff.second.front() != -1){
                 for (auto i: buff.second){
                     possibles.emplace_back(i);
                 }
             }
         } else{
             buff = checkKingStep_Rus(posX, posY);
-            if (buff.first == sideIsAttach && buff.second[0] != -1){
+            if (buff.first == sideIsAttach && buff.second.front() != -1){
                 for (auto i: buff.second){
                     possibles.emplace_back(i);
                 }
             }
         }
     } else {
-        std::pair<bool, std::vector<int>> buff;
+        std::pair<bool, std::list<int>> buff;
         if (figureType == 'p' || figureType == 'P'){
             buff = checkPawnStep_Ang(posX, posY);
-            if (buff.first == sideIsAttach && buff.second[0] != -1){
+            if (buff.first == sideIsAttach && buff.second.front() != -1){
                 for (auto i: buff.second){
                     possibles.emplace_back(i);
                 }
             }
         } else{
             buff = checkKingStep_Ang(posX, posY);
-            if (buff.first == sideIsAttach && buff.second[0] != -1){
+            if (buff.first == sideIsAttach && buff.second.front() != -1){
                 for (auto i: buff.second){
                     possibles.emplace_back(i);
                 }
@@ -283,11 +287,11 @@ std::pair<bool, std::vector<int>> Board::possibles(uint16_t posX, uint16_t posY)
 }
 
 
-std::pair<bool, std::vector<int>> Board::checkPawnStep_Ang(uint16_t posX, uint16_t posY){
+std::pair<bool, std::list<int>> Board::checkPawnStep_Ang(uint16_t posX, uint16_t posY){
 
-    std::vector<int> possibles;
+    std::list<int> possibles;
 
-    std::pair<bool, std::vector<int>> returnPair;
+    std::pair<bool, std::list<int>> returnPair;
 
     char figureType = board[posY][posX];
     char figureSide = checkSide(posX, posY);
@@ -340,11 +344,11 @@ std::pair<bool, std::vector<int>> Board::checkPawnStep_Ang(uint16_t posX, uint16
     return returnPair;
 }
 
-std::pair<bool, std::vector<int>>  Board::checkPawnStep_Rus(uint16_t posX, uint16_t posY){
+std::pair<bool, std::list<int>>  Board::checkPawnStep_Rus(uint16_t posX, uint16_t posY){
 
-    std::vector<int> possibles;
+    std::list<int> possibles;
 
-    std::pair<bool, std::vector<int>> returnPair;
+    std::pair<bool, std::list<int>> returnPair;
 
     char figureType = board[posY][posX];
     char figureSide = checkSide(posX, posY);
@@ -417,11 +421,11 @@ std::pair<bool, std::vector<int>>  Board::checkPawnStep_Rus(uint16_t posX, uint1
 }
 
 
-std::pair<bool, std::vector<int>> Board::checkKingStep_Ang(uint16_t posX, uint16_t posY){
+std::pair<bool, std::list<int>> Board::checkKingStep_Ang(uint16_t posX, uint16_t posY){
 
-    std::vector<int> possibles;
+    std::list<int> possibles;
 
-    std::pair<bool, std::vector<int>> returnPair;
+    std::pair<bool, std::list<int>> returnPair;
 
     char figureType = board[posY][posX];
     char figureSide = checkSide(posX, posY);
@@ -492,11 +496,11 @@ std::pair<bool, std::vector<int>> Board::checkKingStep_Ang(uint16_t posX, uint16
     return returnPair;
 }
 
-std::pair<bool, std::vector<int>> Board::checkKingStep_Rus(uint16_t posX, uint16_t posY){
+std::pair<bool, std::list<int>> Board::checkKingStep_Rus(uint16_t posX, uint16_t posY){
 
-    std::vector<int> possibles;
+    std::list<int> possibles;
 
-    std::pair<bool, std::vector<int>> returnPair;
+    std::pair<bool, std::list<int>> returnPair;
 
     char figureType = board[posY][posX];
     char figureSide = checkSide(posX, posY);
@@ -857,3 +861,136 @@ void Board::clearMoves(char figureSide){
     }
 }
 
+std::list<Moves> Board::generateAllMoves(uint16_t posX, uint16_t posY){
+    std::pair<bool, std::list<int>> capabilities = possibles(posX, posY);
+    char figureSide = checkSide(posX, posY);
+    bool way = whiteWay; // будет хранить инфу, чья сторона ходит
+    std::list<Moves> moving;
+
+    if ((whiteWay && figureSide != 'w') || (!whiteWay && figureSide != 'b')){
+        return moving;
+    }
+
+    if (capabilities.first){
+        for (auto i: capabilities.second){
+
+            move(posX, posY, i % size, i / size);
+
+            Motion motion(moves.moves.back());
+
+            Moves tmpMoves;
+            tmpMoves = moves;
+            moves.moves.clear();
+            std::pair<bool, std::list<int>> capabilities_1 = possibles(i % size, i / size);
+            /////
+            if(capabilities_1.first){
+                for (auto j: capabilities_1.second) {
+                    move( i % size, i / size, j % size, j / size);
+
+                    Motion motion_1(moves.moves.back());
+
+                    Moves tmpMoves_1;
+                    tmpMoves_1 = moves;
+                    moves.moves.clear();
+                    std::pair<bool, std::list<int>> capabilities_2 = possibles(j % size, j / size);
+                    /////
+                    if(capabilities_2.first){
+                        for (auto k: capabilities_2.second) {
+                            move(j % size, j / size, k % size, k / size);
+
+                            Motion motion_2(moves.moves.back());
+
+                            Moves tmpMoves_2;
+                            tmpMoves_2 = moves;
+                            moves.moves.clear();
+                            std::pair<bool, std::list<int>> capabilities_3 = possibles(k % size, k / size);
+                            /////
+                            if(capabilities_3.first){
+                                for (auto s: capabilities_3.second) {
+                                    move(k % size, k / size, s % size, s / size);
+
+                                    Motion motion_3(moves.moves.back());
+
+                                    Moves tmpMoves_3;
+                                    tmpMoves_3 = moves;
+                                    moves.moves.clear();
+                                    std::pair<bool, std::list<int>> capabilities_4 = possibles(s % size, s / size);
+                                    /////
+                                    if(capabilities_4.first){
+                                        for (auto l: capabilities_4.second) {
+
+                                            move(s % size, s / size, l % size, l / size);
+
+                                            Motion motion_4(moves.moves.back());
+
+                                            std::pair<bool, std::list<int>> capabilities_5 = possibles(k % size, k / size);
+                                            /////
+                                            if (capabilities_5.first){
+                                                moving.emplace_back(Moves());
+                                                moving.back().moves.emplace_back(Motion(-1, -1, -1, -1));
+                                            } else {
+                                                moving.emplace_back(Moves());
+                                                moving.back().moves.emplace_back(motion);
+                                                moving.back().moves.emplace_back(motion_1);
+                                                moving.back().moves.emplace_back(motion_2);
+                                                moving.back().moves.emplace_back(motion_3);
+                                                moving.back().moves.emplace_back(motion_4);
+                                            }
+                                            /////
+                                            unMove();
+                                            whiteWay = way;
+                                        }
+                                    } else {
+                                        moving.emplace_back(Moves());
+                                        moving.back().moves.emplace_back(motion);
+                                        moving.back().moves.emplace_back(motion_1);
+                                        moving.back().moves.emplace_back(motion_2);
+                                        moving.back().moves.emplace_back(motion_3);
+                                    }
+                                    /////
+                                    moves = tmpMoves_3;
+                                    unMove();
+                                    whiteWay = way;
+                                }
+                            } else {
+                                moving.emplace_back(Moves());
+                                moving.back().moves.emplace_back(motion);
+                                moving.back().moves.emplace_back(motion_1);
+                                moving.back().moves.emplace_back(motion_2);
+                            }
+                            /////
+                            moves = tmpMoves_2;
+                            unMove();
+                            whiteWay = way;
+                        }
+                    } else {
+                        moving.emplace_back(Moves());
+                        moving.back().moves.emplace_back(motion);
+                        moving.back().moves.emplace_back(motion_1);
+                    }
+                    /////
+                    moves = tmpMoves_1;
+                    unMove();
+                    whiteWay = way;
+                }
+            } else {
+                moving.emplace_back(Moves());
+                moving.back().moves.emplace_back(motion);
+            }
+            /////
+            moves = tmpMoves;
+            unMove();
+            whiteWay = way;
+        }
+    } else {
+        Motion motion;
+        for (auto i: capabilities.second) {
+            move(posX, posY, i % size, i / size);
+            motion = moves.moves.back();
+            moving.emplace_back(Moves());
+            moving.back().moves.emplace_back(motion);
+            unMove();
+        }
+    }
+    return moving;
+}

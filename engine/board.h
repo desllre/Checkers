@@ -1,6 +1,5 @@
 #include "cstdlib"
 #include "string"
-#include "vector"
 #include "list"
 
 #pragma once
@@ -75,6 +74,10 @@ struct Motion{
 
 // структура, содержащая полный ход
 struct Moves{
+    Moves() = default;
+    ~Moves() = default;
+    Moves(const Moves& other){ moves = other.moves; }
+    Moves& operator=(const Moves& other){ moves = other.moves; }
     std::list<Motion> moves;
 };
 
@@ -91,7 +94,7 @@ public:
 
     // проверка на возмножность походить
     // first - true, если фигура бьёт, false - если не бьёт или нет ходов. second - веткор пустой - если нет ходов или содержит координаты возможных ходов
-    std::pair<bool, std::vector<int>> possibles(uint16_t posX, uint16_t posY);
+    std::pair<bool, std::list<int>> possibles(uint16_t posX, uint16_t posY);
 
     std::pair<uint16_t, uint16_t> convertPos(uint16_t pos) const; // конвертирует номер позиции в координаты
 
@@ -112,26 +115,28 @@ public:
     bool GetSideChanging(); // возвращает true, если на предыдущем шаге поменялся цвет фигур
     GameType getGameType();
 
+    std::list<Moves> generateAllMoves(uint16_t posX, uint16_t posY); // возвращает vector со всеми возможными ходами фигуры под заданными координатами
+
 private:
     // функция инициализации борда
     void init();
 
     // проверка хода пешек
-    // возвращаемые значения: std::pair<bool, std::vector<int>> тут bool - true, если фигура бьёт и false в противном случае
+    // возвращаемые значения: std::pair<bool, std::list<int>> тут bool - true, если фигура бьёт и false в противном случае
     // возвращает -1 (в векторе), если не возможно походить или если под указанными координатами не находится фигура
     // если возможно походить, возваращает номера позиций возможных ходов
-    std::pair<bool, std::vector<int>> checkPawnStep_Ang(uint16_t posX, uint16_t posY);
+    std::pair<bool, std::list<int>> checkPawnStep_Ang(uint16_t posX, uint16_t posY);
 
-    std::pair<bool, std::vector<int>>  checkPawnStep_Rus(uint16_t posX, uint16_t posY);
+    std::pair<bool, std::list<int>>  checkPawnStep_Rus(uint16_t posX, uint16_t posY);
 
 
     // проверка хода для дамок
-    // возвращаемые значения: std::pair<bool, std::vector<int>> тут bool - true, если фигура бьёт и false в противном случае
+    // возвращаемые значения: std::pair<bool, std::list<int>> тут bool - true, если фигура бьёт и false в противном случае
     // возвращает -1 (в векторе), если не возможно походить или если под указанными координатами не находится фигура
     // возваращает вектор номеров возможных позиций хождения дамки
-    std::pair<bool, std::vector<int>> checkKingStep_Ang(uint16_t posX, uint16_t posY);
+    std::pair<bool, std::list<int>> checkKingStep_Ang(uint16_t posX, uint16_t posY);
 
-    std::pair<bool, std::vector<int>> checkKingStep_Rus(uint16_t posX, uint16_t posY);
+    std::pair<bool, std::list<int>> checkKingStep_Rus(uint16_t posX, uint16_t posY);
 
     void setSideAttach();
 
