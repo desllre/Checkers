@@ -16,12 +16,61 @@ enum GameType{
 };
 
 struct Figure{
-    Figure() = default;
+    Figure(){ figureType = '0'; figureColor = '0';}
     Figure(uint16_t x, uint16_t y, char figureType): x(x), y(y), figureType(figureType) {};
+    Figure(uint16_t x, uint16_t y, char figureType, char figureColor): x(x), y(y), figureType(figureType), figureColor(figureColor) {};
 
-    char figureType; // p - пешка(pawn), k - дамка(king)
+    Figure(const Figure& other){
+        figureType = other.figureType;
+        figureColor = other.figureColor;
+        x = other.x;
+        y = other.y;
+    }
+
+    Figure& operator =(const Figure& other){
+        figureType = other.figureType;
+        figureColor = other.figureColor;
+        x = other.x;
+        y = other.y;
+    }
+
+    char figureType; // p - пешка(pawn), k - дамка(king) - для белых. P и K для чёрных
+    char figureColor;
     uint16_t x = 0;
     uint16_t y = 0;
+};
+
+// структура - ход(ход может быть не полным, в случае сбитиия не одной). Хранит конечную позиция и предыдущую позицию
+struct Move{
+    Move() = default;
+    Move(int currentX, int currentY, int oldX, int oldY): currentX(currentX), currentY(currentY), oldX(oldX), oldY(oldY){};
+    Move(int currentX, int currentY, int oldX, int oldY, Figure chargeFigure): currentX(currentX), currentY(currentY), oldX(oldX), oldY(oldY), chargeFigure(chargeFigure){};
+    Move(const Move& other){
+        oldFigureType = other.oldFigureType;
+        newFigureType = other.newFigureType;
+        chargeFigure = other.chargeFigure;
+        currentX = other.currentX;
+        currentY = other.currentY;
+        oldX = other.oldX;
+        oldY = other.oldY;
+    }
+    Move& operator =(const Move& other){
+        oldFigureType = other.oldFigureType;
+        newFigureType = other.newFigureType;
+        chargeFigure = other.chargeFigure;
+        currentX = other.currentX;
+        currentY = other.currentY;
+        oldX = other.oldX;
+        oldY = other.oldY;
+    }
+
+    Figure chargeFigure; // фигура, которую бьёт(если не бьёт, то figureType = '0')
+    int currentX;
+    int currentY;
+    int oldX;
+    int oldY;
+    char oldFigureType;
+    char newFigureType;
 };
 
 class Board{
@@ -43,18 +92,18 @@ public:
 
     char checkSide(uint16_t posX, uint16_t posY); // w - white, b - black, 0 - ничего
 
-    bool getIsWhiteBoard();
-
     // проверка на конец игры. Возвращает 1 если выиграли белые, -1 - чёрные, 0 - игра ещё не окончена
     int endOfGame();
 
-    uint16_t getSize();
 
     void setFigure(uint16_t x, uint16_t y, char figure);
 
     void restart();
 
+    uint16_t getSize();
+    bool getIsWhiteBoard();
     bool GetSideChanging(); // возвращает true, если на предыдущем шаге поменялся цвет фигур
+    GameType getGameType();
 
 private:
     // функция инициализации борда

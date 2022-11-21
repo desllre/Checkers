@@ -393,7 +393,7 @@ void Game::Draw(sf::RenderWindow& window){
         }
 
         for(auto i: *player2Figures){
-            if (i.figureType == 'p'){
+            if (i.figureType == 'P'){
                 black_pawn.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
                 black_pawn.Draw(window);
             } else {
@@ -403,7 +403,7 @@ void Game::Draw(sf::RenderWindow& window){
         }
     } else {
         for(auto i: *player1Figures){
-            if (i.figureType == 'p'){
+            if (i.figureType == 'P'){
                 black_pawn.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
                 black_pawn.Draw(window);
             } else {
@@ -598,13 +598,12 @@ void Game::Restart(int a){
     }
 
     scoreText.setString("Score " + std::to_string(score.first) + " : " + std::to_string(score.second));
+    roundsText.setString("Round " + std::to_string(currentRound));
 
     gameTime = sf::Time::Zero;
     gameClock.restart();
     isSelected = false;
 
-    roundsText.setString("Round 1");
-    score.first = score.second = 0;
     gameTimeString = "";
     gameTimeText.setString("00:00");
 }
@@ -666,6 +665,8 @@ bool Game::EndOfGame(sf::RenderWindow& window){
         endOfGameWindowThread.launch();
         endOfGameWindowThread.wait();
         window.setActive();
+        if (roundsNum != currentRound)
+            ++currentRound;
         switch(returnValue){
             case 0:{
                 Restart(1);
@@ -681,12 +682,10 @@ bool Game::EndOfGame(sf::RenderWindow& window){
             default:
                 break;
         }
-
-        if (roundsNum != currentRound)
-            ++currentRound;
     }
     return false;
 }
+
 
 
 void Game::Object::SetPosition(int x, int y){

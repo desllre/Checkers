@@ -34,13 +34,15 @@ void Board::init(){
                 if (i < size / 2){
                     if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
                         board[i][j] = 'P';
-                        blackFigures.emplace_back(Figure(j, i,char('p')));
+                        blackFigures.emplace_back(Figure(j, i,char('P')));
+                        blackFigures.back().figureColor = 'b';
                     }
 
                 } else{
                     if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
                         board[i][j] = 'p';
                         whiteFigures.emplace_back(Figure(j,i,char('p')));
+                        whiteFigures.back().figureColor = 'w';
                     }
                 }
             }
@@ -101,7 +103,7 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
             }
             if (isFindPos){
                 whiteFigures.erase(it);
-                whiteFigures.emplace_back(endX, endY, static_cast<char>(std::tolower(figureType)));
+                whiteFigures.emplace_back(endX, endY, static_cast<char>(figureType));
             }
         } else {
             bool isFindPos = false;
@@ -115,7 +117,7 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
             }
             if (isFindPos){
                 blackFigures.erase(it);
-                blackFigures.emplace_back(endX, endY, static_cast<char>(std::tolower(figureType)));
+                blackFigures.emplace_back(endX, endY, static_cast<char>(figureType));
             }
         }
 
@@ -499,13 +501,21 @@ std::pair<bool, std::vector<int>> Board::checkKingStep_Rus(uint16_t posX, uint16
                 }
             } else if (figureSide != checkSide(j, i)){
                 i += biasY, j += biasX;
+                if (!continueAfterAttach){
+                    continueAfterAttach = true;
+                } else {
+                    continueAfterAttach = false;
+                    break;
+                }
                 if (i < size && i >= 0 && j < size && j >= 0 && board[i][j] == '0'){
                     if (!isAttach){
                         possibles.clear();
                         isAttach = true;
                     }
-                    continueAfterAttach = true;
+
                     possibles.emplace_back(i*size + j);
+                } else {
+                    break;
                 }
             } else {
                 break;
@@ -524,13 +534,20 @@ std::pair<bool, std::vector<int>> Board::checkKingStep_Rus(uint16_t posX, uint16
                 }
             } else if (figureSide != checkSide(j, i)){
                 i += biasY, j += biasX;
+                if (!continueAfterAttach){
+                    continueAfterAttach = true;
+                } else {
+                    continueAfterAttach = false;
+                    break;
+                }
                 if (i < size && i >= 0 && j < size && j >= 0 && board[i][j] == '0'){
                     if (!isAttach){
                         possibles.clear();
                         isAttach = true;
                     }
-                    continueAfterAttach = true;
                     possibles.emplace_back(i*size + j);
+                } else {
+                    break;
                 }
             } else {
                 break;
@@ -582,7 +599,7 @@ void Board::setSideAttach(){
     } else {
         if (typeOfGame == GameType::Russian|| typeOfGame == GameType::Giveaway || typeOfGame == GameType::International) {
             for (auto i: blackFigures){
-                if (i.figureType == 'p'){
+                if (i.figureType == 'P'){
                     if (checkPawnStep_Rus(i.x, i.y).first){
                         sideIsAttach = true;
                         return;
@@ -596,7 +613,7 @@ void Board::setSideAttach(){
             }
         } else {
             for (auto i: blackFigures){
-                if (i.figureType == 'p'){
+                if (i.figureType == 'P'){
                     if (checkPawnStep_Ang(i.x, i.y).first){
                         sideIsAttach = true;
                         return;
@@ -727,7 +744,7 @@ void Board::setFigure(uint16_t x, uint16_t y, char figure){
         if (std::islower(figure))
             whiteFigures.emplace_back(x, y, figure);
         else
-            blackFigures.emplace_back(x, y, std::tolower(figure));
+            blackFigures.emplace_back(x, y, figure);
 
     }
 }
@@ -753,7 +770,7 @@ void Board::restart(){
                 if (i < size / 2){
                     if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
                         board[i][j] = 'P';
-                        blackFigures.emplace_back(Figure(j, i,char('p')));
+                        blackFigures.emplace_back(Figure(j, i,char('P')));
                     }
 
                 } else{
@@ -765,4 +782,8 @@ void Board::restart(){
             }
         }
     }
+}
+
+GameType Board::getGameType(){
+    return typeOfGame;
 }
