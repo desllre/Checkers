@@ -82,12 +82,25 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
     }
 
     if (isMoving){
+        clearMoves(figureSide);
+
         board[beginY][beginX] = '0';
+
+        /////////////////////////////
+        moves.moves.emplace_back(Motion(endX, endY, beginX, beginY));
+        moves.moves.back().oldFigureType = moves.moves.back().newFigureType = figureType;
+        /////////////////////////////
 
         if (endY == 0 && figureSide == 'w'){ // преобразование
             figureType = 'k';
+            ///////////////////
+            moves.moves.back().newFigureType = figureType;
+            ///////////////////
         } else if (endY == size - 1  && figureSide == 'b') {
             figureType = 'K';
+            ////////////////////
+            moves.moves.back().newFigureType = figureType;
+            ////////////////////
         }
         board[endY][endX] = figureType;
 
@@ -149,6 +162,12 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
                 if (checkSide(enemyPosX, enemyPosY) == 'w'){
                     for (auto i = whiteFigures.begin(); i != whiteFigures.end() ; ++i) {
                         if (i->x == enemyPosX && i->y == enemyPosY){
+                            /////////////////////
+                            moves.moves.back().chargeFigure.x = enemyPosX;
+                            moves.moves.back().chargeFigure.y = enemyPosY;
+                            moves.moves.back().chargeFigure.figureType = board[enemyPosY][enemyPosX];
+                            moves.moves.back().chargeFigure.figureColor = 'w';
+                            /////////////////////
                             whiteFigures.erase(i);
                             break;
                         }
@@ -156,6 +175,12 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
                 } else if(checkSide(enemyPosX, enemyPosY) == 'b'){
                     for (auto i = blackFigures.begin(); i != blackFigures.end() ; ++i) {
                         if (i->x == enemyPosX && i->y == enemyPosY){
+                            /////////////////////
+                            moves.moves.back().chargeFigure.x = enemyPosX;
+                            moves.moves.back().chargeFigure.y = enemyPosY;
+                            moves.moves.back().chargeFigure.figureType = board[enemyPosY][enemyPosX];
+                            moves.moves.back().chargeFigure.figureColor = 'b';
+                            /////////////////////
                             blackFigures.erase(i);
                             break;
                         }
@@ -787,3 +812,48 @@ void Board::restart(){
 GameType Board::getGameType(){
     return typeOfGame;
 }
+
+void Board::unMove(){
+    whiteWay = !whiteWay;
+    sideIsChange = true;
+    for (; moves.moves.size() != 0; ) {
+        Motion move = moves.moves.back();
+        if (move.chargeFigure.figureType != '0') { // восстанавливаем сбитую фигуру
+            if (move.chargeFigure.figureColor == 'w') {
+                whiteFigures.emplace_back(move.chargeFigure);
+            } else {
+                Figure chargeFigure = move.chargeFigure;
+                blackFigures.emplace_back(chargeFigure);
+            }
+            board[move.chargeFigure.y][move.chargeFigure.x] = move.chargeFigure.figureType;
+        }
+        // возвращаем фигуру на место
+        if (checkSide(move.currentX, move.currentY) == 'w') {
+            for (auto i = whiteFigures.begin(); i != whiteFigures.end(); ++i) {
+                if (move.currentX == i->x && move.currentY == i->y) {
+                    whiteFigures.erase(i);
+                    whiteFigures.emplace_back(Figure(move.oldX, move.oldY, move.oldFigureType, 'w'));
+                    break;
+                }
+            }
+        } else {
+            for (auto i = blackFigures.begin(); i != blackFigures.end(); ++i) {
+                if (move.currentX == i->x && move.currentY == i->y) {
+                    blackFigures.erase(i);
+                    blackFigures.emplace_back(Figure(move.oldX, move.oldY, move.oldFigureType, 'w'));
+                    break;
+                }
+            }
+        }
+        board[move.currentY][move.currentX] = '0';
+        board[move.oldY][move.oldX] = move.oldFigureType;
+        moves.moves.pop_back();
+    }
+}
+
+void Board::clearMoves(char figureSide){
+    if (!moves.moves.empty() && checkSide(moves.moves.back().currentX, moves.moves.back().currentY) != figureSide){
+        moves.moves.clear();
+    }
+}
+

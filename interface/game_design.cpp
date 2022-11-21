@@ -427,7 +427,6 @@ void Game::Draw(sf::RenderWindow& window){
 }
 
 void Game::FigureSelection(const sf::Vector2i& mousePos){
-
     bool isMissed = false; // проверка на нажатие не на фигуру. В таком случае выделения фигуры убираются
 
     if (gameTime <= sf::seconds(0.2)){
@@ -497,7 +496,7 @@ void Game::Move(const sf::Vector2i& mousePos){
             return;
         }
     }
-
+    movePos.second.clear();
 }
 
 void Game::SetCurrentTIme(){
@@ -685,8 +684,6 @@ bool Game::EndOfGame(sf::RenderWindow& window){
     }
     return false;
 }
-
-
 
 void Game::Object::SetPosition(int x, int y){
     sprite.setPosition(float(x), float(y));

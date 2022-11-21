@@ -40,12 +40,12 @@ struct Figure{
     uint16_t y = 0;
 };
 
-// структура - ход(ход может быть не полным, в случае сбитиия не одной). Хранит конечную позиция и предыдущую позицию
-struct Move{
-    Move() = default;
-    Move(int currentX, int currentY, int oldX, int oldY): currentX(currentX), currentY(currentY), oldX(oldX), oldY(oldY){};
-    Move(int currentX, int currentY, int oldX, int oldY, Figure chargeFigure): currentX(currentX), currentY(currentY), oldX(oldX), oldY(oldY), chargeFigure(chargeFigure){};
-    Move(const Move& other){
+// структура - движение(движение может быть не полным ходом, в случае сбитиия не одной фигуры). Хранит конечную позиция и предыдущую позицию
+struct Motion{
+    Motion() = default;
+    Motion(int currentX, int currentY, int oldX, int oldY): currentX(currentX), currentY(currentY), oldX(oldX), oldY(oldY){};
+    Motion(int currentX, int currentY, int oldX, int oldY, Figure chargeFigure): currentX(currentX), currentY(currentY), oldX(oldX), oldY(oldY), chargeFigure(chargeFigure){};
+    Motion(const Motion& other){
         oldFigureType = other.oldFigureType;
         newFigureType = other.newFigureType;
         chargeFigure = other.chargeFigure;
@@ -54,7 +54,7 @@ struct Move{
         oldX = other.oldX;
         oldY = other.oldY;
     }
-    Move& operator =(const Move& other){
+    Motion& operator =(const Motion& other){
         oldFigureType = other.oldFigureType;
         newFigureType = other.newFigureType;
         chargeFigure = other.chargeFigure;
@@ -71,6 +71,11 @@ struct Move{
     int oldY;
     char oldFigureType;
     char newFigureType;
+};
+
+// структура, содержащая полный ход
+struct Moves{
+    std::list<Motion> moves;
 };
 
 class Board{
@@ -100,6 +105,8 @@ public:
 
     void restart();
 
+    void unMove(); // возвращается к предыдущему ходу на основе moves
+
     uint16_t getSize();
     bool getIsWhiteBoard();
     bool GetSideChanging(); // возвращает true, если на предыдущем шаге поменялся цвет фигур
@@ -128,6 +135,8 @@ private:
 
     void setSideAttach();
 
+    void clearMoves(char figureSide); // очищает Moves, если изменна ходящая фигура
+
 private:
     char** board;
     uint16_t size;
@@ -140,7 +149,9 @@ private:
     bool sideIsAttach; // true, если спрашиваемая сторона должна атаковать и false в противном случае
 
     std::pair<uint32_t, uint32_t> attackingFigurePos; // позиция фигуры, которая уже сбила фигуру на данном ходу и может ещё раз бить
-    // содержит координаты по x и y это фигуры или -1 и -1, если эта фигура не обнаружена на данном ходу
+    // содержит координаты по x и y этой фигуры или -1 и -1, если эта фигура не обнаружена на данном ходу
+
+    Moves moves; // хранит последний ход
 
 public:
     std::list<Figure> whiteFigures;
