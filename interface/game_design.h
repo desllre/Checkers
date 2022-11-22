@@ -1,4 +1,6 @@
 #include "../engine/board.h"
+#include "../engine/AI.h"
+
 #include "gameExitWindow.h"
 #include "elements.h"
 #include "EndOfGameWindow.h"
@@ -63,6 +65,8 @@ public:
     void ClockRestart();
 
     void ChangeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor);
+
+    Board* getBoard();
 
 private:
     void SetActivityPlayerWay(); // выделяет имя текущего ходящего игрока

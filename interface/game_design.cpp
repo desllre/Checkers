@@ -685,6 +685,10 @@ bool Game::EndOfGame(sf::RenderWindow& window){
     return false;
 }
 
+Board* Game::getBoard(){
+    return &board;
+}
+
 void Game::Object::SetPosition(int x, int y){
     sprite.setPosition(static_cast<float>(x), static_cast<float>(y));
 }

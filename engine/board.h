@@ -42,8 +42,11 @@ public:
     bool getIsWhiteBoard() const;
     bool GetSideChanging() const; // возвращает true, если на предыдущем шаге поменялся цвет фигур
     GameType getGameType() const;
+    bool getWhiteWay() const;
 
     std::list<Moves> generateAllMoves(uint16_t posX, uint16_t posY); // возвращает vector со всеми возможными ходами фигуры под заданными координатами
+
+    Board& operator=(const Board& other);
 
 private:
     // функция инициализации борда
@@ -84,9 +87,8 @@ private:
     std::pair<uint32_t, uint32_t> attackingFigurePos; // позиция фигуры, которая уже сбила фигуру на данном ходу и может ещё раз бить
     // содержит координаты по x и y этой фигуры или -1 и -1, если эта фигура не обнаружена на данном ходу
 
-    Moves moves; // хранит последний ход
-
 public:
+    Moves moves; // хранит последний ход
     std::list<Figure> whiteFigures;
     std::list<Figure> blackFigures;
 };

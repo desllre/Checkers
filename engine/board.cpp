@@ -11,14 +11,6 @@ Board::Board(uint16_t size, bool isWhiteBoard, GameType typeOfGame): size(size),
 
     init();
 }
-
-Board::~Board(){
-    for (int i = 0; i < size; ++i) {
-        delete[] board[i];
-    }
-    delete[] board;
-}
-
 void Board::init(){
     board = new char*[size];
     for (size_t i = 0; i < size; ++i) {
@@ -53,12 +45,27 @@ void Board::init(){
         }
     }
 }
-
-bool Board::isHere(uint16_t posX, uint16_t posY) {
-    if (board[posY][posX] != '0') return true;
-    return false;
+Board::~Board(){
+    for (int i = 0; i < size; ++i) {
+        delete[] board[i];
+    }
+    delete[] board;
 }
 
+Board& Board::operator=(const Board& other){
+    whiteFigures = other.whiteFigures;
+    blackFigures = other.blackFigures;
+
+    whiteWay = other.whiteWay;
+    sideIsChange = other.sideIsChange;
+    sideIsAttach = other.sideIsAttach;
+
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            board[i][j] == other.board[i][j];
+        }
+    }
+}
 
 bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY){
 
@@ -216,7 +223,6 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
     return isMoving;
 }
 
-
 std::pair<bool, std::list<int>> Board::possibles(uint16_t posX, uint16_t posY){
 
     if (sideIsChange)
@@ -286,7 +292,6 @@ std::pair<bool, std::list<int>> Board::possibles(uint16_t posX, uint16_t posY){
     return returnPair;
 }
 
-
 std::pair<bool, std::list<int>> Board::checkPawnStep_Ang(uint16_t posX, uint16_t posY){
 
     std::list<int> possibles;
@@ -343,7 +348,6 @@ std::pair<bool, std::list<int>> Board::checkPawnStep_Ang(uint16_t posX, uint16_t
     returnPair.second = possibles;
     return returnPair;
 }
-
 std::pair<bool, std::list<int>>  Board::checkPawnStep_Rus(uint16_t posX, uint16_t posY){
 
     std::list<int> possibles;
@@ -419,8 +423,6 @@ std::pair<bool, std::list<int>>  Board::checkPawnStep_Rus(uint16_t posX, uint16_
     returnPair.second = possibles;
     return returnPair;
 }
-
-
 std::pair<bool, std::list<int>> Board::checkKingStep_Ang(uint16_t posX, uint16_t posY){
 
     std::list<int> possibles;
@@ -495,7 +497,6 @@ std::pair<bool, std::list<int>> Board::checkKingStep_Ang(uint16_t posX, uint16_t
     returnPair.second = possibles;
     return returnPair;
 }
-
 std::pair<bool, std::list<int>> Board::checkKingStep_Rus(uint16_t posX, uint16_t posY){
 
     std::list<int> possibles;
@@ -592,6 +593,10 @@ std::pair<bool, std::list<int>> Board::checkKingStep_Rus(uint16_t posX, uint16_t
     return returnPair;
 }
 
+std::pair<uint16_t, uint16_t> Board::convertPos(uint16_t pos) const{
+    std::pair<uint16_t, uint16_t> pair(pos % size, pos / size);
+    return pair;
+}
 
 void Board::setSideAttach(){
     sideIsChange = false;
@@ -658,15 +663,37 @@ void Board::setSideAttach(){
     }
     sideIsAttach = false;
 }
+void Board::setFigure(uint16_t x, uint16_t y, char figure){
+    if (x >= 0 && y >= 0 && x < size && y < size){
+        board[y][x] = figure;
+        bool isReplaced = false;
+        auto it = whiteFigures.begin();
+        for (auto i = whiteFigures.begin(); i !=whiteFigures.end() ; ++i){
+            if (i->x == x && i->y == y){
+                isReplaced = true;
+                it = i;
+            }
+        }
+        if (isReplaced){
+            whiteFigures.erase(it);
+        } else {
+            for (auto i = blackFigures.begin(); i !=blackFigures.end() ; ++i){
+                if (i->x == x && i->y == y){
+                    isReplaced = true;
+                    it = i;
+                }
+            }
+        }
+        if (isReplaced){
+            blackFigures.erase(it);
+        }
 
-bool Board::GetSideChanging() const{
-    return sideIsChange;
-}
+        if (std::islower(figure))
+            whiteFigures.emplace_back(x, y, figure);
+        else
+            blackFigures.emplace_back(x, y, figure);
 
-
-std::pair<uint16_t, uint16_t> Board::convertPos(uint16_t pos) const{
-    std::pair<uint16_t, uint16_t> pair(pos % size, pos / size);
-    return pair;
+    }
 }
 
 char Board::checkSide(uint16_t posX, uint16_t posY){
@@ -676,9 +703,59 @@ char Board::checkSide(uint16_t posX, uint16_t posY){
     else
         return 'b';
 }
-
+bool Board::isHere(uint16_t posX, uint16_t posY) {
+    if (board[posY][posX] != '0') return true;
+    return false;
+}
+bool Board::GetSideChanging() const{
+    return sideIsChange;
+}
 bool Board::getIsWhiteBoard() const{
     return isWhiteBoard;
+}
+uint16_t Board::getSize() const{
+    return size;
+}
+GameType Board::getGameType() const{
+    return typeOfGame;
+}
+bool Board::getWhiteWay() const{
+    return whiteWay;
+}
+
+void Board::restart(){
+    sideIsAttach = false;
+    sideIsChange = true;
+    if (isWhiteBoard){
+        whiteWay = true;
+    } else{
+        whiteWay = false;
+    }
+
+
+    whiteFigures.clear();
+    blackFigures.clear();
+    for (uint16_t i = 0; i < size ; ++i){ // заполнение борда
+        if (i == size/2 || i == size/2 - 1) {
+            for (size_t j = 0; j < size ; ++j)
+                board[i][j] = '0';
+        } else {
+            for (size_t j = 0; j < size ; ++j) {
+                if (i < size / 2){
+                    if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
+                        board[i][j] = 'P';
+                        blackFigures.emplace_back(Figure(j, i,char('P')));
+                    }
+
+                } else{
+                    if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
+                        board[i][j] = 'p';
+                        whiteFigures.emplace_back(Figure(j,i,char('p')));
+                    }
+                }
+            }
+        }
+    }
 }
 
 int Board::endOfGame() {
@@ -741,82 +818,11 @@ int Board::endOfGame() {
     return 0;
 }
 
-uint16_t Board::getSize() const{
-    return size;
-}
-
-void Board::setFigure(uint16_t x, uint16_t y, char figure){
-    if (x >= 0 && y >= 0 && x < size && y < size){
-        board[y][x] = figure;
-        bool isReplaced = false;
-        auto it = whiteFigures.begin();
-        for (auto i = whiteFigures.begin(); i !=whiteFigures.end() ; ++i){
-            if (i->x == x && i->y == y){
-                isReplaced = true;
-                it = i;
-            }
-        }
-        if (isReplaced){
-            whiteFigures.erase(it);
-        } else {
-            for (auto i = blackFigures.begin(); i !=blackFigures.end() ; ++i){
-                if (i->x == x && i->y == y){
-                    isReplaced = true;
-                    it = i;
-                }
-            }
-        }
-        if (isReplaced){
-            blackFigures.erase(it);
-        }
-
-        if (std::islower(figure))
-            whiteFigures.emplace_back(x, y, figure);
-        else
-            blackFigures.emplace_back(x, y, figure);
-
+void Board::clearMoves(char figureSide){
+    if (!moves.moves.empty() && checkSide(moves.moves.back().currentX, moves.moves.back().currentY) != figureSide){
+        moves.moves.clear();
     }
 }
-
-void Board::restart(){
-    sideIsAttach = false;
-    sideIsChange = true;
-    if (isWhiteBoard){
-        whiteWay = true;
-    } else{
-        whiteWay = false;
-    }
-
-
-    whiteFigures.clear();
-    blackFigures.clear();
-    for (uint16_t i = 0; i < size ; ++i){ // заполнение борда
-        if (i == size/2 || i == size/2 - 1) {
-            for (size_t j = 0; j < size ; ++j)
-                board[i][j] = '0';
-        } else {
-            for (size_t j = 0; j < size ; ++j) {
-                if (i < size / 2){
-                    if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
-                        board[i][j] = 'P';
-                        blackFigures.emplace_back(Figure(j, i,char('P')));
-                    }
-
-                } else{
-                    if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
-                        board[i][j] = 'p';
-                        whiteFigures.emplace_back(Figure(j,i,char('p')));
-                    }
-                }
-            }
-        }
-    }
-}
-
-GameType Board::getGameType() const{
-    return typeOfGame;
-}
-
 void Board::unMove(){
     whiteWay = !whiteWay;
     sideIsChange = true;
@@ -852,12 +858,6 @@ void Board::unMove(){
         board[move.currentY][move.currentX] = '0';
         board[move.oldY][move.oldX] = move.oldFigureType;
         moves.moves.pop_back();
-    }
-}
-
-void Board::clearMoves(char figureSide){
-    if (!moves.moves.empty() && checkSide(moves.moves.back().currentX, moves.moves.back().currentY) != figureSide){
-        moves.moves.clear();
     }
 }
 
