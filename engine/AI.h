@@ -14,7 +14,7 @@ public:
     AI(Board* game_board, uint16_t viewDepth);
     ~AI() = default;
 
-    void Move();
+    void move();
 
     void setSide(bool botSideIsWhite);
 

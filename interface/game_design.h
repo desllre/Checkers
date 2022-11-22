@@ -68,6 +68,10 @@ public:
 
     Board* getBoard();
 
+    bool getPlayerWay();
+
+    void changeWay(); // изменение ходящей стороны
+
 private:
     void SetActivityPlayerWay(); // выделяет имя текущего ходящего игрока
 
@@ -152,5 +156,6 @@ private:
 
     bool necessaryAttach = false; // true, если тот кто сейчас ходит должен бить
     bool alreadyAttach = false; // true, если игрок на своём ходу сбил фигуру (используется для проверки возможности сбить после битья)
+
 };
 

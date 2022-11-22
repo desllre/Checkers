@@ -9,7 +9,7 @@ int evaluation(const std::list<Figure>& whiteFigures, const std::list<Figure>& b
             eval += 3;
     }
     for (auto i : blackFigures){
-        if (i.figureType == 'p')
+        if (i.figureType == 'P')
             --eval;
         else
             eval -= 3;
@@ -35,14 +35,16 @@ int AI::maxEvaluation(int lEval, int rEval){
 }
 
 int AI::bestEvalSearch(uint16_t depth, int alpha, int beta){
-    if (depth == 0 || calculate_board.endOfGame() != 0){
+    int a = calculate_board.endOfGame();
+    if (depth == 0 ||  a != 0){
         return evaluation(calculate_board.whiteFigures, calculate_board.blackFigures);
     }
     if (whiteWay){
         whiteWay = !whiteWay;
         int eval;
         int maxEval = cAlpha;
-        for (auto i: calculate_board.whiteFigures) {
+        std::list<Figure> figures = calculate_board.blackFigures;
+        for (auto i: figures) {
             for (auto j: calculate_board.generateAllMoves(i.x, i.y)){
                 Moves moves = j;
                 for(auto k: j.moves){
@@ -62,11 +64,13 @@ int AI::bestEvalSearch(uint16_t depth, int alpha, int beta){
                 calculate_board.unMove();
             }
         }
+        return maxEval;
     } else {
         whiteWay = !whiteWay;
         int eval;
         int minEval = cBeta;
-        for (auto i: calculate_board.blackFigures) {
+        std::list<Figure> figures = calculate_board.blackFigures;
+        for (auto i: figures) {
             for (auto j: calculate_board.generateAllMoves(i.x, i.y)){
                 Moves moves = j;
                 for(auto k: j.moves){
@@ -86,6 +90,7 @@ int AI::bestEvalSearch(uint16_t depth, int alpha, int beta){
                 calculate_board.unMove();
             }
         }
+        return minEval;
     }
 }
 
@@ -94,7 +99,8 @@ Moves AI::bestMoveSearch(){
     calculate_board = *game_board;
     int bestEval = bestEvalSearch(viewDepth, cAlpha, cBeta);
     if (botSideIsWhite){
-        for (auto i: calculate_board.whiteFigures){
+        std::list<Figure> figures = calculate_board.whiteFigures;
+        for (auto i: figures){
             for (auto j: calculate_board.generateAllMoves(i.x, i.y)){
                 for (auto k: j.moves){
                     calculate_board.move(k.oldX, k.oldY, k.currentX, k.currentY);
@@ -106,7 +112,8 @@ Moves AI::bestMoveSearch(){
             }
         }
     } else {
-        for (auto i: calculate_board.blackFigures){
+        std::list<Figure> figures = calculate_board.blackFigures;
+        for (auto i: figures){
             for (auto j: calculate_board.generateAllMoves(i.x, i.y)){
                 for (auto k: j.moves){
                     calculate_board.move(k.oldX, k.oldY, k.currentX, k.currentY);
@@ -117,5 +124,12 @@ Moves AI::bestMoveSearch(){
                 calculate_board.unMove();
             }
         }
+    }
+}
+
+void AI::move(){
+    Moves moves = bestMoveSearch();
+    for (auto i: moves.moves){
+        game_board->move(i.oldX, i.oldY, i.currentX, i.currentY);
     }
 }

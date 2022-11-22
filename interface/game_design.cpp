@@ -17,63 +17,136 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
 
     Game game(roundsNum, isSingleGame, gameType, playerHasWhiteBoard, boardSize);
 
-    while (window.isOpen()) {
-        sf::Event event;
+    if (!isSingleGame){
+        while (window.isOpen()) {
+            sf::Event event;
 
-        game.SetCurrentTIme();
-        game.CheckActive(window, sf::Mouse::getPosition(window));
+            game.SetCurrentTIme();
+            game.CheckActive(window, sf::Mouse::getPosition(window));
 
-        if(game.EndOfGame(window)){
-            window.setActive(false);
-            return;
-        }
-
-        while (window.pollEvent(event)) {
-
-            if (event.type == sf::Event::Closed) {
-                if (std::filesystem::exists("../config/custom_settings.txt")){
-                    std::system("rm -r ../config/custom_settings.txt");
-                }
-                window.close();
+            if(game.EndOfGame(window)){
+                window.setActive(false);
+                return;
             }
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-                if (game.GetPauseActivity()){ // проверка нажатия на кнопку паузы
-                    int gameState = -1;
-                    window.setActive(false);
-                    game.ChangeCursor(window, sf::Cursor::Type::Arrow);
-                    game.SetPauseActivity(false);
 
-                    sf::Thread GameExitThread([&window, &gameState](){
-                        GameExitWindow(window, gameState);
-                    });
+            while (window.pollEvent(event)) {
 
-                    GameExitThread.launch();
-                    GameExitThread.wait();
-                    window.setActive();
-
-                    switch (gameState) {
-                        case 1:{
-                            game.Restart();
-                            break;
-                        }
-                        case 2:{
-                            window.setActive(false);
-                            return;
-                        }
-                        default:
-                            break;
+                if (event.type == sf::Event::Closed) {
+                    if (std::filesystem::exists("../config/custom_settings.txt")){
+                        std::system("rm -r ../config/custom_settings.txt");
                     }
-                    game.ClockRestart(); // рестартим время, чтобы иммитировать паузу игры (т.е время было не изменно с момента остановки игры)
-                } else {
-                    game.Move(sf::Mouse::getPosition(window));
-                    game.FigureSelection(sf::Mouse::getPosition(window));
+                    window.close();
+                }
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+                    if (game.GetPauseActivity()){ // проверка нажатия на кнопку паузы
+                        int gameState = -1;
+                        window.setActive(false);
+                        game.ChangeCursor(window, sf::Cursor::Type::Arrow);
+                        game.SetPauseActivity(false);
+
+                        sf::Thread GameExitThread([&window, &gameState](){
+                            GameExitWindow(window, gameState);
+                        });
+
+                        GameExitThread.launch();
+                        GameExitThread.wait();
+                        window.setActive();
+
+                        switch (gameState) {
+                            case 1:{
+                                game.Restart();
+                                break;
+                            }
+                            case 2:{
+                                window.setActive(false);
+                                return;
+                            }
+                            default:
+                                break;
+                        }
+                        game.ClockRestart(); // рестартим время, чтобы иммитировать паузу игры (т.е время было не изменно с момента остановки игры)
+                    } else {
+                        game.Move(sf::Mouse::getPosition(window));
+                        game.FigureSelection(sf::Mouse::getPosition(window));
+                    }
                 }
             }
+
+            window.clear();
+            game.Draw(window);
+            window.display();
+        }
+    } else{
+        AI bot(game.getBoard(), 1);
+        if (figureColor == 'w'){
+            bot.setSide(false);
+        } else{
+            bot.setSide(true);
         }
 
-        window.clear();
-        game.Draw(window);
-        window.display();
+        while (window.isOpen()) {
+            sf::Event event;
+
+            game.SetCurrentTIme();
+            game.CheckActive(window, sf::Mouse::getPosition(window));
+
+            if(game.EndOfGame(window)){
+                window.setActive(false);
+                return;
+            }
+
+            if (!game.getPlayerWay()){
+                bot.move();
+                game.changeWay();
+            }
+
+            while (window.pollEvent(event)) {
+
+                if (event.type == sf::Event::Closed) {
+                    if (std::filesystem::exists("../config/custom_settings.txt")){
+                        std::system("rm -r ../config/custom_settings.txt");
+                    }
+                    window.close();
+                }
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+                    if (game.GetPauseActivity()){ // проверка нажатия на кнопку паузы
+                        int gameState = -1;
+                        window.setActive(false);
+                        game.ChangeCursor(window, sf::Cursor::Type::Arrow);
+                        game.SetPauseActivity(false);
+
+                        sf::Thread GameExitThread([&window, &gameState](){
+                            GameExitWindow(window, gameState);
+                        });
+
+                        GameExitThread.launch();
+                        GameExitThread.wait();
+                        window.setActive();
+
+                        switch (gameState) {
+                            case 1:{
+                                game.Restart();
+                                break;
+                            }
+                            case 2:{
+                                window.setActive(false);
+                                return;
+                            }
+                            default:
+                                break;
+                        }
+                        game.ClockRestart(); // рестартим время, чтобы иммитировать паузу игры (т.е время было не изменно с момента остановки игры)
+                    } else if(game.getPlayerWay()){
+                        game.Move(sf::Mouse::getPosition(window));
+                        game.FigureSelection(sf::Mouse::getPosition(window));
+                    }
+                }
+            }
+
+            window.clear();
+            game.Draw(window);
+            window.display();
+        }
     }
 
     window.setActive(false);
@@ -688,6 +761,13 @@ bool Game::EndOfGame(sf::RenderWindow& window){
 Board* Game::getBoard(){
     return &board;
 }
+bool Game::getPlayerWay(){
+    return player1Way;
+}
+void Game::changeWay(){
+    player1Way = !player1Way;
+}
+
 
 void Game::Object::SetPosition(int x, int y){
     sprite.setPosition(static_cast<float>(x), static_cast<float>(y));
