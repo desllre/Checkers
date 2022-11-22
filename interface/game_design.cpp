@@ -78,11 +78,6 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
         }
     } else{
         AI bot(game.getBoard(), 1);
-        if (figureColor == 'w'){
-            bot.setSide(false);
-        } else{
-            bot.setSide(true);
-        }
 
         while (window.isOpen()) {
             sf::Event event;

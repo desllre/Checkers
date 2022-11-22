@@ -1,5 +1,7 @@
 #include "board.h"
 
+#include "cstdlib"
+#include "vector"
 #include "list"
 
 #pragma once
@@ -15,8 +17,6 @@ public:
     ~AI() = default;
 
     void move();
-
-    void setSide(bool botSideIsWhite);
 
 private:
     // Поиск лучшего хода на основе лучшей оценки bestEvalSearch
@@ -44,6 +44,5 @@ private:
     const int cAlpha = -61;
     const int cBeta = 61;
 
-    bool botSideIsWhite; // бот играет за белых?
     bool whiteWay; // сейчас ходят белые?
 };
