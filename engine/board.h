@@ -13,6 +13,7 @@ class Board{
 private:
 
 public:
+
     Board(uint16_t size, bool isWhiteBoard, GameType typeOfGame);
     ~Board();
 

@@ -18,7 +18,7 @@ int evaluation(const std::list<Figure>& whiteFigures, const std::list<Figure>& b
 }
 
 AI::AI(Board* game_board, uint16_t viewDepth): calculate_board(game_board->getSize(), game_board->getIsWhiteBoard(), game_board->getGameType()),
-                                                                                viewDepth(viewDepth){
+                                               viewDepth(viewDepth){
     this->game_board = game_board;
 }
 
@@ -40,7 +40,6 @@ int AI::bestEvalSearch(uint16_t depth, int alpha, int beta){
         return evaluation(calculate_board.whiteFigures, calculate_board.blackFigures);
     }
     if (whiteWay){
-        whiteWay = !whiteWay;
         int eval;
         int maxEval = cAlpha;
         std::list<Figure> figures = calculate_board.blackFigures;
@@ -66,7 +65,6 @@ int AI::bestEvalSearch(uint16_t depth, int alpha, int beta){
         }
         return maxEval;
     } else {
-        whiteWay = !whiteWay;
         int eval;
         int minEval = cBeta;
         std::list<Figure> figures = calculate_board.blackFigures;
@@ -85,7 +83,6 @@ int AI::bestEvalSearch(uint16_t depth, int alpha, int beta){
                     calculate_board.unMove();
                     return minEval;
                 }
-
                 calculate_board.moves = moves;
                 calculate_board.unMove();
             }
@@ -98,7 +95,9 @@ Moves AI::bestMoveSearch(){
     whiteWay = game_board->getWhiteWay();
     calculate_board = *game_board;
     int bestEval = bestEvalSearch(viewDepth, cAlpha, cBeta);
+    Moves moves;
     if (botSideIsWhite){
+        calculate_board = *game_board;
         std::list<Figure> figures = calculate_board.whiteFigures;
         for (auto i: figures){
             for (auto j: calculate_board.generateAllMoves(i.x, i.y)){
@@ -112,6 +111,7 @@ Moves AI::bestMoveSearch(){
             }
         }
     } else {
+        calculate_board = *game_board;
         std::list<Figure> figures = calculate_board.blackFigures;
         for (auto i: figures){
             for (auto j: calculate_board.generateAllMoves(i.x, i.y)){
@@ -125,6 +125,7 @@ Moves AI::bestMoveSearch(){
             }
         }
     }
+    return moves;
 }
 
 void AI::move(){

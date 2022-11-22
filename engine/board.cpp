@@ -62,7 +62,7 @@ Board& Board::operator=(const Board& other){
 
     for (int i = 0; i < size; ++i) {
         for (int j = 0; j < size; ++j) {
-            board[i][j] == other.board[i][j];
+            board[i][j] = other.board[i][j];
         }
     }
 }
@@ -862,6 +862,7 @@ void Board::unMove(){
 }
 
 std::list<Moves> Board::generateAllMoves(uint16_t posX, uint16_t posY){
+
     std::pair<bool, std::list<int>> capabilities = possibles(posX, posY);
     char figureSide = checkSide(posX, posY);
     bool way = whiteWay; // будет хранить инфу, чья сторона ходит
@@ -874,51 +875,51 @@ std::list<Moves> Board::generateAllMoves(uint16_t posX, uint16_t posY){
     if (capabilities.first){
         for (auto i: capabilities.second){
 
+            moves.moves.clear();
             move(posX, posY, i % size, i / size);
 
             Motion motion(moves.moves.back());
 
             Moves tmpMoves;
             tmpMoves = moves;
-            moves.moves.clear();
             std::pair<bool, std::list<int>> capabilities_1 = possibles(i % size, i / size);
             /////
             if(capabilities_1.first){
                 for (auto j: capabilities_1.second) {
+                    moves.moves.clear();
                     move( i % size, i / size, j % size, j / size);
 
                     Motion motion_1(moves.moves.back());
 
                     Moves tmpMoves_1;
                     tmpMoves_1 = moves;
-                    moves.moves.clear();
                     std::pair<bool, std::list<int>> capabilities_2 = possibles(j % size, j / size);
                     /////
                     if(capabilities_2.first){
                         for (auto k: capabilities_2.second) {
+                            moves.moves.clear();
                             move(j % size, j / size, k % size, k / size);
 
                             Motion motion_2(moves.moves.back());
 
                             Moves tmpMoves_2;
                             tmpMoves_2 = moves;
-                            moves.moves.clear();
                             std::pair<bool, std::list<int>> capabilities_3 = possibles(k % size, k / size);
                             /////
                             if(capabilities_3.first){
                                 for (auto s: capabilities_3.second) {
+                                    moves.moves.clear();
                                     move(k % size, k / size, s % size, s / size);
 
                                     Motion motion_3(moves.moves.back());
 
                                     Moves tmpMoves_3;
                                     tmpMoves_3 = moves;
-                                    moves.moves.clear();
                                     std::pair<bool, std::list<int>> capabilities_4 = possibles(s % size, s / size);
                                     /////
                                     if(capabilities_4.first){
                                         for (auto l: capabilities_4.second) {
-
+                                            moves.moves.clear();
                                             move(s % size, s / size, l % size, l / size);
 
                                             Motion motion_4(moves.moves.back());
@@ -985,6 +986,7 @@ std::list<Moves> Board::generateAllMoves(uint16_t posX, uint16_t posY){
     } else {
         Motion motion;
         for (auto i: capabilities.second) {
+            moves.moves.clear();
             move(posX, posY, i % size, i / size);
             motion = moves.moves.back();
             moving.emplace_back(Moves());

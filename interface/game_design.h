@@ -72,6 +72,8 @@ public:
 
     void changeWay(); // изменение ходящей стороны
 
+    void botMove(AI& bot); // хождение бота
+
 private:
     void SetActivityPlayerWay(); // выделяет имя текущего ходящего игрока
 
@@ -157,5 +159,8 @@ private:
     bool necessaryAttach = false; // true, если тот кто сейчас ходит должен бить
     bool alreadyAttach = false; // true, если игрок на своём ходу сбил фигуру (используется для проверки возможности сбить после битья)
 
+public:
+    bool botIsActive = false;
+    sf::Clock botMoveClock;
 };
 
