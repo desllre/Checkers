@@ -17,6 +17,17 @@ int evaluation(const std::list<Figure>& whiteFigures, const std::list<Figure>& b
     return eval;
 }
 
-AI::AI(Board* game_board): calculate_board(game_board->getSize(), game_board->getIsWhiteBoard(), game_board->getGameType()){
-
+AI::AI(Board* game_board, uint16_t viewDepth, bool whiteWay, bool botSideIsWhite): calculate_board(game_board->getSize(), game_board->getIsWhiteBoard(), game_board->getGameType()),
+                                                                                viewDepth(viewDepth), whiteWay(whiteWay), botSideIsWhite(botSideIsWhite){
+    this->game_board = game_board;
 }
+
+int AI::minEvaluation(int lEval, int rEval){
+    return (lEval<rEval)?lEval:rEval;
+}
+
+int AI::maxEvaluation(int lEval, int rEval){
+    return (lEval<rEval)?rEval:lEval;
+}
+
+
