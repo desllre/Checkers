@@ -286,7 +286,7 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
     player1TextName.setFillColor(sf::Color::Black);
     player1TextName.setFont(textFont);
     player1TextName.setCharacterSize(20);
-    player1TextName.setPosition(45, yPosPlayer1_NameField + 3);
+    player1TextName.setPosition(45, static_cast<float>(yPosPlayer1_NameField) + 3);
     player1TextName.setString(player1Name);
     player1TextName.setStyle(sf::Text::Bold);
 
@@ -294,13 +294,13 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
     player1Rect.setFillColor(sf::Color::White);
     player1Rect.setOutlineColor(sf::Color::Black);
     player1Rect.setOutlineThickness(3);
-    player1Rect.setPosition(43, yPosPlayer1_NameField);
+    player1Rect.setPosition(43, static_cast<float>(yPosPlayer1_NameField));
 
 
     player2TextName.setFillColor(sf::Color::Black);
     player2TextName.setFont(textFont);
     player2TextName.setCharacterSize(20);
-    player2TextName.setPosition(45, yPosPlayer2_NameField + 3);
+    player2TextName.setPosition(45, static_cast<float>(yPosPlayer2_NameField) + 3);
     player2TextName.setString(player2Name);
     player2TextName.setStyle(sf::Text::Bold);
 
@@ -308,7 +308,7 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
     player2Rect.setFillColor(sf::Color::White);
     player2Rect.setOutlineColor(sf::Color::Black);
     player2Rect.setOutlineThickness(3);
-    player2Rect.setPosition(43, yPosPlayer2_NameField);
+    player2Rect.setPosition(43, static_cast<float>(yPosPlayer2_NameField));
 
 
     pauseButton.texture.loadFromFile(pauseButtonStr);
@@ -613,16 +613,16 @@ void Game::ClockRestart(){
 
 void Game::SetActivityPlayerWay(){
     if (player1Way){
-        player1TextName.setColor(sf::Color::Red);
+        player1TextName.setFillColor(sf::Color::Red);
         player1Rect.setOutlineColor(sf::Color::Red);
 
-        player2TextName.setColor(sf::Color::Black);
+        player2TextName.setFillColor(sf::Color::Black);
         player2Rect.setOutlineColor(sf::Color::Black);
     } else {
-        player2TextName.setColor(sf::Color::Red);
+        player2TextName.setFillColor(sf::Color::Red);
         player2Rect.setOutlineColor(sf::Color::Red);
 
-        player1TextName.setColor(sf::Color::Black);
+        player1TextName.setFillColor(sf::Color::Black);
         player1Rect.setOutlineColor(sf::Color::Black);
     }
 
@@ -658,7 +658,7 @@ bool Game::EndOfGame(sf::RenderWindow& window){
                 winnerName = player1Name;
         }
         window.setActive(false);
-        sf::Thread endOfGameWindowThread([&window, &endValue, &returnValue, &winnerName, this](){
+        sf::Thread endOfGameWindowThread([&window, &returnValue, &winnerName, this](){
             EndOfGameWindow(window, roundsNum, currentRound, score, winnerName, returnValue);
         });
         endOfGameWindowThread.launch();
@@ -686,7 +686,7 @@ bool Game::EndOfGame(sf::RenderWindow& window){
 }
 
 void Game::Object::SetPosition(int x, int y){
-    sprite.setPosition(float(x), float(y));
+    sprite.setPosition(static_cast<float>(x), static_cast<float>(y));
 }
 void Game::Object::Draw(sf::RenderWindow& window) const{
     window.draw(sprite);

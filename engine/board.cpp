@@ -659,7 +659,7 @@ void Board::setSideAttach(){
     sideIsAttach = false;
 }
 
-bool Board::GetSideChanging(){
+bool Board::GetSideChanging() const{
     return sideIsChange;
 }
 
@@ -677,7 +677,7 @@ char Board::checkSide(uint16_t posX, uint16_t posY){
         return 'b';
 }
 
-bool Board::getIsWhiteBoard(){
+bool Board::getIsWhiteBoard() const{
     return isWhiteBoard;
 }
 
@@ -741,7 +741,7 @@ int Board::endOfGame() {
     return 0;
 }
 
-uint16_t Board::getSize(){
+uint16_t Board::getSize() const{
     return size;
 }
 
@@ -813,14 +813,14 @@ void Board::restart(){
     }
 }
 
-GameType Board::getGameType(){
+GameType Board::getGameType() const{
     return typeOfGame;
 }
 
 void Board::unMove(){
     whiteWay = !whiteWay;
     sideIsChange = true;
-    for (; moves.moves.size() != 0; ) {
+    for (; !moves.moves.empty(); ) {
         Motion move = moves.moves.back();
         if (move.chargeFigure.figureType != '0') { // восстанавливаем сбитую фигуру
             if (move.chargeFigure.figureColor == 'w') {

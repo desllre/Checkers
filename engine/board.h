@@ -1,3 +1,5 @@
+#include "subStructs.h"
+
 #include "cstdlib"
 #include "string"
 #include "list"
@@ -6,80 +8,6 @@
 
 // обозначение фигур: 'P' - чёрная пешка, 'p' - белая пешка, 'K' - чёрная дамка,
 // 'k' - белая дамка, отсутствие фигуры - '0'
-
-enum GameType{
-    English,
-    Russian,
-    Giveaway, // поддавки шашки
-    International // международные шашки
-};
-
-struct Figure{
-    Figure(){ figureType = '0'; figureColor = '0';}
-    Figure(uint16_t x, uint16_t y, char figureType): x(x), y(y), figureType(figureType) {};
-    Figure(uint16_t x, uint16_t y, char figureType, char figureColor): x(x), y(y), figureType(figureType), figureColor(figureColor) {};
-
-    Figure(const Figure& other){
-        figureType = other.figureType;
-        figureColor = other.figureColor;
-        x = other.x;
-        y = other.y;
-    }
-
-    Figure& operator =(const Figure& other){
-        figureType = other.figureType;
-        figureColor = other.figureColor;
-        x = other.x;
-        y = other.y;
-    }
-
-    char figureType; // p - пешка(pawn), k - дамка(king) - для белых. P и K для чёрных
-    char figureColor;
-    uint16_t x = 0;
-    uint16_t y = 0;
-};
-
-// структура - движение(движение может быть не полным ходом, в случае сбитиия не одной фигуры). Хранит конечную позиция и предыдущую позицию
-struct Motion{
-    Motion() = default;
-    Motion(int currentX, int currentY, int oldX, int oldY): currentX(currentX), currentY(currentY), oldX(oldX), oldY(oldY){};
-    Motion(int currentX, int currentY, int oldX, int oldY, Figure chargeFigure): currentX(currentX), currentY(currentY), oldX(oldX), oldY(oldY), chargeFigure(chargeFigure){};
-    Motion(const Motion& other){
-        oldFigureType = other.oldFigureType;
-        newFigureType = other.newFigureType;
-        chargeFigure = other.chargeFigure;
-        currentX = other.currentX;
-        currentY = other.currentY;
-        oldX = other.oldX;
-        oldY = other.oldY;
-    }
-    Motion& operator =(const Motion& other){
-        oldFigureType = other.oldFigureType;
-        newFigureType = other.newFigureType;
-        chargeFigure = other.chargeFigure;
-        currentX = other.currentX;
-        currentY = other.currentY;
-        oldX = other.oldX;
-        oldY = other.oldY;
-    }
-
-    Figure chargeFigure; // фигура, которую бьёт(если не бьёт, то figureType = '0')
-    int currentX;
-    int currentY;
-    int oldX;
-    int oldY;
-    char oldFigureType;
-    char newFigureType;
-};
-
-// структура, содержащая полный ход
-struct Moves{
-    Moves() = default;
-    ~Moves() = default;
-    Moves(const Moves& other){ moves = other.moves; }
-    Moves& operator=(const Moves& other){ moves = other.moves; }
-    std::list<Motion> moves;
-};
 
 class Board{
 private:
@@ -110,10 +38,10 @@ public:
 
     void unMove(); // возвращается к предыдущему ходу на основе moves
 
-    uint16_t getSize();
-    bool getIsWhiteBoard();
-    bool GetSideChanging(); // возвращает true, если на предыдущем шаге поменялся цвет фигур
-    GameType getGameType();
+    uint16_t getSize() const;
+    bool getIsWhiteBoard() const;
+    bool GetSideChanging() const; // возвращает true, если на предыдущем шаге поменялся цвет фигур
+    GameType getGameType() const;
 
     std::list<Moves> generateAllMoves(uint16_t posX, uint16_t posY); // возвращает vector со всеми возможными ходами фигуры под заданными координатами
 
