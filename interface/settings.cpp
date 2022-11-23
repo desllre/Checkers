@@ -430,4 +430,3 @@ Settings::Game_Styles::Game_Styles(const std::string& textureImg_1, const std::s
     sprite.setTexture(textures[0]);
     sprite.setPosition(x, y);
 }
-

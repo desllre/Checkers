@@ -17,8 +17,6 @@ public:
     Board(uint16_t size, bool isWhiteBoard, GameType typeOfGame);
     ~Board();
 
-    bool isHere(uint16_t posX, uint16_t posY); // проверка на наличие фигуры в данной точке
-
     bool move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY); // движение фигуры. Возвращает true, если фигура успешно перемещена
 
     // проверка на возмножность походить
@@ -32,8 +30,6 @@ public:
     // проверка на конец игры. Возвращает 1 если выиграли белые, -1 - чёрные, 0 - игра ещё не окончена
     int endOfGame();
 
-
-    void setFigure(uint16_t x, uint16_t y, char figure);
 
     void restart();
 

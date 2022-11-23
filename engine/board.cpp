@@ -663,38 +663,6 @@ void Board::setSideAttach(){
     }
     sideIsAttach = false;
 }
-void Board::setFigure(uint16_t x, uint16_t y, char figure){
-    if (x >= 0 && y >= 0 && x < size && y < size){
-        board[y][x] = figure;
-        bool isReplaced = false;
-        auto it = whiteFigures.begin();
-        for (auto i = whiteFigures.begin(); i !=whiteFigures.end() ; ++i){
-            if (i->x == x && i->y == y){
-                isReplaced = true;
-                it = i;
-            }
-        }
-        if (isReplaced){
-            whiteFigures.erase(it);
-        } else {
-            for (auto i = blackFigures.begin(); i !=blackFigures.end() ; ++i){
-                if (i->x == x && i->y == y){
-                    isReplaced = true;
-                    it = i;
-                }
-            }
-        }
-        if (isReplaced){
-            blackFigures.erase(it);
-        }
-
-        if (std::islower(figure))
-            whiteFigures.emplace_back(x, y, figure);
-        else
-            blackFigures.emplace_back(x, y, figure);
-
-    }
-}
 
 char Board::checkSide(uint16_t posX, uint16_t posY){
     if (board[posY][posX] == '0') return '0';
@@ -702,10 +670,6 @@ char Board::checkSide(uint16_t posX, uint16_t posY){
         return 'w';
     else
         return 'b';
-}
-bool Board::isHere(uint16_t posX, uint16_t posY) {
-    if (board[posY][posX] != '0') return true;
-    return false;
 }
 bool Board::GetSideChanging() const{
     return sideIsChange;

@@ -160,9 +160,6 @@ private:
 
     sf::Cursor cursor;
 
-    bool necessaryAttach = false; // true, если тот кто сейчас ходит должен бить
-    bool alreadyAttach = false; // true, если игрок на своём ходу сбил фигуру (используется для проверки возможности сбить после битья)
-
 public:
     bool botIsActive = false;
     sf::Clock botMoveClock;
