@@ -48,6 +48,8 @@ public:
     int PressButton(bool mouse_is_pressed) const; // возвращает 0, если нажата кнопка рестарт, 1 - если выход, -1 - ничего
 
     bool IsLastRound(); // возвращает isLastRound
+
+    void setArrowCursor(sf::RenderWindow& window);
 private:
 
     void ChangeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor);

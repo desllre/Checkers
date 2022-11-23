@@ -77,7 +77,7 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
             window.display();
         }
     } else{
-        AI bot(game.getBoard(), 1);
+        AI bot(game.getBoard(), 4);
 
         while (window.isOpen()) {
             sf::Event event;

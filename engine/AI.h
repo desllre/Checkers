@@ -45,4 +45,6 @@ private:
     const int cBeta = 61;
 
     bool whiteWay; // сейчас ходят белые?
+
+    std::vector<Moves> bestMovesStorage; // будет хранить лучший ход полученный в результате работы функции bestEvalSearch
 };

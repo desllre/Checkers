@@ -10,6 +10,7 @@ void EndOfGameWindow(sf::RenderWindow& window, uint32_t roundsNum, uint32_t curr
     }
 
     EndOfGame endOfGame(roundsNum, currentRound, score, winnerName);
+    endOfGame.setArrowCursor(window);
 
     sf::RenderWindow endOfGameWindow(sf::VideoMode(695, 434), "Checkers", sf::Style::None);
     sf::Vector2i menuWindowPosition = window.getPosition();
@@ -31,7 +32,7 @@ void EndOfGameWindow(sf::RenderWindow& window, uint32_t roundsNum, uint32_t curr
             return;
         }
 
-        while (endOfGameWindow.pollEvent(event)) {
+        while (endOfGameWindow.pollEvent(event) && endOfGame.IsLastRound()) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
                 window.setActive(false);
                 endOfGameWindow.close();
@@ -79,6 +80,7 @@ EndOfGame::EndOfGame(uint32_t roundsNum, uint32_t currentRound, std::pair<uint16
                          POS_EXIT_Y, COLOR_OUTLINE, COLOR_TEXT,
                          TEXT_SIZE, PATH_FONTS, POS_EXIT_TEXT_X,
                          POS_EXIT_TEXT_Y, "EXIT"){
+
     if (currentRound == roundsNum) {
         isLastRound = true;
     }
@@ -197,4 +199,9 @@ int EndOfGame::PressButton(bool mouse_is_pressed) const{
 
 bool EndOfGame::IsLastRound(){
     return isLastRound;
+}
+
+void EndOfGame::setArrowCursor(sf::RenderWindow& window){
+    cursor.loadFromSystem(sf::Cursor::Type::Arrow);
+    window.setMouseCursor(cursor);
 }
