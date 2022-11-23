@@ -17,63 +17,139 @@ void Game_design(sf::RenderWindow& window, const uint32_t& roundsNum, bool isSin
 
     Game game(roundsNum, isSingleGame, gameType, playerHasWhiteBoard, boardSize);
 
-    while (window.isOpen()) {
-        sf::Event event;
+    if (!isSingleGame){
+        while (window.isOpen()) {
+            sf::Event event;
 
-        game.SetCurrentTIme();
-        game.CheckActive(window, sf::Mouse::getPosition(window));
+            game.SetCurrentTIme();
+            game.CheckActive(window, sf::Mouse::getPosition(window));
 
-        if(game.EndOfGame(window)){
-            window.setActive(false);
-            return;
-        }
-
-        while (window.pollEvent(event)) {
-
-            if (event.type == sf::Event::Closed) {
-                if (std::filesystem::exists("../config/custom_settings.txt")){
-                    std::system("rm -r ../config/custom_settings.txt");
-                }
-                window.close();
+            if(game.EndOfGame(window)){
+                window.setActive(false);
+                return;
             }
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-                if (game.GetPauseActivity()){ // проверка нажатия на кнопку паузы
-                    int gameState = -1;
-                    window.setActive(false);
-                    game.ChangeCursor(window, sf::Cursor::Type::Arrow);
-                    game.SetPauseActivity(false);
 
-                    sf::Thread GameExitThread([&window, &gameState](){
-                        GameExitWindow(window, gameState);
-                    });
+            while (window.pollEvent(event)) {
 
-                    GameExitThread.launch();
-                    GameExitThread.wait();
-                    window.setActive();
-
-                    switch (gameState) {
-                        case 1:{
-                            game.Restart();
-                            break;
-                        }
-                        case 2:{
-                            window.setActive(false);
-                            return;
-                        }
-                        default:
-                            break;
+                if (event.type == sf::Event::Closed) {
+                    if (std::filesystem::exists("../config/custom_settings.txt")){
+                        std::system("rm -r ../config/custom_settings.txt");
                     }
-                    game.ClockRestart(); // рестартим время, чтобы иммитировать паузу игры (т.е время было не изменно с момента остановки игры)
-                } else {
-                    game.Move(sf::Mouse::getPosition(window));
-                    game.FigureSelection(sf::Mouse::getPosition(window));
+                    window.close();
+                }
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+                    if (game.GetPauseActivity()){ // проверка нажатия на кнопку паузы
+                        int gameState = -1;
+                        window.setActive(false);
+                        game.ChangeCursor(window, sf::Cursor::Type::Arrow);
+                        game.SetPauseActivity(false);
+
+                        sf::Thread GameExitThread([&window, &gameState](){
+                            GameExitWindow(window, gameState);
+                        });
+
+                        GameExitThread.launch();
+                        GameExitThread.wait();
+                        window.setActive();
+
+                        switch (gameState) {
+                            case 1:{
+                                game.Restart();
+                                break;
+                            }
+                            case 2:{
+                                window.setActive(false);
+                                return;
+                            }
+                            default:
+                                break;
+                        }
+                        game.ClockRestart(); // рестартим время, чтобы иммитировать паузу игры (т.е время было не изменно с момента остановки игры)
+                    } else {
+                        game.Move(sf::Mouse::getPosition(window));
+                        game.FigureSelection(sf::Mouse::getPosition(window));
+                    }
                 }
             }
-        }
 
-        window.clear();
-        game.Draw(window);
-        window.display();
+            window.clear();
+            game.Draw(window);
+            window.display();
+        }
+    } else{
+        AI bot(game.getBoard(), 1);
+
+        while (window.isOpen()) {
+            sf::Event event;
+
+            game.SetCurrentTIme();
+            game.CheckActive(window, sf::Mouse::getPosition(window));
+
+            if(game.EndOfGame(window)){
+                window.setActive(false);
+                return;
+            }
+
+            if (!game.getPlayerWay()){
+                if (!game.botIsActive){
+                    game.botMoveClock.restart();
+                    game.botIsActive = true;
+                } else if (game.botIsActive && game.botMoveClock.getElapsedTime() >= sf::seconds(0.6)){
+                    sf::Thread botMoveThread([&game, &bot](){
+                        game.botMove(bot);
+                    });
+                    botMoveThread.launch();
+                    game.botIsActive = false;
+                }
+            }
+
+            while (window.pollEvent(event)) {
+
+                if (event.type == sf::Event::Closed) {
+                    if (std::filesystem::exists("../config/custom_settings.txt")){
+                        std::system("rm -r ../config/custom_settings.txt");
+                    }
+                    window.close();
+                }
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+                    if (game.GetPauseActivity()){ // проверка нажатия на кнопку паузы
+                        int gameState = -1;
+                        window.setActive(false);
+                        game.ChangeCursor(window, sf::Cursor::Type::Arrow);
+                        game.SetPauseActivity(false);
+
+                        sf::Thread GameExitThread([&window, &gameState](){
+                            GameExitWindow(window, gameState);
+                        });
+
+                        GameExitThread.launch();
+                        GameExitThread.wait();
+                        window.setActive();
+
+                        switch (gameState) {
+                            case 1:{
+                                game.Restart();
+                                break;
+                            }
+                            case 2:{
+                                window.setActive(false);
+                                return;
+                            }
+                            default:
+                                break;
+                        }
+                        game.ClockRestart(); // рестартим время, чтобы иммитировать паузу игры (т.е время было не изменно с момента остановки игры)
+                    } else if(game.getPlayerWay()){
+                        game.Move(sf::Mouse::getPosition(window));
+                        game.FigureSelection(sf::Mouse::getPosition(window));
+                    }
+                }
+            }
+
+            window.clear();
+            game.Draw(window);
+            window.display();
+        }
     }
 
     window.setActive(false);
@@ -201,16 +277,17 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
                 moveSelectorStr = "../textures/elements/move_selector.png";
                 figureSelectorStr = "../textures/elements/figure_selector.png";
 
-                if (playerHasWhiteBoard || !isSingleGame){ // будут отображаться снизу белые фигуры
-                    black_pawnStr = "../textures/figures/black_and_white/black_pawn.png";
-                    black_kingStr = "../textures/figures/black_and_white/black_king.png";
-                    white_pawnStr = "../textures/figures/black_and_white/white_pawn.png";
-                    white_kingStr = "../textures/figures/black_and_white/white_king.png";
-                } else if(isSingleGame){ // будут отображаться снизу белые фигуры
+
+                if(isSingleGame){ // будут отображаться снизу белые фигуры
                     white_pawnStr = "../textures/figures/black_and_white/black_pawn.png";
                     white_kingStr = "../textures/figures/black_and_white/black_king.png";
                     black_pawnStr = "../textures/figures/black_and_white/white_pawn.png";
                     black_kingStr = "../textures/figures/black_and_white/white_king.png";
+                } if (playerHasWhiteBoard || !isSingleGame){ // будут отображаться снизу белые фигуры
+                    black_pawnStr = "../textures/figures/black_and_white/black_pawn.png";
+                    black_kingStr = "../textures/figures/black_and_white/black_king.png";
+                    white_pawnStr = "../textures/figures/black_and_white/white_pawn.png";
+                    white_kingStr = "../textures/figures/black_and_white/white_king.png";
                 }
 
             } else {
@@ -218,16 +295,16 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
                 moveSelectorStr = "../textures/elements/big_move_selector.png";
                 figureSelectorStr = "../textures/elements/big_figure_selector.png";
 
-                if (playerHasWhiteBoard || !isSingleGame){ // будут отображаться снизу белые фигуры
-                    black_pawnStr = "../textures/figures/black_and_white/big_black_pawn.png";
-                    black_kingStr = "../textures/figures/black_and_white/big_black_king.png";
-                    white_pawnStr = "../textures/figures/black_and_white/big_white_pawn.png";
-                    white_kingStr = "../textures/figures/black_and_white/big_white_king.png";
-                } else if(isSingleGame){ // будут отображаться снизу белые фигуры
+                if(isSingleGame){ // будут отображаться снизу белые фигуры
                     white_pawnStr = "../textures/figures/black_and_white/big_black_pawn.png";
                     white_kingStr = "../textures/figures/black_and_white/big_black_king.png";
                     black_pawnStr = "../textures/figures/black_and_white/big_white_pawn.png";
                     black_kingStr = "../textures/figures/black_and_white/big_white_king.png";
+                } else if (playerHasWhiteBoard || !isSingleGame){ // будут отображаться снизу белые фигуры
+                    black_pawnStr = "../textures/figures/black_and_white/big_black_pawn.png";
+                    black_kingStr = "../textures/figures/black_and_white/big_black_king.png";
+                    white_pawnStr = "../textures/figures/black_and_white/big_white_pawn.png";
+                    white_kingStr = "../textures/figures/black_and_white/big_white_king.png";
                 }
             }
         }
@@ -286,7 +363,7 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
     player1TextName.setFillColor(sf::Color::Black);
     player1TextName.setFont(textFont);
     player1TextName.setCharacterSize(20);
-    player1TextName.setPosition(45, yPosPlayer1_NameField + 3);
+    player1TextName.setPosition(45, static_cast<float>(yPosPlayer1_NameField) + 3);
     player1TextName.setString(player1Name);
     player1TextName.setStyle(sf::Text::Bold);
 
@@ -294,13 +371,13 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
     player1Rect.setFillColor(sf::Color::White);
     player1Rect.setOutlineColor(sf::Color::Black);
     player1Rect.setOutlineThickness(3);
-    player1Rect.setPosition(43, yPosPlayer1_NameField);
+    player1Rect.setPosition(43, static_cast<float>(yPosPlayer1_NameField));
 
 
     player2TextName.setFillColor(sf::Color::Black);
     player2TextName.setFont(textFont);
     player2TextName.setCharacterSize(20);
-    player2TextName.setPosition(45, yPosPlayer2_NameField + 3);
+    player2TextName.setPosition(45, static_cast<float>(yPosPlayer2_NameField) + 3);
     player2TextName.setString(player2Name);
     player2TextName.setStyle(sf::Text::Bold);
 
@@ -308,7 +385,7 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
     player2Rect.setFillColor(sf::Color::White);
     player2Rect.setOutlineColor(sf::Color::Black);
     player2Rect.setOutlineThickness(3);
-    player2Rect.setPosition(43, yPosPlayer2_NameField);
+    player2Rect.setPosition(43, static_cast<float>(yPosPlayer2_NameField));
 
 
     pauseButton.texture.loadFromFile(pauseButtonStr);
@@ -393,7 +470,7 @@ void Game::Draw(sf::RenderWindow& window){
         }
 
         for(auto i: *player2Figures){
-            if (i.figureType == 'p'){
+            if (i.figureType == 'P'){
                 black_pawn.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
                 black_pawn.Draw(window);
             } else {
@@ -413,7 +490,7 @@ void Game::Draw(sf::RenderWindow& window){
         }
 
         for(auto i: *player2Figures){
-            if (i.figureType == 'p'){
+            if (i.figureType == 'P'){
                 white_pawn.SetPosition(FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*i.x, FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*i.y);
                 white_pawn.Draw(window);
             } else {
@@ -427,7 +504,6 @@ void Game::Draw(sf::RenderWindow& window){
 }
 
 void Game::FigureSelection(const sf::Vector2i& mousePos){
-
     bool isMissed = false; // проверка на нажатие не на фигуру. В таком случае выделения фигуры убираются
 
     if (gameTime <= sf::seconds(0.2)){
@@ -497,7 +573,7 @@ void Game::Move(const sf::Vector2i& mousePos){
             return;
         }
     }
-
+    movePos.second.clear();
 }
 
 void Game::SetCurrentTIme(){
@@ -598,13 +674,12 @@ void Game::Restart(int a){
     }
 
     scoreText.setString("Score " + std::to_string(score.first) + " : " + std::to_string(score.second));
+    roundsText.setString("Round " + std::to_string(currentRound));
 
     gameTime = sf::Time::Zero;
     gameClock.restart();
     isSelected = false;
 
-    roundsText.setString("Round 1");
-    score.first = score.second = 0;
     gameTimeString = "";
     gameTimeText.setString("00:00");
 }
@@ -615,16 +690,16 @@ void Game::ClockRestart(){
 
 void Game::SetActivityPlayerWay(){
     if (player1Way){
-        player1TextName.setColor(sf::Color::Red);
+        player1TextName.setFillColor(sf::Color::Red);
         player1Rect.setOutlineColor(sf::Color::Red);
 
-        player2TextName.setColor(sf::Color::Black);
+        player2TextName.setFillColor(sf::Color::Black);
         player2Rect.setOutlineColor(sf::Color::Black);
     } else {
-        player2TextName.setColor(sf::Color::Red);
+        player2TextName.setFillColor(sf::Color::Red);
         player2Rect.setOutlineColor(sf::Color::Red);
 
-        player1TextName.setColor(sf::Color::Black);
+        player1TextName.setFillColor(sf::Color::Black);
         player1Rect.setOutlineColor(sf::Color::Black);
     }
 
@@ -660,12 +735,14 @@ bool Game::EndOfGame(sf::RenderWindow& window){
                 winnerName = player1Name;
         }
         window.setActive(false);
-        sf::Thread endOfGameWindowThread([&window, &endValue, &returnValue, &winnerName, this](){
+        sf::Thread endOfGameWindowThread([&window, &returnValue, &winnerName, this](){
             EndOfGameWindow(window, roundsNum, currentRound, score, winnerName, returnValue);
         });
         endOfGameWindowThread.launch();
         endOfGameWindowThread.wait();
         window.setActive();
+        if (roundsNum != currentRound)
+            ++currentRound;
         switch(returnValue){
             case 0:{
                 Restart(1);
@@ -681,16 +758,28 @@ bool Game::EndOfGame(sf::RenderWindow& window){
             default:
                 break;
         }
-
-        if (roundsNum != currentRound)
-            ++currentRound;
     }
     return false;
 }
 
+void Game::botMove(AI &bot) {
+    bot.move();
+    changeWay();
+}
+
+Board* Game::getBoard(){
+    return &board;
+}
+bool Game::getPlayerWay(){
+    return player1Way;
+}
+void Game::changeWay(){
+    player1Way = !player1Way;
+}
+
 
 void Game::Object::SetPosition(int x, int y){
-    sprite.setPosition(float(x), float(y));
+    sprite.setPosition(static_cast<float>(x), static_cast<float>(y));
 }
 void Game::Object::Draw(sf::RenderWindow& window) const{
     window.draw(sprite);

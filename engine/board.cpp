@@ -11,14 +11,6 @@ Board::Board(uint16_t size, bool isWhiteBoard, GameType typeOfGame): size(size),
 
     init();
 }
-
-Board::~Board(){
-    for (int i = 0; i < size; ++i) {
-        delete[] board[i];
-    }
-    delete[] board;
-}
-
 void Board::init(){
     board = new char*[size];
     for (size_t i = 0; i < size; ++i) {
@@ -34,25 +26,46 @@ void Board::init(){
                 if (i < size / 2){
                     if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
                         board[i][j] = 'P';
-                        blackFigures.emplace_back(Figure(j, i,char('p')));
+                        blackFigures.emplace_back(Figure(j, i,char('P')));
+                        blackFigures.back().figureColor = 'b';
+                    } else {
+                        board[i][j] = '0';
                     }
 
                 } else{
                     if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
                         board[i][j] = 'p';
                         whiteFigures.emplace_back(Figure(j,i,char('p')));
+                        whiteFigures.back().figureColor = 'w';
+                    } else {
+                        board[i][j] = '0';
                     }
                 }
             }
         }
     }
 }
-
-bool Board::isHere(uint16_t posX, uint16_t posY) {
-    if (board[posY][posX] != '0') return true;
-    return false;
+Board::~Board(){
+    for (int i = 0; i < size; ++i) {
+        delete[] board[i];
+    }
+    delete[] board;
 }
 
+Board& Board::operator=(const Board& other){
+    whiteFigures = other.whiteFigures;
+    blackFigures = other.blackFigures;
+
+    whiteWay = other.whiteWay;
+    sideIsChange = other.sideIsChange;
+    sideIsAttach = other.sideIsAttach;
+
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            board[i][j] = other.board[i][j];
+        }
+    }
+}
 
 bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY){
 
@@ -68,7 +81,7 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
     else if(!whiteWay && figureSide != 'b')
         return false;
 
-    std::pair<bool, std::vector<int>> possiblesPair = possibles(beginX, beginY);
+    std::pair<bool, std::list<int>> possiblesPair = possibles(beginX, beginY);
 
     int endPos = endY * size + endX;
 
@@ -80,12 +93,25 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
     }
 
     if (isMoving){
+        clearMoves(figureSide);
+
         board[beginY][beginX] = '0';
+
+        /////////////////////////////
+        moves.moves.emplace_back(Motion(endX, endY, beginX, beginY));
+        moves.moves.back().oldFigureType = moves.moves.back().newFigureType = figureType;
+        /////////////////////////////
 
         if (endY == 0 && figureSide == 'w'){ // преобразование
             figureType = 'k';
+            ///////////////////
+            moves.moves.back().newFigureType = figureType;
+            ///////////////////
         } else if (endY == size - 1  && figureSide == 'b') {
             figureType = 'K';
+            ////////////////////
+            moves.moves.back().newFigureType = figureType;
+            ////////////////////
         }
         board[endY][endX] = figureType;
 
@@ -101,7 +127,7 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
             }
             if (isFindPos){
                 whiteFigures.erase(it);
-                whiteFigures.emplace_back(endX, endY, static_cast<char>(std::tolower(figureType)));
+                whiteFigures.emplace_back(endX, endY, static_cast<char>(figureType));
             }
         } else {
             bool isFindPos = false;
@@ -115,7 +141,7 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
             }
             if (isFindPos){
                 blackFigures.erase(it);
-                blackFigures.emplace_back(endX, endY, static_cast<char>(std::tolower(figureType)));
+                blackFigures.emplace_back(endX, endY, static_cast<char>(figureType));
             }
         }
 
@@ -147,6 +173,12 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
                 if (checkSide(enemyPosX, enemyPosY) == 'w'){
                     for (auto i = whiteFigures.begin(); i != whiteFigures.end() ; ++i) {
                         if (i->x == enemyPosX && i->y == enemyPosY){
+                            /////////////////////
+                            moves.moves.back().chargeFigure.x = enemyPosX;
+                            moves.moves.back().chargeFigure.y = enemyPosY;
+                            moves.moves.back().chargeFigure.figureType = board[enemyPosY][enemyPosX];
+                            moves.moves.back().chargeFigure.figureColor = 'w';
+                            /////////////////////
                             whiteFigures.erase(i);
                             break;
                         }
@@ -154,6 +186,12 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
                 } else if(checkSide(enemyPosX, enemyPosY) == 'b'){
                     for (auto i = blackFigures.begin(); i != blackFigures.end() ; ++i) {
                         if (i->x == enemyPosX && i->y == enemyPosY){
+                            /////////////////////
+                            moves.moves.back().chargeFigure.x = enemyPosX;
+                            moves.moves.back().chargeFigure.y = enemyPosY;
+                            moves.moves.back().chargeFigure.figureType = board[enemyPosY][enemyPosX];
+                            moves.moves.back().chargeFigure.figureColor = 'b';
+                            /////////////////////
                             blackFigures.erase(i);
                             break;
                         }
@@ -185,14 +223,13 @@ bool Board::move(uint16_t beginX, uint16_t beginY, uint16_t endX, uint16_t endY)
     return isMoving;
 }
 
-
-std::pair<bool, std::vector<int>> Board::possibles(uint16_t posX, uint16_t posY){
+std::pair<bool, std::list<int>> Board::possibles(uint16_t posX, uint16_t posY){
 
     if (sideIsChange)
         setSideAttach();
 
-    std::vector<int> possibles;
-    std::pair<bool, std::vector<int>> returnPair;
+    std::list<int> possibles;
+    std::pair<bool, std::list<int>> returnPair;
 
     char figureSide = checkSide(posX, posY);
     char figureType = board[posY][posX];
@@ -210,34 +247,34 @@ std::pair<bool, std::vector<int>> Board::possibles(uint16_t posX, uint16_t posY)
     }
 
     if (typeOfGame == GameType::Russian|| typeOfGame == GameType::Giveaway || typeOfGame == GameType::International){
-        std::pair<bool, std::vector<int>> buff;
+        std::pair<bool, std::list<int>> buff;
         if (figureType == 'p' || figureType == 'P'){
             buff = checkPawnStep_Rus(posX, posY);
-            if (buff.first == sideIsAttach && buff.second[0] != -1){
+            if (buff.first == sideIsAttach && buff.second.front() != -1){
                 for (auto i: buff.second){
                     possibles.emplace_back(i);
                 }
             }
         } else{
             buff = checkKingStep_Rus(posX, posY);
-            if (buff.first == sideIsAttach && buff.second[0] != -1){
+            if (buff.first == sideIsAttach && buff.second.front() != -1){
                 for (auto i: buff.second){
                     possibles.emplace_back(i);
                 }
             }
         }
     } else {
-        std::pair<bool, std::vector<int>> buff;
+        std::pair<bool, std::list<int>> buff;
         if (figureType == 'p' || figureType == 'P'){
             buff = checkPawnStep_Ang(posX, posY);
-            if (buff.first == sideIsAttach && buff.second[0] != -1){
+            if (buff.first == sideIsAttach && buff.second.front() != -1){
                 for (auto i: buff.second){
                     possibles.emplace_back(i);
                 }
             }
         } else{
             buff = checkKingStep_Ang(posX, posY);
-            if (buff.first == sideIsAttach && buff.second[0] != -1){
+            if (buff.first == sideIsAttach && buff.second.front() != -1){
                 for (auto i: buff.second){
                     possibles.emplace_back(i);
                 }
@@ -255,12 +292,11 @@ std::pair<bool, std::vector<int>> Board::possibles(uint16_t posX, uint16_t posY)
     return returnPair;
 }
 
+std::pair<bool, std::list<int>> Board::checkPawnStep_Ang(uint16_t posX, uint16_t posY){
 
-std::pair<bool, std::vector<int>> Board::checkPawnStep_Ang(uint16_t posX, uint16_t posY){
+    std::list<int> possibles;
 
-    std::vector<int> possibles;
-
-    std::pair<bool, std::vector<int>> returnPair;
+    std::pair<bool, std::list<int>> returnPair;
 
     char figureType = board[posY][posX];
     char figureSide = checkSide(posX, posY);
@@ -312,12 +348,11 @@ std::pair<bool, std::vector<int>> Board::checkPawnStep_Ang(uint16_t posX, uint16
     returnPair.second = possibles;
     return returnPair;
 }
+std::pair<bool, std::list<int>>  Board::checkPawnStep_Rus(uint16_t posX, uint16_t posY){
 
-std::pair<bool, std::vector<int>>  Board::checkPawnStep_Rus(uint16_t posX, uint16_t posY){
+    std::list<int> possibles;
 
-    std::vector<int> possibles;
-
-    std::pair<bool, std::vector<int>> returnPair;
+    std::pair<bool, std::list<int>> returnPair;
 
     char figureType = board[posY][posX];
     char figureSide = checkSide(posX, posY);
@@ -388,13 +423,11 @@ std::pair<bool, std::vector<int>>  Board::checkPawnStep_Rus(uint16_t posX, uint1
     returnPair.second = possibles;
     return returnPair;
 }
+std::pair<bool, std::list<int>> Board::checkKingStep_Ang(uint16_t posX, uint16_t posY){
 
+    std::list<int> possibles;
 
-std::pair<bool, std::vector<int>> Board::checkKingStep_Ang(uint16_t posX, uint16_t posY){
-
-    std::vector<int> possibles;
-
-    std::pair<bool, std::vector<int>> returnPair;
+    std::pair<bool, std::list<int>> returnPair;
 
     char figureType = board[posY][posX];
     char figureSide = checkSide(posX, posY);
@@ -464,12 +497,11 @@ std::pair<bool, std::vector<int>> Board::checkKingStep_Ang(uint16_t posX, uint16
     returnPair.second = possibles;
     return returnPair;
 }
+std::pair<bool, std::list<int>> Board::checkKingStep_Rus(uint16_t posX, uint16_t posY){
 
-std::pair<bool, std::vector<int>> Board::checkKingStep_Rus(uint16_t posX, uint16_t posY){
+    std::list<int> possibles;
 
-    std::vector<int> possibles;
-
-    std::pair<bool, std::vector<int>> returnPair;
+    std::pair<bool, std::list<int>> returnPair;
 
     char figureType = board[posY][posX];
     char figureSide = checkSide(posX, posY);
@@ -499,13 +531,21 @@ std::pair<bool, std::vector<int>> Board::checkKingStep_Rus(uint16_t posX, uint16
                 }
             } else if (figureSide != checkSide(j, i)){
                 i += biasY, j += biasX;
+                if (!continueAfterAttach){
+                    continueAfterAttach = true;
+                } else {
+                    continueAfterAttach = false;
+                    break;
+                }
                 if (i < size && i >= 0 && j < size && j >= 0 && board[i][j] == '0'){
                     if (!isAttach){
                         possibles.clear();
                         isAttach = true;
                     }
-                    continueAfterAttach = true;
+
                     possibles.emplace_back(i*size + j);
+                } else {
+                    break;
                 }
             } else {
                 break;
@@ -524,13 +564,20 @@ std::pair<bool, std::vector<int>> Board::checkKingStep_Rus(uint16_t posX, uint16
                 }
             } else if (figureSide != checkSide(j, i)){
                 i += biasY, j += biasX;
+                if (!continueAfterAttach){
+                    continueAfterAttach = true;
+                } else {
+                    continueAfterAttach = false;
+                    break;
+                }
                 if (i < size && i >= 0 && j < size && j >= 0 && board[i][j] == '0'){
                     if (!isAttach){
                         possibles.clear();
                         isAttach = true;
                     }
-                    continueAfterAttach = true;
                     possibles.emplace_back(i*size + j);
+                } else {
+                    break;
                 }
             } else {
                 break;
@@ -546,6 +593,10 @@ std::pair<bool, std::vector<int>> Board::checkKingStep_Rus(uint16_t posX, uint16
     return returnPair;
 }
 
+std::pair<uint16_t, uint16_t> Board::convertPos(uint16_t pos) const{
+    std::pair<uint16_t, uint16_t> pair(pos % size, pos / size);
+    return pair;
+}
 
 void Board::setSideAttach(){
     sideIsChange = false;
@@ -582,7 +633,7 @@ void Board::setSideAttach(){
     } else {
         if (typeOfGame == GameType::Russian|| typeOfGame == GameType::Giveaway || typeOfGame == GameType::International) {
             for (auto i: blackFigures){
-                if (i.figureType == 'p'){
+                if (i.figureType == 'P'){
                     if (checkPawnStep_Rus(i.x, i.y).first){
                         sideIsAttach = true;
                         return;
@@ -596,7 +647,7 @@ void Board::setSideAttach(){
             }
         } else {
             for (auto i: blackFigures){
-                if (i.figureType == 'p'){
+                if (i.figureType == 'P'){
                     if (checkPawnStep_Ang(i.x, i.y).first){
                         sideIsAttach = true;
                         return;
@@ -612,15 +663,37 @@ void Board::setSideAttach(){
     }
     sideIsAttach = false;
 }
+void Board::setFigure(uint16_t x, uint16_t y, char figure){
+    if (x >= 0 && y >= 0 && x < size && y < size){
+        board[y][x] = figure;
+        bool isReplaced = false;
+        auto it = whiteFigures.begin();
+        for (auto i = whiteFigures.begin(); i !=whiteFigures.end() ; ++i){
+            if (i->x == x && i->y == y){
+                isReplaced = true;
+                it = i;
+            }
+        }
+        if (isReplaced){
+            whiteFigures.erase(it);
+        } else {
+            for (auto i = blackFigures.begin(); i !=blackFigures.end() ; ++i){
+                if (i->x == x && i->y == y){
+                    isReplaced = true;
+                    it = i;
+                }
+            }
+        }
+        if (isReplaced){
+            blackFigures.erase(it);
+        }
 
-bool Board::GetSideChanging(){
-    return sideIsChange;
-}
+        if (std::islower(figure))
+            whiteFigures.emplace_back(x, y, figure);
+        else
+            blackFigures.emplace_back(x, y, figure);
 
-
-std::pair<uint16_t, uint16_t> Board::convertPos(uint16_t pos) const{
-    std::pair<uint16_t, uint16_t> pair(pos % size, pos / size);
-    return pair;
+    }
 }
 
 char Board::checkSide(uint16_t posX, uint16_t posY){
@@ -630,9 +703,59 @@ char Board::checkSide(uint16_t posX, uint16_t posY){
     else
         return 'b';
 }
-
-bool Board::getIsWhiteBoard(){
+bool Board::isHere(uint16_t posX, uint16_t posY) {
+    if (board[posY][posX] != '0') return true;
+    return false;
+}
+bool Board::GetSideChanging() const{
+    return sideIsChange;
+}
+bool Board::getIsWhiteBoard() const{
     return isWhiteBoard;
+}
+uint16_t Board::getSize() const{
+    return size;
+}
+GameType Board::getGameType() const{
+    return typeOfGame;
+}
+bool Board::getWhiteWay() const{
+    return whiteWay;
+}
+
+void Board::restart(){
+    sideIsAttach = false;
+    sideIsChange = true;
+    if (isWhiteBoard){
+        whiteWay = true;
+    } else{
+        whiteWay = false;
+    }
+
+
+    whiteFigures.clear();
+    blackFigures.clear();
+    for (uint16_t i = 0; i < size ; ++i){ // заполнение борда
+        if (i == size/2 || i == size/2 - 1) {
+            for (size_t j = 0; j < size ; ++j)
+                board[i][j] = '0';
+        } else {
+            for (size_t j = 0; j < size ; ++j) {
+                if (i < size / 2){
+                    if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
+                        board[i][j] = 'P';
+                        blackFigures.emplace_back(Figure(j, i,char('P')));
+                    }
+
+                } else{
+                    if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
+                        board[i][j] = 'p';
+                        whiteFigures.emplace_back(Figure(j,i,char('p')));
+                    }
+                }
+            }
+        }
+    }
 }
 
 int Board::endOfGame() {
@@ -695,74 +818,181 @@ int Board::endOfGame() {
     return 0;
 }
 
-uint16_t Board::getSize(){
-    return size;
-}
-
-void Board::setFigure(uint16_t x, uint16_t y, char figure){
-    if (x >= 0 && y >= 0 && x < size && y < size){
-        board[y][x] = figure;
-        bool isReplaced = false;
-        auto it = whiteFigures.begin();
-        for (auto i = whiteFigures.begin(); i !=whiteFigures.end() ; ++i){
-            if (i->x == x && i->y == y){
-                isReplaced = true;
-                it = i;
-            }
-        }
-        if (isReplaced){
-            whiteFigures.erase(it);
-        } else {
-            for (auto i = blackFigures.begin(); i !=blackFigures.end() ; ++i){
-                if (i->x == x && i->y == y){
-                    isReplaced = true;
-                    it = i;
-                }
-            }
-        }
-        if (isReplaced){
-            blackFigures.erase(it);
-        }
-
-        if (std::islower(figure))
-            whiteFigures.emplace_back(x, y, figure);
-        else
-            blackFigures.emplace_back(x, y, std::tolower(figure));
-
+void Board::clearMoves(char figureSide){
+    if (!moves.moves.empty() && checkSide(moves.moves.back().currentX, moves.moves.back().currentY) != figureSide){
+        moves.moves.clear();
     }
 }
-
-void Board::restart(){
-    sideIsAttach = false;
+void Board::unMove(){
+    whiteWay = !whiteWay;
     sideIsChange = true;
-    if (isWhiteBoard){
-        whiteWay = true;
-    } else{
-        whiteWay = false;
-    }
-
-
-    whiteFigures.clear();
-    blackFigures.clear();
-    for (uint16_t i = 0; i < size ; ++i){ // заполнение борда
-        if (i == size/2 || i == size/2 - 1) {
-            for (size_t j = 0; j < size ; ++j)
-                board[i][j] = '0';
+    for (; !moves.moves.empty(); ) {
+        Motion move = moves.moves.back();
+        if (move.chargeFigure.figureType != '0') { // восстанавливаем сбитую фигуру
+            if (move.chargeFigure.figureColor == 'w') {
+                whiteFigures.emplace_back(move.chargeFigure);
+            } else {
+                Figure chargeFigure = move.chargeFigure;
+                blackFigures.emplace_back(chargeFigure);
+            }
+            board[move.chargeFigure.y][move.chargeFigure.x] = move.chargeFigure.figureType;
+        }
+        // возвращаем фигуру на место
+        if (checkSide(move.currentX, move.currentY) == 'w') {
+            for (auto i = whiteFigures.begin(); i != whiteFigures.end(); ++i) {
+                if (move.currentX == i->x && move.currentY == i->y) {
+                    whiteFigures.erase(i);
+                    whiteFigures.emplace_back(Figure(move.oldX, move.oldY, move.oldFigureType, 'w'));
+                    break;
+                }
+            }
         } else {
-            for (size_t j = 0; j < size ; ++j) {
-                if (i < size / 2){
-                    if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
-                        board[i][j] = 'P';
-                        blackFigures.emplace_back(Figure(j, i,char('p')));
-                    }
-
-                } else{
-                    if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
-                        board[i][j] = 'p';
-                        whiteFigures.emplace_back(Figure(j,i,char('p')));
-                    }
+            for (auto i = blackFigures.begin(); i != blackFigures.end(); ++i) {
+                if (move.currentX == i->x && move.currentY == i->y) {
+                    blackFigures.erase(i);
+                    blackFigures.emplace_back(Figure(move.oldX, move.oldY, move.oldFigureType, 'w'));
+                    break;
                 }
             }
         }
+        board[move.currentY][move.currentX] = '0';
+        board[move.oldY][move.oldX] = move.oldFigureType;
+        moves.moves.pop_back();
     }
+}
+
+std::list<Moves> Board::generateAllMoves(uint16_t posX, uint16_t posY){
+
+    std::pair<bool, std::list<int>> capabilities = possibles(posX, posY);
+    char figureSide = checkSide(posX, posY);
+    bool way = whiteWay; // будет хранить инфу, чья сторона ходит
+    std::list<Moves> moving;
+
+    if ((whiteWay && figureSide != 'w') || (!whiteWay && figureSide != 'b')){
+        return moving;
+    }
+
+    if (capabilities.first){
+        for (auto i: capabilities.second){
+
+            moves.moves.clear();
+            move(posX, posY, i % size, i / size);
+
+            Motion motion(moves.moves.back());
+
+            Moves tmpMoves;
+            tmpMoves = moves;
+            std::pair<bool, std::list<int>> capabilities_1 = possibles(i % size, i / size);
+            /////
+            if(capabilities_1.first){
+                for (auto j: capabilities_1.second) {
+                    moves.moves.clear();
+                    move( i % size, i / size, j % size, j / size);
+
+                    Motion motion_1(moves.moves.back());
+
+                    Moves tmpMoves_1;
+                    tmpMoves_1 = moves;
+                    std::pair<bool, std::list<int>> capabilities_2 = possibles(j % size, j / size);
+                    /////
+                    if(capabilities_2.first){
+                        for (auto k: capabilities_2.second) {
+                            moves.moves.clear();
+                            move(j % size, j / size, k % size, k / size);
+
+                            Motion motion_2(moves.moves.back());
+
+                            Moves tmpMoves_2;
+                            tmpMoves_2 = moves;
+                            std::pair<bool, std::list<int>> capabilities_3 = possibles(k % size, k / size);
+                            /////
+                            if(capabilities_3.first){
+                                for (auto s: capabilities_3.second) {
+                                    moves.moves.clear();
+                                    move(k % size, k / size, s % size, s / size);
+
+                                    Motion motion_3(moves.moves.back());
+
+                                    Moves tmpMoves_3;
+                                    tmpMoves_3 = moves;
+                                    std::pair<bool, std::list<int>> capabilities_4 = possibles(s % size, s / size);
+                                    /////
+                                    if(capabilities_4.first){
+                                        for (auto l: capabilities_4.second) {
+                                            moves.moves.clear();
+                                            move(s % size, s / size, l % size, l / size);
+
+                                            Motion motion_4(moves.moves.back());
+
+                                            std::pair<bool, std::list<int>> capabilities_5 = possibles(k % size, k / size);
+                                            /////
+                                            if (capabilities_5.first){
+                                                moving.emplace_back(Moves());
+                                                moving.back().moves.emplace_back(Motion(-1, -1, -1, -1));
+                                            } else {
+                                                moving.emplace_back(Moves());
+                                                moving.back().moves.emplace_back(motion);
+                                                moving.back().moves.emplace_back(motion_1);
+                                                moving.back().moves.emplace_back(motion_2);
+                                                moving.back().moves.emplace_back(motion_3);
+                                                moving.back().moves.emplace_back(motion_4);
+                                            }
+                                            /////
+                                            unMove();
+                                            whiteWay = way;
+                                        }
+                                    } else {
+                                        moving.emplace_back(Moves());
+                                        moving.back().moves.emplace_back(motion);
+                                        moving.back().moves.emplace_back(motion_1);
+                                        moving.back().moves.emplace_back(motion_2);
+                                        moving.back().moves.emplace_back(motion_3);
+                                    }
+                                    /////
+                                    moves = tmpMoves_3;
+                                    unMove();
+                                    whiteWay = way;
+                                }
+                            } else {
+                                moving.emplace_back(Moves());
+                                moving.back().moves.emplace_back(motion);
+                                moving.back().moves.emplace_back(motion_1);
+                                moving.back().moves.emplace_back(motion_2);
+                            }
+                            /////
+                            moves = tmpMoves_2;
+                            unMove();
+                            whiteWay = way;
+                        }
+                    } else {
+                        moving.emplace_back(Moves());
+                        moving.back().moves.emplace_back(motion);
+                        moving.back().moves.emplace_back(motion_1);
+                    }
+                    /////
+                    moves = tmpMoves_1;
+                    unMove();
+                    whiteWay = way;
+                }
+            } else {
+                moving.emplace_back(Moves());
+                moving.back().moves.emplace_back(motion);
+            }
+            /////
+            moves = tmpMoves;
+            unMove();
+            whiteWay = way;
+        }
+    } else {
+        Motion motion;
+        for (auto i: capabilities.second) {
+            moves.moves.clear();
+            move(posX, posY, i % size, i / size);
+            motion = moves.moves.back();
+            moving.emplace_back(Moves());
+            moving.back().moves.emplace_back(motion);
+            unMove();
+        }
+    }
+    return moving;
 }

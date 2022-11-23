@@ -172,6 +172,8 @@ void ConfigGame::pressButtonArrows(bool is_mouse_on_back_button,
         arrow_color_left.playSongsPress();
     } else if (is_mouse_on_begin_button && is_press_mouse) {
         begin_button.playSongsPress();
+        cursor.loadFromSystem(sf::Cursor::Type::Arrow);
+        window.setMouseCursor(cursor);
         window.setActive(false);
 
         sf::Thread GameThread([&window, this](){

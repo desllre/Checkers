@@ -1,4 +1,6 @@
 #include "../engine/board.h"
+#include "../engine/AI.h"
+
 #include "gameExitWindow.h"
 #include "elements.h"
 #include "EndOfGameWindow.h"
@@ -6,7 +8,7 @@
 #include "SFML/Graphics.hpp"
 
 #include "string"
-#include "vector"
+#include "list"
 #include "filesystem"
 #include "fstream"
 #include "array"
@@ -64,6 +66,14 @@ public:
 
     void ChangeCursor(sf::RenderWindow &window, sf::Cursor::Type type_cursor);
 
+    Board* getBoard();
+
+    bool getPlayerWay();
+
+    void changeWay(); // изменение ходящей стороны
+
+    void botMove(AI& bot); // хождение бота
+
 private:
     void SetActivityPlayerWay(); // выделяет имя текущего ходящего игрока
 
@@ -98,7 +108,7 @@ private:
 
     Object moveSelector; // для выделения возможных ходов фигур
     std::pair<uint16_t, uint16_t> selectedPos; // координаты выделеннной фигуры в массиве
-    std::pair<bool, std::vector<int>> movePos; // В first хранит true если фигура атакует или false в противном случае. В second хранит номера позиций возможных ходов фигуры, на которую нажали.
+    std::pair<bool, std::list<int>> movePos; // В first хранит true если фигура атакует или false в противном случае. В second хранит номера позиций возможных ходов фигуры, на которую нажали.
 
     Object figureSelector; // для выделения фигуры
 
@@ -148,5 +158,9 @@ private:
 
     bool necessaryAttach = false; // true, если тот кто сейчас ходит должен бить
     bool alreadyAttach = false; // true, если игрок на своём ходу сбил фигуру (используется для проверки возможности сбить после битья)
+
+public:
+    bool botIsActive = false;
+    sf::Clock botMoveClock;
 };
 

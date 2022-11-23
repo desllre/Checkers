@@ -6,7 +6,9 @@ set(SFML_DIR "SFML-2.5.1/lib/cmake/SFML/")
 
 find_package(SFML COMPONENTS graphics audio REQUIRED)
 
-add_executable(Checkers main.cpp engine/board.cpp engine/board.h
+add_executable(Checkers main.cpp
+        engine/board.cpp engine/board.h
+        engine/AI.cpp engine/AI.h
         interface/game.h interface/header.h
         interface/menu.h interface/menu.cpp
         interface/elements.h interface/elements.cpp
@@ -15,7 +17,7 @@ add_executable(Checkers main.cpp engine/board.cpp engine/board.h
         interface/settings.h interface/settings.cpp
         interface/game_design.cpp interface/game_design.h
         interface/gameExitWindow.cpp interface/gameExitWindow.h
-        interface/EndOfGameWindow.h interface/EndOfGameWindow.cpp)
+        interface/EndOfGameWindow.h interface/EndOfGameWindow.cpp engine/subStructs.h)
 
 target_link_libraries(Checkers sfml-graphics sfml-audio sfml-window)
 
