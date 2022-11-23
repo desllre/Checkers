@@ -6,6 +6,7 @@
 #include "EndOfGameWindow.h"
 
 #include "SFML/Graphics.hpp"
+#include "SFML/Audio.hpp"
 
 #include "string"
 #include "list"
@@ -90,6 +91,9 @@ private:
     };
 
 private:
+    sf::SoundBuffer moveBuffer;
+    sf::Sound moveSound;
+
     Board board;
     Object boardStyle;
 

@@ -160,6 +160,10 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
             gameType(gameType), playerHasWhiteBoard(playerHasWhiteBoard),
             background("../textures/backgrounds/game_bg.png"){
 
+    moveBuffer.loadFromFile("../songs/motion.wav");
+    moveSound.setBuffer(moveBuffer);
+    moveSound.setVolume(15);
+
     int yPosPlayer1_NameField = LOW_POS_NAME_FIELD_Y, yPosPlayer2_NameField = HIGH_POS_NAME_FIELD_Y;
 
     if (playerHasWhiteBoard) { // распределение фигур между игроками в зависимости от цвета фигур игрока
@@ -566,6 +570,7 @@ void Game::Move(const sf::Vector2i& mousePos){
            mousePos.x <= FIRST_FIGURE_POSITION_X + FIGURE_DISPLACEMENT_X*(pos.first + 1) &&
            mousePos.y >= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*pos.second &&
            mousePos.y <= FIRST_FIGURE_POSITION_Y + FIGURE_DISPLACEMENT_Y*(pos.second + 1)){
+            moveSound.play();
             board.move(selectedPos.first, selectedPos.second, pos.first, pos.second);
             if (board.GetSideChanging()){
                 player1Way = !player1Way;
@@ -763,6 +768,7 @@ bool Game::EndOfGame(sf::RenderWindow& window){
 }
 
 void Game::botMove(AI &bot) {
+    moveSound.play();
     bot.move();
     changeWay();
 }
