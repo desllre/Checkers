@@ -281,17 +281,16 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
                 moveSelectorStr = "../textures/elements/move_selector.png";
                 figureSelectorStr = "../textures/elements/figure_selector.png";
 
-
-                if(isSingleGame){ // будут отображаться снизу белые фигуры
-                    white_pawnStr = "../textures/figures/black_and_white/black_pawn.png";
-                    white_kingStr = "../textures/figures/black_and_white/black_king.png";
-                    black_pawnStr = "../textures/figures/black_and_white/white_pawn.png";
-                    black_kingStr = "../textures/figures/black_and_white/white_king.png";
-                } if (playerHasWhiteBoard || !isSingleGame){ // будут отображаться снизу белые фигуры
+                if (playerHasWhiteBoard || !isSingleGame){ // будут отображаться снизу белые фигуры
                     black_pawnStr = "../textures/figures/black_and_white/black_pawn.png";
                     black_kingStr = "../textures/figures/black_and_white/black_king.png";
                     white_pawnStr = "../textures/figures/black_and_white/white_pawn.png";
                     white_kingStr = "../textures/figures/black_and_white/white_king.png";
+                } else if(isSingleGame){ // будут отображаться снизу белые фигуры
+                    white_pawnStr = "../textures/figures/black_and_white/black_pawn.png";
+                    white_kingStr = "../textures/figures/black_and_white/black_king.png";
+                    black_pawnStr = "../textures/figures/black_and_white/white_pawn.png";
+                    black_kingStr = "../textures/figures/black_and_white/white_king.png";
                 }
 
             } else {
@@ -299,16 +298,16 @@ Game::Game(const uint32_t& roundsNum, bool isSingleGame, GameType gameType, bool
                 moveSelectorStr = "../textures/elements/big_move_selector.png";
                 figureSelectorStr = "../textures/elements/big_figure_selector.png";
 
-                if(isSingleGame){ // будут отображаться снизу белые фигуры
-                    white_pawnStr = "../textures/figures/black_and_white/big_black_pawn.png";
-                    white_kingStr = "../textures/figures/black_and_white/big_black_king.png";
-                    black_pawnStr = "../textures/figures/black_and_white/big_white_pawn.png";
-                    black_kingStr = "../textures/figures/black_and_white/big_white_king.png";
-                } else if (playerHasWhiteBoard || !isSingleGame){ // будут отображаться снизу белые фигуры
+                if (playerHasWhiteBoard || !isSingleGame){ // будут отображаться снизу белые фигуры
                     black_pawnStr = "../textures/figures/black_and_white/big_black_pawn.png";
                     black_kingStr = "../textures/figures/black_and_white/big_black_king.png";
                     white_pawnStr = "../textures/figures/black_and_white/big_white_pawn.png";
                     white_kingStr = "../textures/figures/black_and_white/big_white_king.png";
+                } else if(isSingleGame){ // будут отображаться снизу белые фигуры
+                    white_pawnStr = "../textures/figures/black_and_white/big_black_pawn.png";
+                    white_kingStr = "../textures/figures/black_and_white/big_black_king.png";
+                    black_pawnStr = "../textures/figures/black_and_white/big_white_pawn.png";
+                    black_kingStr = "../textures/figures/black_and_white/big_white_king.png";
                 }
             }
         }
